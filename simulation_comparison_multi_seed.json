@@ -1,0 +1,98 @@
+[
+  {
+    "task_id": "pick_smooth_metal",
+    "task_label": "pick_smooth_metal/抓取光滑金属零件",
+    "task_description": "抓取光滑金属零件",
+    "task_split": "train",
+    "ideal_gripper_force": [
+      30,
+      50
+    ],
+    "rag_success_rate_mean": 0.8167,
+    "rag_success_rate_std": 0.0289,
+    "direct_llm_success_rate_mean": 0.6,
+    "direct_llm_success_rate_std": 0.0866,
+    "fixed_success_rate_mean": 0.25,
+    "fixed_success_rate_std": 0.05
+  },
+  {
+    "task_id": "pick_rubber",
+    "task_label": "pick_rubber/抓取橡胶零件",
+    "task_description": "抓取橡胶零件",
+    "task_split": "train",
+    "ideal_gripper_force": [
+      5,
+      15
+    ],
+    "rag_success_rate_mean": 0.8667,
+    "rag_success_rate_std": 0.0764,
+    "direct_llm_success_rate_mean": 0.15,
+    "direct_llm_success_rate_std": 0.05,
+    "fixed_success_rate_mean": 0.25,
+    "fixed_success_rate_std": 0.05
+  },
+  {
+    "task_id": "pick_small_part",
+    "task_label": "pick_small_part/抓取小型机械零件",
+    "task_description": "抓取小型机械零件",
+    "task_split": "train",
+    "ideal_gripper_force": [
+      5,
+      15
+    ],
+    "rag_success_rate_mean": 0.85,
+    "rag_success_rate_std": 0.1803,
+    "direct_llm_success_rate_mean": 0.0833,
+    "direct_llm_success_rate_std": 0.0577,
+    "fixed_success_rate_mean": 0.2167,
+    "fixed_success_rate_std": 0.0764
+  },
+  {
+    "task_id": "pick_large_part",
+    "task_label": "pick_large_part/抓取大型零件",
+    "task_description": "抓取大型零件",
+    "task_split": "train",
+    "ideal_gripper_force": [
+      30,
+      50
+    ],
+    "rag_success_rate_mean": 0.7667,
+    "rag_success_rate_std": 0.0764,
+    "direct_llm_success_rate_mean": 0.4333,
+    "direct_llm_success_rate_std": 0.0289,
+    "fixed_success_rate_mean": 0.4167,
+    "fixed_success_rate_std": 0.0289
+  },
+  {
+    "task_id": "pick_thin_wall",
+    "task_label": "pick_thin_wall/抓取薄壁件",
+    "task_description": "抓取薄壁件",
+    "task_split": "val",
+    "ideal_gripper_force": [
+      5,
+      12
+    ],
+    "rag_success_rate_mean": 0.7833,
+    "rag_success_rate_std": 0.0764,
+    "direct_llm_success_rate_mean": 0.0833,
+    "direct_llm_success_rate_std": 0.0289,
+    "fixed_success_rate_mean": 0.0833,
+    "fixed_success_rate_std": 0.0289
+  },
+  {
+    "task_id": "pick_metal_heavy",
+    "task_label": "pick_metal_heavy/抓取重型光滑金属零件",
+    "task_description": "抓取重型光滑金属零件",
+    "task_split": "test",
+    "ideal_gripper_force": [
+      30,
+      50
+    ],
+    "rag_success_rate_mean": 0.75,
+    "rag_success_rate_std": 0.05,
+    "direct_llm_success_rate_mean": 0.45,
+    "direct_llm_success_rate_std": 0.05,
+    "fixed_success_rate_mean": 0.3333,
+    "fixed_success_rate_std": 0.0764
+  }
+]

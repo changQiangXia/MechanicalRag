@@ -1,0 +1,110 @@
+问答链路结构化评测报告
+============================================================
+direct_llm: strict=0.25, weighted=0.38, correct=2, partial=2, incorrect=4, retrieval=N/A
+base_rag: strict=0.25, weighted=0.38, correct=2, partial=2, incorrect=4, retrieval=0.50
+improved_rag: strict=1.00, weighted=1.00, correct=8, partial=0, incorrect=0, retrieval=1.00
+problem_solving_rag: strict=1.00, weighted=1.00, correct=8, partial=0, incorrect=0, retrieval=1.00
+
+============================================================
+第1题：夹爪payload最大为2kg时，适合抓取哪种类型的工件？
+参考答案：适合轻型工件，典型对象为小型机械零件。
+direct_llm: label=partial, score=0.50, retrieval=N/A
+回答：适用于金属材料的工件。
+缺失要点：小型/轻型
+base_rag: label=correct, score=1.00, retrieval=1.00
+回答：适合抓取小型机械零件的工件。
+improved_rag: label=correct, score=1.00, retrieval=1.00
+回答：适合轻型工件，典型对象为小型机械零件。
+problem_solving_rag: label=correct, score=1.00, retrieval=1.00
+回答：适合轻型工件，典型对象为小型机械零件。
+----------------------------------------
+第2题：机械臂标定后，为什么需要进行复位操作？
+参考答案：标定后需要复位到初始安全位置，便于后续抓取和运行安全。
+direct_llm: label=partial, score=0.50, retrieval=N/A
+回答：因为机械臂的运动轨迹和位置会随时间变化，需要定期复位以保持其精确性。
+缺失要点：初始安全位置/安全位置
+base_rag: label=partial, score=0.50, retrieval=1.00
+回答：为了保证机械臂在标定完成后能够正确返回到初始的安全位置，以避免因标定过程中出现的误差导致的设备损坏或人员伤害。
+缺失要点：复位
+improved_rag: label=correct, score=1.00, retrieval=1.00
+回答：标定后需要复位到初始安全位置，便于后续抓取和运行安全。
+problem_solving_rag: label=correct, score=1.00, retrieval=1.00
+回答：标定后需要复位到初始安全位置，便于后续抓取和运行安全。
+----------------------------------------
+第3题：抓取圆柱形工件时，最佳抓取姿态是什么？
+参考答案：优先采用对称抓取姿态，抓取点靠近工件两端三分之一位置。
+direct_llm: label=incorrect, score=0.00, retrieval=N/A
+回答：最佳抓取姿态是将工件放置于水平面或倾斜面的中心点上。
+缺失要点：对称抓取/对称, 两端1/3/三分之一/1/3
+base_rag: label=incorrect, score=0.00, retrieval=0.00
+回答：最佳抓取姿态是顺时针旋转释放，确认工作区域无障碍物后，按复位键恢复运行。
+缺失要点：对称抓取/对称, 两端1/3/三分之一/1/3
+冲突词：顺时针, 复位
+improved_rag: label=correct, score=1.00, retrieval=1.00
+回答：优先采用对称抓取姿态，抓取点距工件两端1/3处，确保重心稳定。
+problem_solving_rag: label=correct, score=1.00, retrieval=1.00
+回答：优先采用对称抓取姿态，抓取点距工件两端1/3处，确保重心稳定。
+----------------------------------------
+第4题：摩擦系数低的零件，抓取时夹爪力应如何调整？
+参考答案：需要适当增大夹爪力；对于光滑金属零件，可参考30-50N。
+direct_llm: label=correct, score=1.00, retrieval=N/A
+回答：摩擦系数低的零件，抓取时夹爪力应适当增大。
+base_rag: label=partial, score=0.50, retrieval=0.00
+回答：抓取时夹爪力应尽量接近摩擦系数低的零件，以减少夹爪力对零件表面的磨损。
+缺失要点：增大/增加
+improved_rag: label=correct, score=1.00, retrieval=1.00
+回答：夹爪力需要适当增大，可参考30-50N。
+problem_solving_rag: label=correct, score=1.00, retrieval=1.00
+回答：夹爪力应适当增大，可参考光滑金属零件的30-50N范围。
+----------------------------------------
+第5题：机械臂重复定位精度±0.05mm，能满足小型零件的抓取需求吗？
+参考答案：可以满足小型零件抓取需求。
+direct_llm: label=correct, score=1.00, retrieval=N/A
+回答：满足小型零件的抓取需求。
+base_rag: label=incorrect, score=0.00, retrieval=0.00
+回答：3. 设备参数：六轴机械臂——额定负载3kg，最大工作半径650mm，重复定位精度±0.02mm，适用于精密装配场景。
+4. 设备参数：协作机械臂——力控灵敏度0.1N，碰撞检测响应时间<50ms，适用于人机协作工位。
+缺失要点：满足/可以, 小型零件/小型机械零件
+improved_rag: label=correct, score=1.00, retrieval=1.00
+回答：可以满足小型零件的抓取需求。
+problem_solving_rag: label=correct, score=1.00, retrieval=1.00
+回答：可以满足小型零件的抓取需求。
+----------------------------------------
+第6题：抓取光滑金属零件时，夹爪力应控制在什么范围？
+参考答案：建议控制在30-50N。
+direct_llm: label=incorrect, score=0.00, retrieval=N/A
+回答：1-5N
+缺失要点：30-50N/30到50N
+base_rag: label=incorrect, score=1.00, retrieval=1.00
+回答：22. 物理先验知识：摩擦相关——抓取光滑金属零件时，需增大夹爪力（30-50N），避免因摩擦力不足导致工件滑落；抓取橡胶零件时，夹爪力控制在5-15N，防止零件变形。
+冲突词：5-15N
+improved_rag: label=correct, score=1.00, retrieval=1.00
+回答：抓取光滑金属零件时，夹爪力建议控制在30-50N。
+problem_solving_rag: label=correct, score=1.00, retrieval=1.00
+回答：抓取光滑金属零件时，夹爪力建议控制在30-50N。
+----------------------------------------
+第7题：抓取橡胶零件时，夹爪力应控制在什么范围？
+参考答案：建议控制在5-15N。
+direct_llm: label=incorrect, score=0.00, retrieval=N/A
+回答：1-5N
+缺失要点：5-15N/5到15N
+base_rag: label=incorrect, score=0.00, retrieval=0.00
+回答：避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+缺失要点：5-15N/5到15N
+improved_rag: label=correct, score=1.00, retrieval=1.00
+回答：抓取橡胶零件时，夹爪力建议控制在5-15N。
+problem_solving_rag: label=correct, score=1.00, retrieval=1.00
+回答：抓取橡胶零件时，夹爪力建议控制在5-15N。
+----------------------------------------
+第8题：薄壁件抓取时需要注意什么？
+参考答案：要避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+direct_llm: label=incorrect, score=0.00, retrieval=N/A
+回答：抓取前需检查零件尺寸和形状；抓取过程中要保持平稳；抓取后应进行清理和润滑。
+缺失要点：避免, 径向, 多点/分散支撑/真空吸附/真空
+base_rag: label=correct, score=1.00, retrieval=1.00
+回答：避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+improved_rag: label=correct, score=1.00, retrieval=1.00
+回答：需要避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+problem_solving_rag: label=correct, score=1.00, retrieval=1.00
+回答：需要避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+----------------------------------------

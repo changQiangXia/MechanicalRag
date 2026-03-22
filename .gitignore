@@ -1,0 +1,43 @@
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Local model / hub cache
+.modelscope_cache/
+.cache/
+
+# Local vector databases
+chroma_db/
+improved_chroma_db/
+solved_chroma_db/
+
+# Generated training artifacts
+simulation/learned_models/
+
+# Test / coverage cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local logs
+*.log

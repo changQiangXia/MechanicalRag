@@ -1,0 +1,22 @@
+# 在 Linux 容器中运行完整仿真（MuJoCo 有预编译 wheel，无需编译）
+# 若 Docker Hub 拉取超时，可在 Docker Desktop -> Settings -> Docker Engine 中配置 "registry-mirrors"
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# 安装 Python 依赖（MuJoCo 无需 g++，直接 pip 即可）
+COPY requirements.txt .
+RUN pip install --no-cache-dir mujoco numpy \
+    langchain langchain-community chromadb sentence-transformers
+
+COPY mechanical_data.txt .
+COPY simulation/ simulation/
+COPY llm_loader.py .
+
+# RAG 控制器依赖
+RUN pip install --no-cache-dir pydantic
+
+RUN mkdir -p /out
+ENV PYTHONPATH=/app
+# 输出到 /out，运行时可挂载：docker run -v "$(pwd)":/out mech-rag-sim
+CMD ["python", "-m", "simulation.benchmark", "--n_trials", "5", "--output", "/out/simulation_benchmark_result.json"]

@@ -1,0 +1,164 @@
+[
+  {
+    "task_id": "pick_smooth_metal",
+    "task_label": "pick_smooth_metal/抓取光滑金属零件",
+    "task_description": "抓取光滑金属零件",
+    "task_split": "train",
+    "method": "direct_llm",
+    "n_trials": 20,
+    "ideal_gripper_force": [
+      30,
+      50
+    ],
+    "ideal_approach_height": 0.05,
+    "success_count": 11,
+    "success_rate": 0.55,
+    "avg_time_sec": 1.5178,
+    "avg_steps": 6.0,
+    "avg_distance_error": 0.0324,
+    "success_rate_ci95": [
+      0.3421,
+      0.7418
+    ],
+    "force_deviation_from_center": 10.0,
+    "rag_params": {
+      "gripper_force": 50.0,
+      "approach_height": 0.1
+    }
+  },
+  {
+    "task_id": "pick_rubber",
+    "task_label": "pick_rubber/抓取橡胶零件",
+    "task_description": "抓取橡胶零件",
+    "task_split": "train",
+    "method": "direct_llm",
+    "n_trials": 20,
+    "ideal_gripper_force": [
+      5,
+      15
+    ],
+    "ideal_approach_height": 0.03,
+    "success_count": 3,
+    "success_rate": 0.15,
+    "avg_time_sec": 1.4944,
+    "avg_steps": 6.0,
+    "avg_distance_error": 0.0196,
+    "success_rate_ci95": [
+      0.0524,
+      0.3604
+    ],
+    "force_deviation_from_center": 40.0,
+    "rag_params": {
+      "gripper_force": 50.0,
+      "approach_height": 0.1
+    }
+  },
+  {
+    "task_id": "pick_small_part",
+    "task_label": "pick_small_part/抓取小型机械零件",
+    "task_description": "抓取小型机械零件",
+    "task_split": "train",
+    "method": "direct_llm",
+    "n_trials": 20,
+    "ideal_gripper_force": [
+      5,
+      15
+    ],
+    "ideal_approach_height": 0.04,
+    "success_count": 3,
+    "success_rate": 0.15,
+    "avg_time_sec": 1.1388,
+    "avg_steps": 6.0,
+    "avg_distance_error": 0.0322,
+    "success_rate_ci95": [
+      0.0524,
+      0.3604
+    ],
+    "force_deviation_from_center": 40.0,
+    "rag_params": {
+      "gripper_force": 50.0,
+      "approach_height": 0.1
+    }
+  },
+  {
+    "task_id": "pick_large_part",
+    "task_label": "pick_large_part/抓取大型零件",
+    "task_description": "抓取大型零件",
+    "task_split": "train",
+    "method": "direct_llm",
+    "n_trials": 20,
+    "ideal_gripper_force": [
+      30,
+      50
+    ],
+    "ideal_approach_height": 0.06,
+    "success_count": 9,
+    "success_rate": 0.45,
+    "avg_time_sec": 2.5119,
+    "avg_steps": 5.0,
+    "avg_distance_error": 0.0458,
+    "success_rate_ci95": [
+      0.2582,
+      0.6579
+    ],
+    "force_deviation_from_center": 10.0,
+    "rag_params": {
+      "gripper_force": 50.0,
+      "approach_height": 0.1
+    }
+  },
+  {
+    "task_id": "pick_thin_wall",
+    "task_label": "pick_thin_wall/抓取薄壁件",
+    "task_description": "抓取薄壁件",
+    "task_split": "val",
+    "method": "direct_llm",
+    "n_trials": 20,
+    "ideal_gripper_force": [
+      5,
+      12
+    ],
+    "ideal_approach_height": 0.02,
+    "success_count": 2,
+    "success_rate": 0.1,
+    "avg_time_sec": 2.0037,
+    "avg_steps": 8.0,
+    "avg_distance_error": 0.0187,
+    "success_rate_ci95": [
+      0.0279,
+      0.301
+    ],
+    "force_deviation_from_center": 41.5,
+    "rag_params": {
+      "gripper_force": 50.0,
+      "approach_height": 0.1
+    }
+  },
+  {
+    "task_id": "pick_metal_heavy",
+    "task_label": "pick_metal_heavy/抓取光滑金属零件",
+    "task_description": "抓取光滑金属零件",
+    "task_split": "test",
+    "method": "direct_llm",
+    "n_trials": 20,
+    "ideal_gripper_force": [
+      30,
+      50
+    ],
+    "ideal_approach_height": 0.05,
+    "success_count": 9,
+    "success_rate": 0.45,
+    "avg_time_sec": 3.4591,
+    "avg_steps": 16.0,
+    "avg_distance_error": 0.0465,
+    "success_rate_ci95": [
+      0.2582,
+      0.6579
+    ],
+    "force_deviation_from_center": 10.0,
+    "rag_params": {
+      "gripper_force": 50.0,
+      "approach_height": 0.1
+    }
+  }
+]

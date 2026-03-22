@@ -1,0 +1,98 @@
+[
+  {
+    "task_id": "pick_smooth_metal",
+    "task_description": "抓取光滑金属零件",
+    "ideal_gripper_force": [
+      30,
+      50
+    ],
+    "rag_success_rate": 0.8,
+    "rag_gripper_force": 40.0,
+    "rag_multi_success_rate": 0.8,
+    "rag_multi_gripper_force": 40.0,
+    "rag_random_success_rate": 0.8,
+    "rag_random_gripper_force": 40.0,
+    "fixed_success_rate": 0.2,
+    "fixed_gripper_force": 25.0
+  },
+  {
+    "task_id": "pick_rubber",
+    "task_description": "抓取橡胶零件",
+    "ideal_gripper_force": [
+      5,
+      15
+    ],
+    "rag_success_rate": 1.0,
+    "rag_gripper_force": 10.0,
+    "rag_multi_success_rate": 1.0,
+    "rag_multi_gripper_force": 10.0,
+    "rag_random_success_rate": 1.0,
+    "rag_random_gripper_force": 15.0,
+    "fixed_success_rate": 0.0,
+    "fixed_gripper_force": 25.0
+  },
+  {
+    "task_id": "pick_small_part",
+    "task_description": "抓取小型机械零件",
+    "ideal_gripper_force": [
+      5,
+      15
+    ],
+    "rag_success_rate": 0.6,
+    "rag_gripper_force": 10.0,
+    "rag_multi_success_rate": 0.6,
+    "rag_multi_gripper_force": 10.0,
+    "rag_random_success_rate": 0.6,
+    "rag_random_gripper_force": 5.0,
+    "fixed_success_rate": 0.0,
+    "fixed_gripper_force": 25.0
+  },
+  {
+    "task_id": "pick_large_part",
+    "task_description": "抓取大型零件",
+    "ideal_gripper_force": [
+      30,
+      50
+    ],
+    "rag_success_rate": 1.0,
+    "rag_gripper_force": 40.0,
+    "rag_multi_success_rate": 1.0,
+    "rag_multi_gripper_force": 40.0,
+    "rag_random_success_rate": 1.0,
+    "rag_random_gripper_force": 30.0,
+    "fixed_success_rate": 0.4,
+    "fixed_gripper_force": 25.0
+  },
+  {
+    "task_id": "pick_thin_wall",
+    "task_description": "抓取薄壁件",
+    "ideal_gripper_force": [
+      5,
+      12
+    ],
+    "rag_success_rate": 1.0,
+    "rag_gripper_force": 8.5,
+    "rag_multi_success_rate": 1.0,
+    "rag_multi_gripper_force": 8.5,
+    "rag_random_success_rate": 1.0,
+    "rag_random_gripper_force": 12.0,
+    "fixed_success_rate": 0.6,
+    "fixed_gripper_force": 25.0
+  },
+  {
+    "task_id": "pick_metal_heavy",
+    "task_description": "抓取光滑金属零件",
+    "ideal_gripper_force": [
+      30,
+      50
+    ],
+    "rag_success_rate": 0.8,
+    "rag_gripper_force": 40.0,
+    "rag_multi_success_rate": 0.8,
+    "rag_multi_gripper_force": 40.0,
+    "rag_random_success_rate": 0.8,
+    "rag_random_gripper_force": 40.0,
+    "fixed_success_rate": 0.6,
+    "fixed_gripper_force": 25.0
+  }
+]

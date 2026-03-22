@@ -1,0 +1,52 @@
+机械 RAG 项目展示摘要
+================================================================
+
+一、问答结果总览
+- direct_llm: strict=0.25, weighted=0.38, correct=2, incorrect=4
+- base_rag: strict=0.25, weighted=0.38, correct=2, incorrect=4
+- improved_rag: strict=1.00, weighted=1.00, correct=8, incorrect=0
+- problem_solving_rag: strict=1.00, weighted=1.00, correct=8, incorrect=0
+
+二、代表性问答样例
+- 问题：抓取圆柱形工件时，最佳抓取姿态是什么？
+  参考：优先采用对称抓取姿态，抓取点靠近工件两端三分之一位置。
+  direct_llm: incorrect | 最佳抓取姿态是将工件放置于水平面或倾斜面的中心点上。
+  base_rag: incorrect | 最佳抓取姿态是顺时针旋转释放，确认工作区域无障碍物后，按复位键恢复运行。
+  improved_rag: correct | 优先采用对称抓取姿态，抓取点距工件两端1/3处，确保重心稳定。
+  problem_solving_rag: correct | 优先采用对称抓取姿态，抓取点距工件两端1/3处，确保重心稳定。
+
+- 问题：抓取光滑金属零件时，夹爪力应控制在什么范围？
+  参考：建议控制在30-50N。
+  direct_llm: incorrect | 1-5N
+  base_rag: incorrect | 22. 物理先验知识：摩擦相关——抓取光滑金属零件时，需增大夹爪力（30-50N），避免因摩擦力不足导致工件滑落；抓取橡胶零件时，夹爪力控制在5-15N，防止零件变形。
+  improved_rag: correct | 抓取光滑金属零件时，夹爪力建议控制在30-50N。
+  problem_solving_rag: correct | 抓取光滑金属零件时，夹爪力建议控制在30-50N。
+
+- 问题：薄壁件抓取时需要注意什么？
+  参考：要避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+  direct_llm: incorrect | 抓取前需检查零件尺寸和形状；抓取过程中要保持平稳；抓取后应进行清理和润滑。
+  base_rag: correct | 避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+  improved_rag: correct | 需要避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+  problem_solving_rag: correct | 需要避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+
+三、仿真对比重点
+- 多 seed 平均上，RAG 相对 Direct LLM 的成功率提升为 50.56%。
+- 多 seed 平均上，RAG 相对固定基线的成功率提升为 54.72%。
+- pick_small_part: RAG=0.8500, Direct LLM=0.0833, 提升=0.7667
+- pick_rubber: RAG=0.8667, Direct LLM=0.1500, 提升=0.7167
+- pick_thin_wall: RAG=0.7833, Direct LLM=0.0833, 提升=0.7000
+
+四、正式汇报建议引用文件
+- qa_evaluation_detail.json
+- simulation_benchmark_result.json
+- simulation_comparison_multi_seed.json
+- visualizations/qa_method_summary.png
+- visualizations/qa_gain_over_direct_llm.png
+- visualizations/simulation_rag_gain.png
+- visualizations/simulation_multi_seed_success.png
+
+五、当前主结论
+- improved_rag 在当前 8 道机械问答上达到 strict=1.00。
+- problem_solving_rag 在当前 8 道机械问答上达到 strict=1.00。
+- RAG 多 seed benchmark 中，最难任务为 pick_metal_heavy，平均成功率 0.7500。
+- RAG 多 seed benchmark 中，最稳任务为 pick_rubber，平均成功率 0.8667。

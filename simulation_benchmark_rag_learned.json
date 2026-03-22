@@ -1,0 +1,74 @@
+[
+  {
+    "task_id": "pick_smooth_metal",
+    "task_description": "抓取光滑金属零件",
+    "method": "rag_learned",
+    "n_trials": 3,
+    "success_count": 3,
+    "success_rate": 1.0,
+    "avg_time_sec": 0.0008,
+    "rag_params": {
+      "gripper_force": 32.92
+    }
+  },
+  {
+    "task_id": "pick_rubber",
+    "task_description": "抓取橡胶零件",
+    "method": "rag_learned",
+    "n_trials": 3,
+    "success_count": 3,
+    "success_rate": 1.0,
+    "avg_time_sec": 0.0041,
+    "rag_params": {
+      "gripper_force": 13.86
+    }
+  },
+  {
+    "task_id": "pick_small_part",
+    "task_description": "抓取小型机械零件",
+    "method": "rag_learned",
+    "n_trials": 3,
+    "success_count": 2,
+    "success_rate": 0.6667,
+    "avg_time_sec": 0.0002,
+    "rag_params": {
+      "gripper_force": 13.86
+    }
+  },
+  {
+    "task_id": "pick_large_part",
+    "task_description": "抓取大型零件",
+    "method": "rag_learned",
+    "n_trials": 3,
+    "success_count": 2,
+    "success_rate": 0.6667,
+    "avg_time_sec": 0.0006,
+    "rag_params": {
+      "gripper_force": 15.26
+    }
+  },
+  {
+    "task_id": "pick_thin_wall",
+    "task_description": "抓取薄壁件",
+    "method": "rag_learned",
+    "n_trials": 3,
+    "success_count": 1,
+    "success_rate": 0.3333,
+    "avg_time_sec": 0.0002,
+    "rag_params": {
+      "gripper_force": 13.86
+    }
+  },
+  {
+    "task_id": "pick_metal_heavy",
+    "task_description": "抓取光滑金属零件",
+    "method": "rag_learned",
+    "n_trials": 3,
+    "success_count": 2,
+    "success_rate": 0.6667,
+    "avg_time_sec": 0.0002,
+    "rag_params": {
+      "gripper_force": 32.92
+    }
+  }
+]
