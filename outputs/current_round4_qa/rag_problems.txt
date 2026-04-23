@@ -1,0 +1,38 @@
+direct_llm 在 core split 仍有明显错误：抓取圆柱形工件时，最佳抓取姿态是什么？；抓取光滑金属零件时，夹爪力应控制在什么范围？；抓取橡胶零件时，夹爪力应控制在什么范围？；薄壁件抓取时需要注意什么？。
+direct_llm 在 paraphrase split 仍有明显错误：完成机械臂标定后，为什么还要让它回到初始安全位？；面对表面很滑的金属件，夹持力大致该设到哪个区间？；抓薄壁零件时，夹持方式上最该避免什么，又推荐什么方案？。
+direct_llm 在 robustness split 仍有明显错误：知识库里同时出现了5-15N和30-50N两个范围。若任务是抓取光滑金属零件，最终该引用哪个范围？。
+direct_llm 在 compositional split 仍有明显错误：如果工件既是薄壁件又要求适配光滑表面，优先推荐什么末端方案？；高速搬运工件时，夹持策略应如何调整，并需要额外注意什么？；机械臂抓取规划通常包含哪些阶段？。
+direct_llm 在 procedure split 仍有明显错误：机械臂上电的正确顺序是什么？；换产时需要执行哪些关键步骤？。
+direct_llm 在 holdout split 仍有明显错误：真空吸盘更适合哪类表面？；机械臂出现伺服报警时，通常先检查哪几类原因？；机械臂发生碰撞后，安全恢复时通常先做哪些处理？；如果夹爪不动作，通常优先检查哪些环节？。
+direct_llm 在 counterfactual split 仍有明显错误：机械臂标定后，为什么需要进行复位操作？；抓取光滑金属零件时，夹爪力应控制在什么范围？；抓取橡胶零件时，夹爪力应控制在什么范围？；薄壁件抓取时需要注意什么？；真空吸盘更适合哪类表面？；机械臂出现伺服报警时，通常先检查哪几类原因？；机械臂发生碰撞后，安全恢复时通常先做哪些处理？；机械臂上电的正确顺序是什么？。
+direct_llm 在 ood split 仍有明显错误：机械臂焊接铝板时推荐焊接电流是多少？；视觉相机用于高速抓取时，采集帧率应该设置为多少fps？；PLC 和机械臂之间推荐使用哪种工业以太网通信协议？；AGV 小车电池通常多久需要更换一次？。
+direct_llm 出现与知识库冲突的关键词：smooth_metal_force_robustness -> 5-15N。
+direct_llm 在部分题目上回答支撑不足：payload_small_part(core) -> 无；calibration_reset(core) -> 无；cylinder_pose(core) -> 无；low_friction_force(core) -> 无。
+direct_llm 在数值题上出现硬性不一致：smooth_metal_force -> gold=30-50n, pred=15-20n；rubber_force -> gold=5-15n, pred=15-20n；smooth_metal_force_paraphrase -> gold=30-50n, pred=10-20n。
+direct_llm 在流程型题目上的步骤顺序/覆盖仍偏弱：grasp_sequence_composition -> 缺失 接近,抬升；power_on_sequence_procedure -> 缺失 控制柜电源,伺服就绪；changeover_sequence_procedure -> 缺失 备份当前程序/备份,加载新程序/加载。
+direct_llm 在 OOD/unsupported 题上仍出现无根据硬答：calibration_reset_counterfactual -> 因为机械臂的运动轨迹和位置会随时间变化，需要定期复位以保持其精确性。；smooth_metal_force_counterfactual -> 抓取光滑金属零件时，夹爪力应控制在15-20N范围内。；rubber_force_counterfactual -> 抓取橡胶零件时，夹爪力应控制在15-20N范围内。；thin_wall_handling_counterfactual -> 抓取前需检查零件尺寸和形状，确保抓取面平整光滑，避免碰撞损伤。。
+base_rag 在 core split 仍有明显错误：抓取圆柱形工件时，最佳抓取姿态是什么？；摩擦系数低的零件，抓取时夹爪力应如何调整？；抓取光滑金属零件时，夹爪力应控制在什么范围？；抓取橡胶零件时，夹爪力应控制在什么范围？。
+base_rag 在 paraphrase split 仍有明显错误：面对表面很滑的金属件，夹持力大致该设到哪个区间？。
+base_rag 在 compositional split 仍有明显错误：机械臂抓取规划通常包含哪些阶段？。
+base_rag 在 procedure split 仍有明显错误：换产时需要执行哪些关键步骤？。
+base_rag 在 holdout split 仍有明显错误：机械臂出现伺服报警时，通常先检查哪几类原因？；机械臂发生碰撞后，安全恢复时通常先做哪些处理？。
+base_rag 在 counterfactual split 仍有明显错误：机械臂标定后，为什么需要进行复位操作？；抓取光滑金属零件时，夹爪力应控制在什么范围？；抓取橡胶零件时，夹爪力应控制在什么范围？；薄壁件抓取时需要注意什么？；真空吸盘更适合哪类表面？；机械臂出现伺服报警时，通常先检查哪几类原因？；机械臂发生碰撞后，安全恢复时通常先做哪些处理？；机械臂上电的正确顺序是什么？。
+base_rag 在 ood split 仍有明显错误：机械臂焊接铝板时推荐焊接电流是多少？；视觉相机用于高速抓取时，采集帧率应该设置为多少fps？；PLC 和机械臂之间推荐使用哪种工业以太网通信协议？；AGV 小车电池通常多久需要更换一次？。
+base_rag 出现与知识库冲突的关键词：cylinder_pose -> 顺时针/复位；smooth_metal_force -> 5-15N；smooth_metal_force_paraphrase -> 5-15N。
+base_rag 在部分题目上证据覆盖不足：cylinder_pose(core) -> 圆柱形工件/圆柱形,对称抓取/对称；low_friction_force(core) -> 摩擦,光滑金属/摩擦系数低；repeatability_small_part(core) -> 重复定位精度±0.05mm/±0.05mm,小型机械零件/小型零件；rubber_force(core) -> 橡胶零件/橡胶,5-15N/5到15N。
+base_rag 在部分题目上回答支撑不足：cylinder_pose(core) -> 无；repeatability_small_part(core) -> 无；rubber_force(core) -> 无；thin_wall_handling_paraphrase(paraphrase) -> 避免。
+base_rag 在流程型题目上的步骤顺序/覆盖仍偏弱：grasp_sequence_composition -> 缺失 接近,抓取；changeover_sequence_procedure -> 缺失 备份当前程序/备份,加载新程序/加载。
+base_rag 在 OOD/unsupported 题上仍出现无根据硬答：calibration_reset_counterfactual -> 为了保证机械臂在标定完成后能够正确返回到初始的安全位置，以避免因标定过程中出现的误差导致的设备损坏或人员伤害。；smooth_metal_force_counterfactual -> 22. 物理先验知识：摩擦相关——抓取光滑金属零件时，需增大夹爪力（30-50N），避免因摩擦力不足导致工件滑落；抓取橡胶零件时，夹爪力控制在5-15N，防止零件变形。；rubber_force_counterfactual -> 避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。；thin_wall_handling_counterfactual -> 避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。。
+improved_rag 在 core split 仍有明显错误：抓取圆柱形工件时，最佳抓取姿态是什么？；机械臂重复定位精度±0.05mm，能满足小型零件的抓取需求吗？。
+improved_rag 在 compositional split 仍有明显错误：如果工件既是薄壁件又要求适配光滑表面，优先推荐什么末端方案？。
+improved_rag 在 holdout split 仍有明显错误：如果夹爪不动作，通常优先检查哪些环节？。
+improved_rag 在 ood split 仍有明显错误：视觉相机用于高速抓取时，采集帧率应该设置为多少fps？。
+improved_rag 在部分题目上回答支撑不足：grasp_sequence_composition(compositional) -> 抓取。
+improved_rag 在数值题上出现硬性不一致：cylinder_pose -> gold=两端1/3,1/3, pred=1,3。
+improved_rag 在流程型题目上的步骤顺序/覆盖仍偏弱：grasp_sequence_composition -> 缺失 接近,抬升。
+improved_rag 在 OOD/unsupported 题上仍出现无根据硬答：camera_fps_ood -> 先进行关节零位标定，再通过激光定位校准末端执行器，最后进行负载标定，确保抓取精度；抓取前检查夹爪松紧度，确认工件放置稳定，避免抓取过程中脱落。。
+problem_solving_rag 在 core split 仍有明显错误：抓取圆柱形工件时，最佳抓取姿态是什么？；机械臂重复定位精度±0.05mm，能满足小型零件的抓取需求吗？。
+problem_solving_rag 在 holdout split 仍有明显错误：如果夹爪不动作，通常优先检查哪些环节？。
+problem_solving_rag 在 ood split 仍有明显错误：视觉相机用于高速抓取时，采集帧率应该设置为多少fps？。
+problem_solving_rag 在数值题上出现硬性不一致：cylinder_pose -> gold=两端1/3,1/3, pred=1,3。
+problem_solving_rag 在 OOD/unsupported 题上仍出现无根据硬答：camera_fps_ood -> 先进行关节零位标定，再通过激光定位校准末端执行器，最后进行负载标定，确保抓取精度；抓取前检查夹爪松紧度，确认工件放置稳定，避免抓取过程中脱落；识别工件姿态，计算抓取点与夹持力，生成接近-抓取-抬升-放置序列。。

@@ -1,0 +1,20 @@
+RAG vs 基线 对比结果
+====================================================================
+n_trials_per_task=20, seed=44
+
+任务                               参考力范围(N)       rag_成功率 rag_no_motion_rules_成功率
+--------------------------------------------------------------------
+pick_smooth_metal/抓取光滑金属零件       30-50          60.00% 60.00%
+pick_rubber/抓取橡胶零件               5-15           50.00% 45.00%
+pick_small_part/抓取小型机械零件         5-15           80.00% 75.00%
+pick_large_part/抓取大型零件           30-50          75.00% 75.00%
+pick_smooth_metal_fast/高速搬运光滑金属零件 35-50          75.00% 75.00%
+pick_small_part_fast/高速搬运小型机械零件  8-18           75.00% 65.00%
+pick_thin_wall/抓取薄壁件             5-12           50.00% 25.00%
+pick_rubber_fast/高速搬运橡胶零件        8-18           65.00% 65.00%
+pick_large_part_far/长距离搬运大型零件    32-48          65.00% 60.00%
+pick_metal_heavy/抓取重型光滑金属零件      30-50          50.00% 55.00%
+pick_thin_wall_fast/高速搬运薄壁件      8-16           75.00% 45.00%
+pick_metal_heavy_fast/高速搬运重型光滑金属零件 38-50          45.00% 50.00%
+
+对比 JSON: outputs/current_round5_sim3/simulation_comparison_rag_vs_baseline.json

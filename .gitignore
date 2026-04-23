@@ -32,6 +32,10 @@ solved_chroma_db/
 # Generated training artifacts
 simulation/learned_models/
 
+# Generated outputs
+outputs/current/
+outputs/visualizations/
+
 # Test / coverage cache
 .pytest_cache/
 .mypy_cache/

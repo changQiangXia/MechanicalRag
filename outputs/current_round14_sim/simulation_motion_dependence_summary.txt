@@ -1,0 +1,15 @@
+Simulation motion dependence 汇总
+================================================================================
+
+按证据强度分组
+group                        n_tasks  rag(mean)    no_motion(mean)    gain        
+--------------------------------------------------------------------------------
+low_support                  1        66.67% 71.67% -5.00%
+medium_support               8        76.67% 68.33% 8.33%
+high_support                 3        71.11% 33.34% 37.78%
+
+按 motion rule 可用性分组
+group                        n_tasks  rag(mean)    no_motion(mean)    gain        
+--------------------------------------------------------------------------------
+motion_rule_available        8        74.17% 52.71% 21.46%
+no_motion_rule_available     4        75.00% 74.17% 0.83%

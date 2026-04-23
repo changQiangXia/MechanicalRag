@@ -1,0 +1,15 @@
+Simulation evidence dependence 汇总
+================================================================================
+
+按证据强度分组
+group                        n_tasks  rag(mean)    generic_only(mean)   gain        
+--------------------------------------------------------------------------------
+low_support                  3        67.22% 67.22% 0.00%
+medium_support               7        76.90% 35.71% 41.19%
+high_support                 2        71.67% 71.67% 0.00%
+
+按对象特定规则可用性分组
+group                        n_tasks  rag(mean)    generic_only(mean)   gain        
+--------------------------------------------------------------------------------
+specific_rule_available      5        77.00% 19.33% 57.67%
+no_specific_rule_available   7        71.19% 71.19% 0.00%

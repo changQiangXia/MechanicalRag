@@ -1,0 +1,310 @@
+[
+  {
+    "task_id": "pick_smooth_metal",
+    "task_label": "pick_smooth_metal/抓取光滑金属零件",
+    "task_description": "抓取光滑金属零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "low_friction",
+      "fragile"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.7833,
+    "rag_success_rate_std": 0.0764,
+    "rag_generic_only_success_rate_mean": 0.1667,
+    "rag_generic_only_success_rate_std": 0.0764,
+    "rag_minus_generic_only_success_gain": 0.6167,
+    "rag_evidence_support_score_mean": 3.0,
+    "rag_available_specific_force_rules_mean": 1.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 1.0,
+    "support_bucket": "medium_support"
+  },
+  {
+    "task_id": "pick_rubber",
+    "task_label": "pick_rubber/抓取橡胶零件",
+    "task_description": "抓取橡胶零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "high_friction",
+      "compliant"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.7833,
+    "rag_success_rate_std": 0.1443,
+    "rag_generic_only_success_rate_mean": 0.1333,
+    "rag_generic_only_success_rate_std": 0.0577,
+    "rag_minus_generic_only_success_gain": 0.65,
+    "rag_evidence_support_score_mean": 2.5,
+    "rag_available_specific_force_rules_mean": 1.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 1.0,
+    "support_bucket": "medium_support"
+  },
+  {
+    "task_id": "pick_small_part",
+    "task_label": "pick_small_part/抓取小型机械零件",
+    "task_description": "抓取小型机械零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "small",
+      "precision"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.6667,
+    "rag_success_rate_std": 0.0764,
+    "rag_generic_only_success_rate_mean": 0.6667,
+    "rag_generic_only_success_rate_std": 0.0764,
+    "rag_minus_generic_only_success_gain": 0.0,
+    "rag_evidence_support_score_mean": 1.5,
+    "rag_available_specific_force_rules_mean": 0.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 0.0,
+    "support_bucket": "low_support"
+  },
+  {
+    "task_id": "pick_large_part",
+    "task_label": "pick_large_part/抓取大型零件",
+    "task_description": "抓取大型零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "large",
+      "heavy"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.7167,
+    "rag_success_rate_std": 0.1258,
+    "rag_generic_only_success_rate_mean": 0.7167,
+    "rag_generic_only_success_rate_std": 0.1258,
+    "rag_minus_generic_only_success_gain": 0.0,
+    "rag_evidence_support_score_mean": 2.75,
+    "rag_available_specific_force_rules_mean": 1.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 1.0,
+    "support_bucket": "medium_support"
+  },
+  {
+    "task_id": "pick_smooth_metal_fast",
+    "task_label": "pick_smooth_metal_fast/高速搬运光滑金属零件",
+    "task_description": "高速搬运光滑金属零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "low_friction",
+      "fragile",
+      "high_speed"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.8167,
+    "rag_success_rate_std": 0.0289,
+    "rag_generic_only_success_rate_mean": 0.2167,
+    "rag_generic_only_success_rate_std": 0.1041,
+    "rag_minus_generic_only_success_gain": 0.6,
+    "rag_evidence_support_score_mean": 3.5,
+    "rag_available_specific_force_rules_mean": 1.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 1.0,
+    "support_bucket": "medium_support"
+  },
+  {
+    "task_id": "pick_small_part_fast",
+    "task_label": "pick_small_part_fast/高速搬运小型机械零件",
+    "task_description": "高速搬运小型机械零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "small",
+      "precision",
+      "high_speed"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.7667,
+    "rag_success_rate_std": 0.0764,
+    "rag_generic_only_success_rate_mean": 0.7667,
+    "rag_generic_only_success_rate_std": 0.0764,
+    "rag_minus_generic_only_success_gain": 0.0,
+    "rag_evidence_support_score_mean": 3.0,
+    "rag_available_specific_force_rules_mean": 0.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 0.0,
+    "support_bucket": "medium_support"
+  },
+  {
+    "task_id": "pick_thin_wall",
+    "task_label": "pick_thin_wall/抓取薄壁件",
+    "task_description": "抓取薄壁件",
+    "task_split": "val",
+    "challenge_tags": [
+      "thin_wall",
+      "fragile"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.8167,
+    "rag_success_rate_std": 0.0577,
+    "rag_generic_only_success_rate_mean": 0.8167,
+    "rag_generic_only_success_rate_std": 0.0577,
+    "rag_minus_generic_only_success_gain": 0.0,
+    "rag_evidence_support_score_mean": 4.0,
+    "rag_available_specific_force_rules_mean": 0.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 0.0,
+    "support_bucket": "high_support"
+  },
+  {
+    "task_id": "pick_rubber_fast",
+    "task_label": "pick_rubber_fast/高速搬运橡胶零件",
+    "task_description": "高速搬运橡胶零件",
+    "task_split": "val",
+    "challenge_tags": [
+      "high_friction",
+      "compliant",
+      "high_speed"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.8,
+    "rag_success_rate_std": 0.1323,
+    "rag_generic_only_success_rate_mean": 0.8,
+    "rag_generic_only_success_rate_std": 0.1323,
+    "rag_minus_generic_only_success_gain": 0.0,
+    "rag_evidence_support_score_mean": 3.0,
+    "rag_available_specific_force_rules_mean": 0.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 0.0,
+    "support_bucket": "medium_support"
+  },
+  {
+    "task_id": "pick_large_part_far",
+    "task_label": "pick_large_part_far/长距离搬运大型零件",
+    "task_description": "长距离搬运大型零件",
+    "task_split": "val",
+    "challenge_tags": [
+      "large",
+      "heavy",
+      "long_transfer"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.6333,
+    "rag_success_rate_std": 0.0764,
+    "rag_generic_only_success_rate_mean": 0.55,
+    "rag_generic_only_success_rate_std": 0.05,
+    "rag_minus_generic_only_success_gain": 0.0833,
+    "rag_evidence_support_score_mean": 4.5,
+    "rag_available_specific_force_rules_mean": 1.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 1.0,
+    "support_bucket": "high_support"
+  },
+  {
+    "task_id": "pick_metal_heavy",
+    "task_label": "pick_metal_heavy/抓取重型光滑金属零件",
+    "task_description": "抓取重型光滑金属零件",
+    "task_split": "test",
+    "challenge_tags": [
+      "low_friction",
+      "heavy",
+      "fragile"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.7667,
+    "rag_success_rate_std": 0.0764,
+    "rag_generic_only_success_rate_mean": 0.1833,
+    "rag_generic_only_success_rate_std": 0.0577,
+    "rag_minus_generic_only_success_gain": 0.5833,
+    "rag_evidence_support_score_mean": 3.0,
+    "rag_available_specific_force_rules_mean": 1.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 1.0,
+    "support_bucket": "medium_support"
+  },
+  {
+    "task_id": "pick_thin_wall_fast",
+    "task_label": "pick_thin_wall_fast/高速搬运薄壁件",
+    "task_description": "高速搬运薄壁件",
+    "task_split": "test",
+    "challenge_tags": [
+      "thin_wall",
+      "fragile",
+      "high_speed"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.7167,
+    "rag_success_rate_std": 0.1041,
+    "rag_generic_only_success_rate_mean": 0.7167,
+    "rag_generic_only_success_rate_std": 0.1041,
+    "rag_minus_generic_only_success_gain": 0.0,
+    "rag_evidence_support_score_mean": 4.6667,
+    "rag_available_specific_force_rules_mean": 0.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 0.0,
+    "support_bucket": "high_support"
+  },
+  {
+    "task_id": "pick_metal_heavy_fast",
+    "task_label": "pick_metal_heavy_fast/高速搬运重型光滑金属零件",
+    "task_description": "高速搬运重型光滑金属零件",
+    "task_split": "test",
+    "challenge_tags": [
+      "low_friction",
+      "heavy",
+      "fragile",
+      "high_speed"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "n_trials_per_seed": 20,
+    "rag_success_rate_mean": 0.7333,
+    "rag_success_rate_std": 0.0577,
+    "rag_generic_only_success_rate_mean": 0.15,
+    "rag_generic_only_success_rate_std": 0.05,
+    "rag_minus_generic_only_success_gain": 0.5833,
+    "rag_evidence_support_score_mean": 3.5,
+    "rag_available_specific_force_rules_mean": 1.0,
+    "rag_generic_only_suppressed_specific_force_rules_mean": 1.0,
+    "support_bucket": "medium_support"
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "by_support_bucket": [
+    {
+      "group": "low_support",
+      "n_tasks": 3,
+      "rag_success_rate_mean": 0.6722,
+      "rag_no_motion_rules_success_rate_mean": 0.6222,
+      "rag_minus_no_motion_rules_gain_mean": 0.05,
+      "rag_evidence_support_score_mean": 1.7778
+    },
+    {
+      "group": "medium_support",
+      "n_tasks": 7,
+      "rag_success_rate_mean": 0.769,
+      "rag_no_motion_rules_success_rate_mean": 0.6643,
+      "rag_minus_no_motion_rules_gain_mean": 0.1048,
+      "rag_evidence_support_score_mean": 3.0714
+    },
+    {
+      "group": "high_support",
+      "n_tasks": 2,
+      "rag_success_rate_mean": 0.7167,
+      "rag_no_motion_rules_success_rate_mean": 0.3417,
+      "rag_minus_no_motion_rules_gain_mean": 0.375,
+      "rag_evidence_support_score_mean": 4.3333
+    }
+  ],
+  "by_motion_rule_availability": [
+    {
+      "group": "motion_rule_available",
+      "n_tasks": 8,
+      "rag_success_rate_mean": 0.7146,
+      "rag_no_motion_rules_success_rate_mean": 0.5417,
+      "rag_minus_no_motion_rules_gain_mean": 0.1729,
+      "rag_evidence_support_score_mean": 3.1875
+    },
+    {
+      "group": "no_motion_rule_available",
+      "n_tasks": 4,
+      "rag_success_rate_mean": 0.7792,
+      "rag_no_motion_rules_success_rate_mean": 0.7167,
+      "rag_minus_no_motion_rules_gain_mean": 0.0625,
+      "rag_evidence_support_score_mean": 2.5
+    }
+  ]
+}

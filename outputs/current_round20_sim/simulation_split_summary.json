@@ -1,0 +1,44 @@
+[
+  {
+    "task_split": "train",
+    "n_tasks": 6,
+    "rag_success_rate_mean": 0.7556,
+    "rag_success_rate_std": 0.0544,
+    "rag_learned_success_rate_mean": 0.4417,
+    "rag_learned_success_rate_std": 0.1559,
+    "task_heuristic_success_rate_mean": 0.6611,
+    "task_heuristic_success_rate_std": 0.0647,
+    "direct_llm_success_rate_mean": 0.1194,
+    "direct_llm_success_rate_std": 0.0287,
+    "fixed_success_rate_mean": 0.4639,
+    "fixed_success_rate_std": 0.1737
+  },
+  {
+    "task_split": "val",
+    "n_tasks": 3,
+    "rag_success_rate_mean": 0.7333,
+    "rag_success_rate_std": 0.1302,
+    "rag_learned_success_rate_mean": 0.25,
+    "rag_learned_success_rate_std": 0.1323,
+    "task_heuristic_success_rate_mean": 0.4889,
+    "task_heuristic_success_rate_std": 0.2299,
+    "direct_llm_success_rate_mean": 0.0778,
+    "direct_llm_success_rate_std": 0.0096,
+    "fixed_success_rate_mean": 0.15,
+    "fixed_success_rate_std": 0.0333
+  },
+  {
+    "task_split": "test",
+    "n_tasks": 3,
+    "rag_success_rate_mean": 0.7389,
+    "rag_success_rate_std": 0.0255,
+    "rag_learned_success_rate_mean": 0.3889,
+    "rag_learned_success_rate_std": 0.1183,
+    "task_heuristic_success_rate_mean": 0.5,
+    "task_heuristic_success_rate_std": 0.0289,
+    "direct_llm_success_rate_mean": 0.1222,
+    "direct_llm_success_rate_std": 0.0673,
+    "fixed_success_rate_mean": 0.2278,
+    "fixed_success_rate_std": 0.0962
+  }
+]
