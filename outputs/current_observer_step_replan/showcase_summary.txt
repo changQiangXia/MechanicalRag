@@ -83,21 +83,21 @@ MechanicalRag 展示摘要
   problem_solving_rag 删证据后: correct | 当前知识库未提供足够证据，无法可靠回答该问题。
 
 五、仿真对比重点
-- 多 seed 平均上，RAG + Feedback 相对 RAG seed-only 的成功率提升为 15.14%。
-- 多 seed 平均上，RAG + Feedback 相对 Task Heuristic 基线的成功率提升为 24.44%。
+- 多 seed 平均上，RAG + Feedback 相对 RAG seed-only 的成功率提升为 15.42%。
+- 多 seed 平均上，RAG + Feedback 相对 Task Heuristic 基线的成功率提升为 30.70%。
 - 多 seed 平均上，RAG + Feedback 控制计划的证据支持分为 3.24。
 - 多 seed 平均上，RAG + Feedback belief state coverage 为 0.69。
 - 多 seed 平均上，RAG + Feedback uncertainty conservative mode 的触发率为 100.00%。
-- 当前多 seed 结果中，RAG + Feedback 最常选中的 solver 候选是 `uncertainty_guard`，覆盖 10/12 个任务。
-- split 汇总显示 test 任务上 RAG + Feedback 平均成功率为 0.5722，便于和 train/val 做泛化对照。
-- challenge 汇总显示 RAG + Feedback 当前最弱的挑战标签是 low_friction，平均成功率 0.6292。
-- `pick_rubber` 当前 RAG + Feedback 平均成功率为 0.9500，相对 task_heuristic 提升 36.67%。
+- 当前多 seed 结果中，RAG + Feedback 最常选中的 solver 候选是 `uncertainty_guard`，覆盖 9/12 个任务。
+- split 汇总显示 test 任务上 RAG + Feedback 平均成功率为 0.8500，便于和 train/val 做泛化对照。
+- challenge 汇总显示 RAG + Feedback 当前最弱的挑战标签是 compliant，平均成功率 0.8500。
+- `pick_rubber` 当前 RAG + Feedback 平均成功率为 0.8167，相对 task_heuristic 提升 23.34%。
 - `pick_smooth_metal` 当前 RAG + Feedback 平均成功率为 0.9167，已领先 task_heuristic 16.67%。
-- `pick_smooth_metal_fast` 当前 RAG + Feedback 平均成功率为 0.7333，相对 task_heuristic 提升 13.33%。
+- `pick_smooth_metal_fast` 当前 RAG + Feedback 平均成功率为 0.9000，相对 task_heuristic 提升 30.00%。
 - round16 之后，`pick_smooth_metal_fast` 已进入 `high_speed_low_friction` dynamic transport mode，不再只靠单一静态抓取参数解释高速运输失败。
-- `pick_smooth_metal_fast` 当前显式使用 stage-specific 动态运输控制： transfer_force=43.05N, placement_velocity=0.21m/s。
-- `pick_smooth_metal_fast` 当前不再出现“stage fail 有值但 risk 全 0”的薄语义： transfer_sway_risk=0.0000, placement_settle_risk=0.0000。
-- `pick_metal_heavy` 当前 RAG + Feedback 平均成功率为 0.0000，相对 task_heuristic 提升 -48.33%。
+- `pick_smooth_metal_fast` 当前显式使用 stage-specific 动态运输控制： transfer_force=40.86N, placement_velocity=0.29m/s。
+- `pick_smooth_metal_fast` 当前不再出现“stage fail 有值但 risk 全 0”的薄语义： transfer_sway_risk=0.0151, placement_settle_risk=0.0384。
+- `pick_metal_heavy` 当前 RAG + Feedback 平均成功率为 0.8667，相对 task_heuristic 提升 38.34%。
 - `pick_large_part_far` 当前 RAG + Feedback 平均成功率为 0.9167，相对 task_heuristic 提升 60.00%，但仍是当前最难任务。
 - round19 之后，`pick_large_part_far` 已把 long-transfer 的起吊保持链补厚成显式 `long_transfer` 控制计划： lift_force=37.47N, transfer_alignment=0.94, transfer_force=37.31N。
 - `pick_large_part_far` 当前已不再只靠 large-part force band；lift-stage 证据可见性为 1.00，实际使用率为 1.00。
@@ -106,8 +106,8 @@ MechanicalRag 展示摘要
 - `pick_large_part_far` 当前已拆成 stage-specific failure model： lift_hold=0.0100, transfer_sway=0.0182, placement_settle=0.0344，主导失败模式为 `placement_settle_fail`。
 - `pick_large_part_far` 的 stage fail rate 当前为 lift_hold=1.67% / transfer_sway=1.67% / placement_settle=5.00%。
 - round15 之后，`pick_large_part_far` 已不再把运输段速度直接沿用到落位段；当前显式 `placement_velocity` 为 0.12 m/s。
-- 最难任务：pick_metal_heavy，平均成功率 0.0000，稳定度 0.7628。
-- 最稳任务：pick_rubber，平均成功率 0.9500，稳定度 0.9249。
+- 最难任务：pick_rubber，平均成功率 0.8167，稳定度 0.7918。
+- 最稳任务：pick_small_part_fast，平均成功率 0.9500，稳定度 0.9425。
 
 六、当前证据边界
 - QA 结果应解读为“当前知识库 + 当前 split 划分”上的结果，不直接外推为强泛化能力。

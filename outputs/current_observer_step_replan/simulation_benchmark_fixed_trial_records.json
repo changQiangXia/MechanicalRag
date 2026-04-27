@@ -19,10 +19,11 @@
     "trial_records": [
       {
         "trial_index": 0,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -33,6 +34,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -43,10 +48,11 @@
       },
       {
         "trial_index": 1,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -57,6 +63,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -71,6 +81,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -81,6 +92,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -95,6 +110,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -105,6 +121,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -116,9 +136,10 @@
       {
         "trial_index": 4,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -129,6 +150,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -143,6 +168,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -153,6 +179,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -167,6 +197,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -177,6 +208,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -191,6 +226,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -201,6 +237,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -211,10 +251,11 @@
       },
       {
         "trial_index": 8,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -225,6 +266,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -239,6 +284,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -249,6 +295,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -263,6 +313,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -273,6 +324,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -284,9 +339,10 @@
       {
         "trial_index": 11,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -297,6 +353,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -307,10 +367,11 @@
       },
       {
         "trial_index": 12,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -321,6 +382,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -335,6 +400,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -345,6 +411,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -359,6 +429,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -369,6 +440,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -379,10 +454,11 @@
       },
       {
         "trial_index": 15,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -393,6 +469,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -407,6 +487,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -417,6 +498,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -431,6 +516,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -441,6 +527,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -452,9 +542,10 @@
       {
         "trial_index": 18,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -465,6 +556,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -479,6 +574,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3638,
         "distance_error": 0.0318,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -489,6 +585,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1438,
@@ -519,10 +619,11 @@
     "trial_records": [
       {
         "trial_index": 0,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -533,6 +634,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -544,9 +649,10 @@
       {
         "trial_index": 1,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -557,6 +663,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -571,6 +681,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -581,6 +692,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -592,9 +707,10 @@
       {
         "trial_index": 3,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -605,6 +721,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -619,6 +739,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -629,6 +750,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -640,9 +765,10 @@
       {
         "trial_index": 5,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -653,6 +779,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -667,6 +797,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -677,6 +808,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -691,6 +826,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -701,6 +837,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -711,10 +851,11 @@
       },
       {
         "trial_index": 8,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -725,6 +866,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -735,10 +880,11 @@
       },
       {
         "trial_index": 9,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -749,6 +895,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -760,9 +910,10 @@
       {
         "trial_index": 10,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -773,6 +924,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -783,10 +938,11 @@
       },
       {
         "trial_index": 11,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -797,6 +953,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -811,6 +971,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -821,6 +982,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -831,10 +996,11 @@
       },
       {
         "trial_index": 13,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -845,6 +1011,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -859,6 +1029,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -869,6 +1040,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -880,9 +1055,10 @@
       {
         "trial_index": 15,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -893,6 +1069,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -903,10 +1083,11 @@
       },
       {
         "trial_index": 16,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -917,6 +1098,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -928,9 +1113,10 @@
       {
         "trial_index": 17,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -941,6 +1127,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -952,9 +1142,10 @@
       {
         "trial_index": 18,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -965,6 +1156,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -975,10 +1170,11 @@
       },
       {
         "trial_index": 19,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.3492,
         "distance_error": 0.0355,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -989,6 +1185,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1023,6 +1223,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1033,6 +1234,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1043,10 +1248,11 @@
       },
       {
         "trial_index": 1,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1057,6 +1263,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1067,10 +1277,11 @@
       },
       {
         "trial_index": 2,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1081,6 +1292,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1095,6 +1310,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1105,6 +1321,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1119,6 +1339,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1129,6 +1350,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1143,6 +1368,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1153,6 +1379,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1163,10 +1393,11 @@
       },
       {
         "trial_index": 6,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1177,6 +1408,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1191,6 +1426,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1201,6 +1437,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1215,6 +1455,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1225,6 +1466,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1239,6 +1484,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1249,6 +1495,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1263,6 +1513,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1273,6 +1524,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1287,6 +1542,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1297,6 +1553,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1311,6 +1571,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1321,6 +1582,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1331,10 +1596,11 @@
       },
       {
         "trial_index": 13,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1345,6 +1611,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1359,6 +1629,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1369,6 +1640,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1383,6 +1658,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1393,6 +1669,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1403,10 +1683,11 @@
       },
       {
         "trial_index": 16,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1417,6 +1698,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1431,6 +1716,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1441,6 +1727,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1455,6 +1745,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1465,6 +1756,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1475,10 +1770,11 @@
       },
       {
         "trial_index": 19,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.8802,
         "distance_error": 0.0243,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1489,6 +1785,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1523,6 +1823,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1533,6 +1834,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1547,6 +1852,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1557,6 +1863,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1567,10 +1877,11 @@
       },
       {
         "trial_index": 2,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1581,6 +1892,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1591,10 +1906,11 @@
       },
       {
         "trial_index": 3,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1605,6 +1921,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1615,10 +1935,11 @@
       },
       {
         "trial_index": 4,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1629,6 +1950,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1639,10 +1964,11 @@
       },
       {
         "trial_index": 5,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1653,6 +1979,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1664,9 +1994,10 @@
       {
         "trial_index": 6,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1677,6 +2008,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1688,9 +2023,10 @@
       {
         "trial_index": 7,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1701,6 +2037,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1712,9 +2052,10 @@
       {
         "trial_index": 8,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1725,6 +2066,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1735,10 +2080,11 @@
       },
       {
         "trial_index": 9,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1749,6 +2095,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1763,6 +2113,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1773,6 +2124,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1784,9 +2139,10 @@
       {
         "trial_index": 11,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1797,6 +2153,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1807,10 +2167,11 @@
       },
       {
         "trial_index": 12,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1821,6 +2182,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1831,10 +2196,11 @@
       },
       {
         "trial_index": 13,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1845,6 +2211,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1859,6 +2229,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1869,6 +2240,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1883,6 +2258,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1893,6 +2269,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1903,10 +2283,11 @@
       },
       {
         "trial_index": 16,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1917,6 +2298,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1931,6 +2316,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1941,6 +2327,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1952,9 +2342,10 @@
       {
         "trial_index": 18,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1965,6 +2356,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -1975,10 +2370,11 @@
       },
       {
         "trial_index": 19,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 3.4622,
         "distance_error": 0.0382,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -1989,6 +2385,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1215,
@@ -2021,9 +2421,10 @@
       {
         "trial_index": 0,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2034,6 +2435,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2048,6 +2453,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2058,6 +2464,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2068,10 +2478,11 @@
       },
       {
         "trial_index": 2,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2082,6 +2493,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2092,10 +2507,11 @@
       },
       {
         "trial_index": 3,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2106,6 +2522,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2120,6 +2540,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2130,6 +2551,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2141,9 +2566,10 @@
       {
         "trial_index": 5,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2154,6 +2580,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2168,6 +2598,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2178,6 +2609,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2188,10 +2623,11 @@
       },
       {
         "trial_index": 7,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2202,6 +2638,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2216,6 +2656,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2226,6 +2667,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2236,10 +2681,11 @@
       },
       {
         "trial_index": 9,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2250,6 +2696,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2264,6 +2714,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2274,6 +2725,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2288,6 +2743,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2298,6 +2754,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2309,9 +2769,10 @@
       {
         "trial_index": 12,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2322,6 +2783,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2336,6 +2801,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2346,6 +2812,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2360,6 +2830,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2370,6 +2841,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2384,6 +2859,7 @@
         "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2394,6 +2870,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2404,10 +2884,11 @@
       },
       {
         "trial_index": 16,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2418,6 +2899,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2428,10 +2913,11 @@
       },
       {
         "trial_index": 17,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2442,6 +2928,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2452,10 +2942,11 @@
       },
       {
         "trial_index": 18,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2466,6 +2957,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2476,10 +2971,11 @@
       },
       {
         "trial_index": 19,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.3678,
         "distance_error": 0.0272,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2490,6 +2986,10 @@
           "dynamic_transport_mode": "high_speed_low_friction"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.1156,
@@ -2525,6 +3025,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2535,6 +3036,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2545,10 +3050,11 @@
       },
       {
         "trial_index": 1,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2559,6 +3065,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2569,10 +3079,11 @@
       },
       {
         "trial_index": 2,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2583,6 +3094,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2597,6 +3112,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2607,6 +3123,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2621,6 +3141,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2631,6 +3152,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2645,6 +3170,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2655,6 +3181,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2665,10 +3195,11 @@
       },
       {
         "trial_index": 6,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2679,6 +3210,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2693,6 +3228,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2703,6 +3239,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2717,6 +3257,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2727,6 +3268,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2737,10 +3282,11 @@
       },
       {
         "trial_index": 9,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2751,6 +3297,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2761,10 +3311,11 @@
       },
       {
         "trial_index": 10,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2775,6 +3326,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2789,6 +3344,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2799,6 +3355,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2813,6 +3373,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2823,6 +3384,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2837,6 +3402,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2847,6 +3413,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2861,6 +3431,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2871,6 +3442,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2885,6 +3460,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2895,6 +3471,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2905,10 +3485,11 @@
       },
       {
         "trial_index": 16,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2919,6 +3500,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2929,10 +3514,11 @@
       },
       {
         "trial_index": 17,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2943,6 +3529,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2957,6 +3547,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2967,6 +3558,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2977,10 +3572,11 @@
       },
       {
         "trial_index": 19,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 1.7903,
         "distance_error": 0.0267,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -2991,6 +3587,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3021,10 +3621,11 @@
     "trial_records": [
       {
         "trial_index": 0,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3035,6 +3636,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3045,10 +3650,11 @@
       },
       {
         "trial_index": 1,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3059,6 +3665,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3069,10 +3679,11 @@
       },
       {
         "trial_index": 2,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3083,6 +3694,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3093,10 +3708,11 @@
       },
       {
         "trial_index": 3,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3107,6 +3723,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3121,6 +3741,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3131,6 +3752,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3142,9 +3767,10 @@
       {
         "trial_index": 5,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3155,6 +3781,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3165,10 +3795,11 @@
       },
       {
         "trial_index": 6,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3179,6 +3810,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3193,6 +3828,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3203,6 +3839,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3214,9 +3854,10 @@
       {
         "trial_index": 8,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3227,6 +3868,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3241,6 +3886,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3251,6 +3897,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3261,10 +3911,11 @@
       },
       {
         "trial_index": 10,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3275,6 +3926,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3289,6 +3944,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3299,6 +3955,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3309,10 +3969,11 @@
       },
       {
         "trial_index": 12,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3323,6 +3984,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3337,6 +4002,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3347,6 +4013,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3361,6 +4031,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3371,6 +4042,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3382,9 +4057,10 @@
       {
         "trial_index": 15,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3395,6 +4071,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3406,9 +4086,10 @@
       {
         "trial_index": 16,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3419,6 +4100,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3430,9 +4115,10 @@
       {
         "trial_index": 17,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3443,6 +4129,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3453,10 +4143,11 @@
       },
       {
         "trial_index": 18,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3467,6 +4158,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3478,9 +4173,10 @@
       {
         "trial_index": 19,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.8833,
         "distance_error": 0.025,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3491,6 +4187,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3522,10 +4222,11 @@
     "trial_records": [
       {
         "trial_index": 0,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3536,6 +4237,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3547,9 +4252,10 @@
       {
         "trial_index": 1,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3560,6 +4266,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3570,10 +4280,11 @@
       },
       {
         "trial_index": 2,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3584,6 +4295,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3598,6 +4313,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3608,6 +4324,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3619,9 +4339,10 @@
       {
         "trial_index": 4,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3632,6 +4353,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3642,10 +4367,11 @@
       },
       {
         "trial_index": 5,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3656,6 +4382,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3666,10 +4396,11 @@
       },
       {
         "trial_index": 6,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3680,6 +4411,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3691,9 +4426,10 @@
       {
         "trial_index": 7,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3704,6 +4440,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3714,10 +4454,11 @@
       },
       {
         "trial_index": 8,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3728,6 +4469,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3742,6 +4487,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3752,6 +4498,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3763,9 +4513,10 @@
       {
         "trial_index": 10,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3776,6 +4527,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3786,10 +4541,11 @@
       },
       {
         "trial_index": 11,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3800,6 +4556,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3810,10 +4570,11 @@
       },
       {
         "trial_index": 12,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3824,6 +4585,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3835,9 +4600,10 @@
       {
         "trial_index": 13,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3848,6 +4614,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3859,9 +4629,10 @@
       {
         "trial_index": 14,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3872,6 +4643,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3883,9 +4658,10 @@
       {
         "trial_index": 15,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3896,6 +4672,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3907,9 +4687,10 @@
       {
         "trial_index": 16,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3920,6 +4701,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3934,6 +4719,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3944,6 +4730,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3954,10 +4744,11 @@
       },
       {
         "trial_index": 18,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3968,6 +4759,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3978,10 +4773,11 @@
       },
       {
         "trial_index": 19,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.2775,
         "distance_error": 0.0301,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -3992,6 +4788,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -4024,9 +4824,10 @@
       {
         "trial_index": 0,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4037,6 +4838,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4048,9 +4853,10 @@
       {
         "trial_index": 1,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4061,6 +4867,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4072,9 +4882,10 @@
       {
         "trial_index": 2,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4085,6 +4896,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4095,10 +4910,11 @@
       },
       {
         "trial_index": 3,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4109,6 +4925,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4119,10 +4939,11 @@
       },
       {
         "trial_index": 4,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4133,6 +4954,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4147,6 +4972,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4157,6 +4983,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4171,6 +5001,7 @@
         "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4181,6 +5012,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4192,9 +5027,10 @@
       {
         "trial_index": 7,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4205,6 +5041,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4216,9 +5056,10 @@
       {
         "trial_index": 8,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4229,6 +5070,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4240,9 +5085,10 @@
       {
         "trial_index": 9,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4253,6 +5099,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4267,6 +5117,7 @@
         "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4277,6 +5128,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4288,9 +5143,10 @@
       {
         "trial_index": 11,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4301,6 +5157,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4315,6 +5175,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4325,6 +5186,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4336,9 +5201,10 @@
       {
         "trial_index": 13,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4349,6 +5215,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4363,6 +5233,7 @@
         "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4373,6 +5244,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4383,10 +5258,11 @@
       },
       {
         "trial_index": 15,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4397,6 +5273,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4408,9 +5288,10 @@
       {
         "trial_index": 16,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4421,6 +5302,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4432,9 +5317,10 @@
       {
         "trial_index": 17,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4445,6 +5331,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4456,9 +5346,10 @@
       {
         "trial_index": 18,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4469,6 +5360,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4480,9 +5375,10 @@
       {
         "trial_index": 19,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 4.1661,
         "distance_error": 0.0293,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4493,6 +5389,10 @@
           "dynamic_transport_mode": "long_transfer"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.19,
@@ -4528,6 +5428,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4538,6 +5439,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4552,6 +5457,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4562,6 +5468,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4572,10 +5482,11 @@
       },
       {
         "trial_index": 2,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4586,6 +5497,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4596,10 +5511,11 @@
       },
       {
         "trial_index": 3,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4610,6 +5526,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4620,10 +5540,11 @@
       },
       {
         "trial_index": 4,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4634,6 +5555,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4645,9 +5570,10 @@
       {
         "trial_index": 5,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4658,6 +5584,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4672,6 +5602,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4682,6 +5613,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4696,6 +5631,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4706,6 +5642,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4716,10 +5656,11 @@
       },
       {
         "trial_index": 8,
-        "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4730,6 +5671,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4741,9 +5686,10 @@
       {
         "trial_index": 9,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4754,6 +5700,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4768,6 +5718,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4778,6 +5729,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4789,9 +5744,10 @@
       {
         "trial_index": 11,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4802,6 +5758,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4813,9 +5773,10 @@
       {
         "trial_index": 12,
         "success": false,
-        "failure_bucket": "transfer_sway_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4826,6 +5787,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4836,10 +5801,11 @@
       },
       {
         "trial_index": 13,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4850,6 +5816,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4864,6 +5834,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4874,6 +5845,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4884,10 +5859,11 @@
       },
       {
         "trial_index": 15,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4898,6 +5874,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4909,9 +5889,10 @@
       {
         "trial_index": 16,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "transfer_sway_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4922,6 +5903,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4936,6 +5921,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4946,6 +5932,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4960,6 +5950,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4970,6 +5961,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -4984,6 +5979,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 4.2885,
         "distance_error": 0.0474,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -4994,6 +5990,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.3969,
@@ -5026,9 +6026,10 @@
       {
         "trial_index": 0,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5039,6 +6040,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5050,9 +6055,10 @@
       {
         "trial_index": 1,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5063,6 +6069,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5073,10 +6083,11 @@
       },
       {
         "trial_index": 2,
-        "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5087,6 +6098,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5097,10 +6112,11 @@
       },
       {
         "trial_index": 3,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5111,6 +6127,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5125,6 +6145,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5135,6 +6156,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5146,9 +6171,10 @@
       {
         "trial_index": 5,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5159,6 +6185,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5169,10 +6199,11 @@
       },
       {
         "trial_index": 6,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5183,6 +6214,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5194,9 +6229,10 @@
       {
         "trial_index": 7,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5207,6 +6243,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5218,9 +6258,10 @@
       {
         "trial_index": 8,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5231,6 +6272,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5241,10 +6286,11 @@
       },
       {
         "trial_index": 9,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5255,6 +6301,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5269,6 +6319,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5279,6 +6330,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5290,9 +6345,10 @@
       {
         "trial_index": 11,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5303,6 +6359,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5317,6 +6377,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5327,6 +6388,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5337,10 +6402,11 @@
       },
       {
         "trial_index": 13,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5351,6 +6417,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5362,9 +6432,10 @@
       {
         "trial_index": 14,
         "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5375,6 +6446,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5389,6 +6464,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5399,6 +6475,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5409,10 +6489,11 @@
       },
       {
         "trial_index": 16,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5423,6 +6504,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5437,6 +6522,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5447,6 +6533,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5458,9 +6548,10 @@
       {
         "trial_index": 18,
         "success": false,
-        "failure_bucket": "placement_settle_fail",
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5471,6 +6562,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5485,6 +6580,7 @@
         "failure_bucket": "placement_settle_fail",
         "elapsed_sec": 2.4756,
         "distance_error": 0.023,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5495,6 +6591,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.0,
@@ -5531,6 +6631,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5541,6 +6642,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5555,6 +6660,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5565,6 +6671,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5575,10 +6685,11 @@
       },
       {
         "trial_index": 2,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5589,6 +6700,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5599,10 +6714,11 @@
       },
       {
         "trial_index": 3,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5613,6 +6729,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5623,10 +6743,11 @@
       },
       {
         "trial_index": 4,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5637,6 +6758,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5647,10 +6772,11 @@
       },
       {
         "trial_index": 5,
-        "success": false,
-        "failure_bucket": "lift_hold_fail",
+        "success": true,
+        "failure_bucket": "success",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5661,6 +6787,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5675,6 +6805,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5685,6 +6816,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5699,6 +6834,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5709,6 +6845,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5723,6 +6863,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5733,6 +6874,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5747,6 +6892,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5757,6 +6903,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5771,6 +6921,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5781,6 +6932,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5791,10 +6946,11 @@
       },
       {
         "trial_index": 11,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5805,6 +6961,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5819,6 +6979,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5829,6 +6990,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5839,10 +7004,11 @@
       },
       {
         "trial_index": 13,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5853,6 +7019,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5867,6 +7037,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5877,6 +7048,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5891,6 +7066,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5901,6 +7077,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5911,10 +7091,11 @@
       },
       {
         "trial_index": 16,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5925,6 +7106,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5939,6 +7124,7 @@
         "failure_bucket": "success",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5949,6 +7135,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5963,6 +7153,7 @@
         "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5973,6 +7164,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,
@@ -5983,10 +7178,11 @@
       },
       {
         "trial_index": 19,
-        "success": true,
-        "failure_bucket": "success",
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
         "elapsed_sec": 3.9275,
         "distance_error": 0.0467,
+        "execution_feedback_mode": "observer_only",
         "feedback_retry_count": 0,
         "step_replan_count": 0,
         "terminal_plan": {
@@ -5997,6 +7193,10 @@
           "dynamic_transport_mode": "static"
         },
         "observer_trace": [],
+        "phase_execution_trace": [],
+        "observation_trace": [],
+        "belief_update_trace": [],
+        "counterfactual_replan_trace": [],
         "step_replan_trace": [],
         "avg_risks": {
           "slip_risk": 0.4274,

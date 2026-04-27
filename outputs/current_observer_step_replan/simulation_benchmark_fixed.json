@@ -16,14 +16,14 @@
     ],
     "reference_force_center": 40.0,
     "reference_approach_height": 0.05,
-    "success_count": 8,
-    "success_rate": 0.4,
+    "success_count": 5,
+    "success_rate": 0.25,
     "avg_time_sec": 2.3638,
     "avg_steps": 6.0,
     "avg_distance_error": 0.0318,
     "success_rate_ci95": [
-      0.2188,
-      0.6134
+      0.1119,
+      0.4687
     ],
     "reference_force_deviation_stats": {
       "mean": 15.0,
@@ -40,9 +40,9 @@
     "avg_placement_settle_risk": 0.006,
     "avg_stability_score": 0.3954,
     "physics_fail_rate": 0.0,
-    "lift_hold_fail_rate": 0.5,
+    "lift_hold_fail_rate": 0.6,
     "transfer_sway_fail_rate": 0.1,
-    "placement_settle_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.05,
     "dominant_failure_mode": "lift_hold_fail",
     "seed_plan": {
       "gripper_force": 25.0,
@@ -78,7 +78,13 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_rubber",
@@ -97,14 +103,14 @@
     ],
     "reference_force_center": 10.0,
     "reference_approach_height": 0.03,
-    "success_count": 3,
-    "success_rate": 0.15,
+    "success_count": 6,
+    "success_rate": 0.3,
     "avg_time_sec": 2.3492,
     "avg_steps": 5.0,
     "avg_distance_error": 0.0355,
     "success_rate_ci95": [
-      0.0524,
-      0.3604
+      0.1455,
+      0.519
     ],
     "reference_force_deviation_stats": {
       "mean": 15.0,
@@ -123,7 +129,7 @@
     "physics_fail_rate": 0.0,
     "lift_hold_fail_rate": 0.5,
     "transfer_sway_fail_rate": 0.0,
-    "placement_settle_fail_rate": 0.35,
+    "placement_settle_fail_rate": 0.2,
     "dominant_failure_mode": "lift_hold_fail",
     "seed_plan": {
       "gripper_force": 25.0,
@@ -159,7 +165,13 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_small_part",
@@ -240,7 +252,13 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_large_part",
@@ -259,14 +277,14 @@
     ],
     "reference_force_center": 40.0,
     "reference_approach_height": 0.06,
-    "success_count": 8,
-    "success_rate": 0.4,
+    "success_count": 7,
+    "success_rate": 0.35,
     "avg_time_sec": 3.4622,
     "avg_steps": 4.0,
     "avg_distance_error": 0.0382,
     "success_rate_ci95": [
-      0.2188,
-      0.6134
+      0.1812,
+      0.5671
     ],
     "reference_force_deviation_stats": {
       "mean": 15.0,
@@ -283,10 +301,10 @@
     "avg_placement_settle_risk": 0.121,
     "avg_stability_score": 0.3565,
     "physics_fail_rate": 0.0,
-    "lift_hold_fail_rate": 0.25,
+    "lift_hold_fail_rate": 0.3,
     "transfer_sway_fail_rate": 0.05,
     "placement_settle_fail_rate": 0.3,
-    "dominant_failure_mode": "placement_settle_fail",
+    "dominant_failure_mode": "lift_hold_fail",
     "seed_plan": {
       "gripper_force": 25.0,
       "approach_height": 0.05,
@@ -321,7 +339,13 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_smooth_metal_fast",
@@ -341,14 +365,14 @@
     ],
     "reference_force_center": 42.5,
     "reference_approach_height": 0.05,
-    "success_count": 13,
-    "success_rate": 0.65,
+    "success_count": 7,
+    "success_rate": 0.35,
     "avg_time_sec": 2.3678,
     "avg_steps": 6.0,
     "avg_distance_error": 0.0272,
     "success_rate_ci95": [
-      0.4329,
-      0.8188
+      0.1812,
+      0.5671
     ],
     "reference_force_deviation_stats": {
       "mean": 17.5,
@@ -366,9 +390,9 @@
     "avg_stability_score": 0.2214,
     "physics_fail_rate": 0.0,
     "lift_hold_fail_rate": 0.25,
-    "transfer_sway_fail_rate": 0.05,
-    "placement_settle_fail_rate": 0.05,
-    "dominant_failure_mode": "lift_hold_fail",
+    "transfer_sway_fail_rate": 0.4,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "transfer_sway_fail",
     "seed_plan": {
       "gripper_force": 25.0,
       "approach_height": 0.05,
@@ -403,7 +427,13 @@
       "dynamic_transport_mode_mode": "high_speed_low_friction"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_small_part_fast",
@@ -423,14 +453,14 @@
     ],
     "reference_force_center": 13.0,
     "reference_approach_height": 0.04,
-    "success_count": 15,
-    "success_rate": 0.75,
+    "success_count": 7,
+    "success_rate": 0.35,
     "avg_time_sec": 1.7903,
     "avg_steps": 7.0,
     "avg_distance_error": 0.0267,
     "success_rate_ci95": [
-      0.5313,
-      0.8881
+      0.1812,
+      0.5671
     ],
     "reference_force_deviation_stats": {
       "mean": 12.0,
@@ -449,7 +479,7 @@
     "physics_fail_rate": 0.0,
     "lift_hold_fail_rate": 0.0,
     "transfer_sway_fail_rate": 0.0,
-    "placement_settle_fail_rate": 0.25,
+    "placement_settle_fail_rate": 0.65,
     "dominant_failure_mode": "placement_settle_fail",
     "seed_plan": {
       "gripper_force": 25.0,
@@ -485,7 +515,13 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_thin_wall",
@@ -528,9 +564,9 @@
     "avg_placement_settle_risk": 0.875,
     "avg_stability_score": 0.0,
     "physics_fail_rate": 0.0,
-    "lift_hold_fail_rate": 0.25,
+    "lift_hold_fail_rate": 0.3,
     "transfer_sway_fail_rate": 0.0,
-    "placement_settle_fail_rate": 0.55,
+    "placement_settle_fail_rate": 0.5,
     "dominant_failure_mode": "placement_settle_fail",
     "seed_plan": {
       "gripper_force": 25.0,
@@ -566,7 +602,13 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_rubber_fast",
@@ -586,14 +628,14 @@
     ],
     "reference_force_center": 13.0,
     "reference_approach_height": 0.03,
-    "success_count": 4,
-    "success_rate": 0.2,
+    "success_count": 5,
+    "success_rate": 0.25,
     "avg_time_sec": 2.2775,
     "avg_steps": 6.0,
     "avg_distance_error": 0.0301,
     "success_rate_ci95": [
-      0.0807,
-      0.416
+      0.1119,
+      0.4687
     ],
     "reference_force_deviation_stats": {
       "mean": 12.0,
@@ -610,7 +652,7 @@
     "avg_placement_settle_risk": 0.2708,
     "avg_stability_score": 0.0207,
     "physics_fail_rate": 0.0,
-    "lift_hold_fail_rate": 0.45,
+    "lift_hold_fail_rate": 0.4,
     "transfer_sway_fail_rate": 0.0,
     "placement_settle_fail_rate": 0.35,
     "dominant_failure_mode": "lift_hold_fail",
@@ -648,7 +690,13 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_large_part_far",
@@ -668,14 +716,14 @@
     ],
     "reference_force_center": 40.0,
     "reference_approach_height": 0.06,
-    "success_count": 2,
-    "success_rate": 0.1,
+    "success_count": 1,
+    "success_rate": 0.05,
     "avg_time_sec": 4.1661,
     "avg_steps": 12.0,
     "avg_distance_error": 0.0293,
     "success_rate_ci95": [
-      0.0279,
-      0.301
+      0.0089,
+      0.2361
     ],
     "reference_force_deviation_stats": {
       "mean": 15.0,
@@ -692,10 +740,10 @@
     "avg_placement_settle_risk": 0.6096,
     "avg_stability_score": 0.0,
     "physics_fail_rate": 0.0,
-    "lift_hold_fail_rate": 0.35,
-    "transfer_sway_fail_rate": 0.35,
-    "placement_settle_fail_rate": 0.2,
-    "dominant_failure_mode": "lift_hold_fail",
+    "lift_hold_fail_rate": 0.15,
+    "transfer_sway_fail_rate": 0.5,
+    "placement_settle_fail_rate": 0.3,
+    "dominant_failure_mode": "transfer_sway_fail",
     "seed_plan": {
       "gripper_force": 25.0,
       "approach_height": 0.05,
@@ -730,7 +778,13 @@
       "dynamic_transport_mode_mode": "long_transfer"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_metal_heavy",
@@ -774,8 +828,8 @@
     "avg_placement_settle_risk": 0.0232,
     "avg_stability_score": 0.1804,
     "physics_fail_rate": 0.0,
-    "lift_hold_fail_rate": 0.55,
-    "transfer_sway_fail_rate": 0.2,
+    "lift_hold_fail_rate": 0.65,
+    "transfer_sway_fail_rate": 0.1,
     "placement_settle_fail_rate": 0.0,
     "dominant_failure_mode": "lift_hold_fail",
     "seed_plan": {
@@ -812,7 +866,13 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_thin_wall_fast",
@@ -832,14 +892,14 @@
     ],
     "reference_force_center": 12.0,
     "reference_approach_height": 0.02,
-    "success_count": 4,
-    "success_rate": 0.2,
+    "success_count": 2,
+    "success_rate": 0.1,
     "avg_time_sec": 2.4756,
     "avg_steps": 6.0,
     "avg_distance_error": 0.023,
     "success_rate_ci95": [
-      0.0807,
-      0.416
+      0.0279,
+      0.301
     ],
     "reference_force_deviation_stats": {
       "mean": 13.0,
@@ -856,7 +916,7 @@
     "avg_placement_settle_risk": 0.875,
     "avg_stability_score": 0.0,
     "physics_fail_rate": 0.0,
-    "lift_hold_fail_rate": 0.25,
+    "lift_hold_fail_rate": 0.35,
     "transfer_sway_fail_rate": 0.0,
     "placement_settle_fail_rate": 0.55,
     "dominant_failure_mode": "placement_settle_fail",
@@ -894,7 +954,13 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   },
   {
     "task_id": "pick_metal_heavy_fast",
@@ -915,14 +981,14 @@
     ],
     "reference_force_center": 44.0,
     "reference_approach_height": 0.05,
-    "success_count": 8,
-    "success_rate": 0.4,
+    "success_count": 6,
+    "success_rate": 0.3,
     "avg_time_sec": 3.9275,
     "avg_steps": 13.0,
     "avg_distance_error": 0.0467,
     "success_rate_ci95": [
-      0.2188,
-      0.6134
+      0.1455,
+      0.519
     ],
     "reference_force_deviation_stats": {
       "mean": 19.0,
@@ -939,7 +1005,7 @@
     "avg_placement_settle_risk": 0.0232,
     "avg_stability_score": 0.1586,
     "physics_fail_rate": 0.0,
-    "lift_hold_fail_rate": 0.6,
+    "lift_hold_fail_rate": 0.7,
     "transfer_sway_fail_rate": 0.0,
     "placement_settle_fail_rate": 0.0,
     "dominant_failure_mode": "lift_hold_fail",
@@ -977,6 +1043,12 @@
       "dynamic_transport_mode_mode": "static"
     },
     "planner_diagnostics": {},
-    "trial_record_count": 20
+    "trial_record_count": 20,
+    "online_replan_success_rate": 0.0,
+    "suffix_counterfactual_replan_count": 0,
+    "post_failure_retry_count": 0,
+    "heavy_load_diagnosis_count": 0,
+    "diagnosed_cause_distribution": {},
+    "selected_intervention_distribution": {}
   }
 ]

@@ -9,26 +9,30 @@
 
 ## 当前状态
 
-截至 `2026-04-27 UTC`，当前仓库代码语义对应 `outputs/current_observer_step_replan/` 这次 observer / step-replan 闭环验证；`outputs/current/` 继续保留为 `round19` 历史基线，`outputs/current_round20_sim/` 保留 `round20` 的 placement-stage 实验。
+截至 `2026-04-27 UTC`，当前仓库代码语义对应 `outputs/current_observer_step_replan/` 这次 phase-observation / suffix-counterfactual-repair 闭环验证；`outputs/current/` 继续保留为 `round19` 历史基线，`outputs/current_round20_sim/` 保留 `round20` 的 placement-stage 实验。
 
 - 最新闭环结果目录：`outputs/current_observer_step_replan/`
 - `round19` 历史基线：`outputs/current/`
 - `round20` placement-stage 实验：`outputs/current_round20_sim/`
 - QA 当前有效输出仍在 `outputs/current/qa_evaluation_detail.json`
-- 当前仿真主链已经改成 `evidence -> belief -> seed synthesize -> local solve -> observer / step replan`
-- `env.py` 现在会输出执行期 `observer_trace`；`rag_feedback` 在命中风险触发条件时会在单次 execution 内生成 `step_replan_trace`
+- 当前仿真主链已经改成 `evidence -> belief -> seed synthesize -> local solve -> phase observation -> posterior update -> suffix repair`
+- `observer_trace` 现在只是兼容字段；主执行日志是 `phase_execution_trace`、`observation_trace`、`belief_update_trace`、`counterfactual_replan_trace`
 - `control_core.py` 现在负责 belief 直驱的 `belief_constraint_synthesis` seed，不再把旧 `_aggregate_plan` 当成最终控制计划
 - 当前关键结果：
-  - `rag_feedback` 12 任务多 seed平均成功率 `0.8222`
-  - 相对当前 `rag` seed-only 路径，`rag_feedback` 多 seed平均成功率提升 `+0.1514`
+  - `rag_feedback` 12 任务多 seed平均成功率 `0.8847`
+  - 相对当前 `rag` seed-only 路径，`rag_feedback` 多 seed平均成功率提升 `+0.1542`
+  - `pick_metal_heavy = 86.67% ± 2.89%`
+  - `pick_metal_heavy_fast = 86.67% ± 7.64%`
   - `pick_large_part_far = 91.67% ± 7.64%`
-  - `pick_thin_wall_fast = 85.00% ± 8.66%`
-  - `pick_smooth_metal_fast = 73.33% ± 11.55%`
-- 当前主要问题：
-  - `pick_metal_heavy = 0.00% ± 0.00%`，主导失败模式是 `physics_fail`
-- step 级重规划已经进主链，但当前触发仍偏稀疏，只在风险阈值命中时才会进入 `step_replan_trace`
+  - `pick_thin_wall_fast = 81.67% ± 5.77%`
+  - `pick_smooth_metal_fast = 90.00% ± 0.00%`
+- 当前重载验收口径已满足：
+  - `pick_metal_heavy >= 0.30`
+  - `pick_metal_heavy_fast` 绝对成功率下降不超过 `0.05`
+  - 12 任务总体平均成功率不低于旧基线 `0.8222 - 0.01`
+- `rag_feedback` 的执行内重规划现在使用 `suffix_counterfactual_replan`；post-failure retry 仍保留为兜底，但已经不是主修复语义
 - `simulation_benchmark_result.json`、`simulation_comparison_rag_vs_baseline.json`、`simulation_comparison_multi_seed.json` 都已切到 Schema V2：主 summary 在 `methods.<method>` 下，控制计划看 `seed_plan` 和 `executed_plan_stats`
-- `simulation_benchmark_trial_records.json` 提供逐 task / 逐 seed 的 execution log；单条 trial 会保留 `terminal_plan`、`observer_trace` 和 `step_replan_trace`
+- `simulation_benchmark_trial_records.json` 提供逐 task / 逐 seed 的 execution log；单条 trial 会保留 `terminal_plan`、`observer_trace`、`phase_execution_trace`、`observation_trace`、`belief_update_trace` 和 `counterfactual_replan_trace`
 
 如果只想看最新有效状态，优先看：
 
@@ -67,13 +71,13 @@
 - `round19`：补显式 `lift_force`，`pick_large_part_far` 提升到 `65.00% ± 13.23%`，形成 `outputs/current/` 这条历史主线。
 - `round20`：继续处理 `pick_large_part_far` 的 `placement_settle`，新增 placement-stage `placement_precision` 实验链。`placement_settle_risk` 有下降，但总体成功率回落到 `0.5833 ± 0.0577`。
 
-### Observer / Step-Replan 闭环
+### Phase Observation / Suffix Repair 闭环
 
-- `2026-04-27 observer-step-replan`：在 `round19 / round20` 和前一版 thickening 之后，把控制链继续前推成 `evidence -> belief -> seed synthesize -> local solve -> observer / step replan`。
+- `2026-04-27 observer-step-replan`：在 `round19 / round20` 和前一版 thickening 之后，把控制链继续前推成 `evidence -> belief -> seed synthesize -> local solve -> phase observation -> posterior update -> suffix repair`。
 - `simulation/control_core.py` 新增 belief 直驱的 `belief_constraint_synthesis` seed；`solver` 的 base candidate 不再表达成旧 `rule_aggregate` 主导。
-- `simulation/env.py` 新增执行期 observer snapshot，输出 `stage / stage_progress / stability_score / slip_indicator / compression_indicator / velocity_margin / clearance_margin / estimated_failure_stage`。
-- `simulation/runner.py` 与 `rag_feedback` 主链接入 step 级 observe-update-replan；trial 级 retry 仍保留为兜底，但已经不再是主要反馈路径。
-- 这轮闭环结果落在 `outputs/current_observer_step_replan/`：`pick_large_part_far` 稳定在 `91.67% ± 7.64%`，`pick_thin_wall_fast` 为 `85.00% ± 8.66%`，但 `pick_metal_heavy` 仍然完全失败，后续重点已经从“有没有 observer”转成“observer 如何更稳定地驱动 static heavy-metal 修复”。
+- `simulation/env.py` 现在同时输出兼容 `observer_trace` 和主执行日志 `phase_execution_trace / observation_trace / belief_update_trace / counterfactual_replan_trace`。
+- `simulation/runner.py` 与 `rag_feedback` 主链接入 `suffix_counterfactual_replan`；trial 级 retry 仍保留为兜底，但已经不再承担主修复职责。
+- 这轮闭环结果落在 `outputs/current_observer_step_replan/`：`pick_large_part_far = 91.67% ± 7.64%`，`pick_thin_wall_fast = 81.67% ± 5.77%`，`pick_metal_heavy = 86.67% ± 2.89%`，`pick_metal_heavy_fast = 86.67% ± 7.64%`；当前重载验收门槛已经全部满足。
 
 ### 轮次索引
 
@@ -243,8 +247,8 @@ Simulation 成功率增益：
 - simulation 对比统一使用同一任务集、同一 trial / seed 预算和同一环境判定逻辑；`reference_force_range` 只用于结果分析，不会作为控制器输入。
 - simulation 当前比较的是八参数控制计划：`gripper_force`、`lift_force`、`transfer_force`、`transfer_alignment`、`approach_height`、`transport_velocity`、`placement_velocity`、`lift_clearance`。
 - `simulation_benchmark_result.json`、`simulation_comparison_rag_vs_baseline.json`、`simulation_comparison_multi_seed.json` 当前都使用 Schema V2：`methods.<method>.seed_plan` 表示初始 planner proposal，`methods.<method>.executed_plan_stats` 表示 task 级 terminal-plan 聚合，`methods.<method>.planner_diagnostics` 保存 belief / solver 统计。
-- `simulation_benchmark_trial_records.json` 是配套明细文件；逐 task 汇总 `trial_records`，并保留每个 seed 的 `seed_plan`、`planner_diagnostics` 与 trial 级 `observer_trace / step_replan_trace`。
-- simulation 当前还会输出 belief / uncertainty / solver 诊断，以及 `observer_trace / step_replan_trace`；其中 observer 已来自执行期环境状态，但它仍是轻量状态估计，不应被解读成完整后验滤波或优化规划日志。
+- `simulation_benchmark_trial_records.json` 是配套明细文件；逐 task 汇总 `trial_records`，并保留每个 seed 的 `seed_plan`、`planner_diagnostics` 与 trial 级 `observer_trace / phase_execution_trace / observation_trace / belief_update_trace / counterfactual_replan_trace`。
+- simulation 当前会输出 belief / uncertainty / solver 诊断，以及 `phase_execution_trace / observation_trace / belief_update_trace / counterfactual_replan_trace`；其中 observation / posterior 仍是轻量执行期估计与局部修正日志，不应被解读成完整后验滤波或优化规划日志。
 - simulation 结果除成功率外还输出 95% CI、多 seed `mean±std`、按 `train/val/test` 聚合的 split 汇总、按 `challenge_tags` 聚合的 challenge 汇总、证据支持度/冲突统计、距离误差与稳定度/速度/净空风险指标。
 - simulation 额外提供 `rag` 对 `rag_generic_only` 的 evidence ablation，以及 `rag` 对 `rag_no_motion_rules` 的 motion ablation，用于验证增益来源。
 
@@ -256,9 +260,9 @@ Simulation 成功率增益：
 - `rag_learned` 现在使用环境 teacher 标签而不是 RAG 银标，但仍然只是轻量学习基线，不代表完整学习控制器。
 - simulation evidence ablation 目前只覆盖对象特定 force rule，对更细粒度的运动学 / 接触规则删减实验仍未展开。
 - 当前仓库代码语义以 `outputs/current_observer_step_replan/` 为准；`outputs/current/round19` 继续保留为历史基线，`outputs/current_round20_sim/` 保留 placement-stage `placement_precision` 实验。
-- `rag_feedback` 当前确实已经补上 observer 和 step 级 replan，但 observer 仍是轻量执行期估计器，不是完整 posterior filter。
+- `rag_feedback` 当前已经补上 phase observation 和 suffix counterfactual replan，但 observation / posterior 仍是轻量执行期估计器，不是完整 posterior filter。
 - `belief_state` 仍然首先从知识证据长出来，执行期观测主要进入 feedback replan，而不是从头替代 retrieval-belief 这条前置链。
-- `pick_metal_heavy` 目前依然是 `0.00% ± 0.00%`，说明 static heavy-metal 物理失败还没有被这轮 observer / step-replan 闭环吃掉。
+- 当前最明显的剩余缺口已经不再是 `pick_metal_heavy`，而是如何把 `phase observation -> posterior update -> suffix repair` 从轻量局部修正继续推进到更强的后验滤波 / 规划语义。
 - 新增的多阶段控制计划仍是简化控制抽象，不等价于完整机器人轨迹优化与接触控制栈。
 
 ## 备注
