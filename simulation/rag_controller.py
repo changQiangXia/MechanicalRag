@@ -1728,7 +1728,10 @@ class RAGController:
                 suggestion,
                 step=adjustment_step,
             )
-            return replan_control_plan(previous_params, replan_request)
+            updated = replan_control_plan(previous_params, replan_request)
+            if replan_request.get("requested_suffix_start") == "lift" and "counterfactual_replan_trace" in updated:
+                updated["execution_feedback_mode"] = "suffix_counterfactual_replan"
+            return updated
         return adjust_params_by_feedback(
             previous_params,
             suggestion,
@@ -1760,4 +1763,7 @@ class RAGController:
         replan_request["observation_index"] = observation.get("observation_index")
         replan_request["trigger_reason"] = observation.get("trigger_reason")
         replan_request["observation_stage"] = observation.get("stage")
-        return replan_control_plan(previous_params, replan_request)
+        updated = replan_control_plan(previous_params, replan_request)
+        if replan_request.get("requested_suffix_start") == "lift" and "counterfactual_replan_trace" in updated:
+            updated["execution_feedback_mode"] = "suffix_counterfactual_replan"
+        return updated

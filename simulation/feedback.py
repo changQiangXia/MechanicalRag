@@ -233,6 +233,21 @@ def build_feedback_replan_request(
         "velocity_risk": round(signal.velocity_risk, 4),
         "clearance_risk": round(signal.clearance_risk, 4),
     }
+    phase_observation = {
+        "phase": stage_bias,
+        "contact_stability_obs": round(max(0.0, 1.0 - signal.slip_risk), 4),
+        "micro_slip_obs": round(signal.slip_risk, 4),
+        "payload_ratio_obs": round(1.0 + signal.lift_hold_risk, 4),
+        "lift_progress_obs": round(max(0.0, 1.0 - signal.distance), 4),
+        "lift_reserve_obs": round(-signal.lift_hold_risk if stage_bias == "lift" else 0.0, 4),
+        "tilt_obs": round(signal.clearance_risk if stage_bias == "lift" else 0.0, 4),
+        "sway_obs": round(signal.transfer_sway_risk if stage_bias == "transfer" else 0.0, 4),
+        "velocity_stress_obs": round(signal.velocity_risk, 4),
+        "settle_obs": round(signal.placement_settle_risk if stage_bias == "place" else 0.0, 4),
+        "placement_error_obs": round(signal.distance, 4),
+        "observation_confidence": 0.76,
+        "trigger_reason": signal.failure_bucket,
+    }
     return {
         "failure_bucket": signal.failure_bucket,
         "stage_bias": stage_bias,
@@ -240,6 +255,8 @@ def build_feedback_replan_request(
         "uncertainty_reasons": uncertainty_reasons,
         "failure_attribution": failure_attribution,
         "param_deltas": {key: round(value, 4) for key, value in param_deltas.items()},
+        "phase_observation": phase_observation,
+        "requested_suffix_start": stage_bias,
         "previous_solver_mode": previous_params.get("solver_mode"),
         "previous_solver_selected_candidate": previous_params.get("solver_selected_candidate"),
     }

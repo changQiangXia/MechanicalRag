@@ -1472,6 +1472,16 @@ def replan_control_plan(
     previous_params: dict[str, Any],
     replan_request: dict[str, Any],
 ) -> dict[str, Any]:
+    plan_keys = (
+        "gripper_force",
+        "approach_height",
+        "transport_velocity",
+        "lift_force",
+        "transfer_force",
+        "placement_velocity",
+        "transfer_alignment",
+        "lift_clearance",
+    )
     belief = control_belief_from_trace(previous_params)
     updated_belief, belief_update_trace = update_belief_with_feedback(belief, replan_request)
 
@@ -1496,6 +1506,44 @@ def replan_control_plan(
         next_params[key] = round(float(value), 4 if key != "transfer_alignment" else 4)
 
     trace = updated_belief.to_trace_dict()
+    requested_suffix_start = str(replan_request.get("requested_suffix_start", replan_request.get("stage_bias", "none")))
+    phase_observation_payload = replan_request.get("phase_observation")
+    counterfactual_belief_update = None
+    counterfactual_diagnosis = None
+    if isinstance(phase_observation_payload, dict) and requested_suffix_start == "lift":
+        observation = PhaseObservation(**dict(phase_observation_payload))
+        counterfactual_seed = dict(previous_params)
+        counterfactual_seed.update(solved_plan)
+        prior = build_execution_prior(counterfactual_seed, phase=observation.phase)
+        posterior, posterior_trace = apply_phase_observation(prior, observation)
+        diagnosis = diagnose_failure_cause(posterior, observation, solved_plan)
+        repaired_plan = repair_suffix_plan(
+            solved_plan,
+            current_phase=observation.phase,
+            diagnosis=diagnosis,
+        )
+        for key in plan_keys:
+            if key in repaired_plan:
+                next_params[key] = round(float(repaired_plan[key]), 4)
+        next_params["execution_feedback_mode"] = repaired_plan["execution_feedback_mode"]
+        next_params["counterfactual_replan_trace"] = list(repaired_plan["counterfactual_replan_trace"])
+        next_params["suffix_replan_start_stage"] = repaired_plan["suffix_replan_start_stage"]
+        next_params["belief_update_trace"] = posterior_trace
+        counterfactual_belief_update = posterior_trace
+        counterfactual_diagnosis = {
+            "diagnosed_cause": diagnosis.diagnosed_cause,
+            "selected_intervention": diagnosis.selected_intervention.label,
+            "predicted_flip_gain": diagnosis.predicted_flip_gain,
+            "candidate_interventions": [
+                {
+                    "label": item.label,
+                    "param_deltas": dict(item.param_deltas),
+                    "predicted_flip_gain": item.predicted_flip_gain,
+                }
+                for item in diagnosis.candidate_interventions
+            ],
+        }
+
     next_params["evidence_state_summary"] = trace["evidence_state_summary"]
     next_params["belief_state"] = trace["belief_state"]
     next_params["task_constraints"] = trace["task_constraints"]
@@ -1519,20 +1567,28 @@ def replan_control_plan(
     next_params["feedback_adjusted"] = True
     next_params["feedback_adjustment_type"] = str(replan_request.get("suggestion", "replan"))
     next_params["feedback_stage_adjustments"] = [str(replan_request.get("stage_bias", "none"))]
+    final_plan = {
+        key: round(float(next_params[key]), 4)
+        for key in plan_keys
+    }
     next_params["feedback_replan_trace"] = {
         "failure_bucket": replan_request.get("failure_bucket", "unknown_failure"),
         "stage_bias": replan_request.get("stage_bias", "none"),
+        "requested_suffix_start": requested_suffix_start,
         "observation_index": replan_request.get("observation_index"),
         "observation_stage": replan_request.get("observation_stage"),
         "trigger_reason": replan_request.get("trigger_reason"),
+        "phase_observation": phase_observation_payload,
         "failure_attribution": replan_request.get("failure_attribution", {}),
         "updated_uncertainty_reasons": trace["uncertainty_reasons"],
         "belief_update": belief_update_trace,
+        "counterfactual_belief_update": counterfactual_belief_update,
+        "counterfactual_diagnosis": counterfactual_diagnosis,
         "seed_plan": {key: round(float(value), 4) for key, value in base_plan.items()},
-        "final_plan": {key: round(float(value), 4) for key, value in solved_plan.items()},
+        "final_plan": final_plan,
         "param_deltas": {
-            key: round(float(solved_plan[key]) - float(previous_params.get(key, 0.0)), 4)
-            for key in solved_plan
+            key: round(float(final_plan[key]) - float(previous_params.get(key, 0.0)), 4)
+            for key in final_plan
         },
     }
 

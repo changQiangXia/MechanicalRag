@@ -196,6 +196,94 @@ class ControlCoreTest(unittest.TestCase):
         self.assertTrue(updated["uncertainty_conservative_mode"])
         self.assertIn("solver_local_search_trace", updated)
 
+    def test_feedback_request_wraps_phase_observation_for_suffix_repair(self):
+        signal = FeedbackSignal(
+            success=False,
+            gripper_force=42.0,
+            distance=0.02,
+            steps=12,
+            transport_velocity=0.22,
+            lift_clearance=0.06,
+            slip_risk=0.08,
+            compression_risk=0.05,
+            stability_score=0.36,
+            velocity_risk=0.04,
+            clearance_risk=0.22,
+            lift_hold_risk=0.44,
+            transfer_sway_risk=0.0,
+            placement_settle_risk=0.0,
+            failure_bucket="lift_hold_fail",
+            dynamic_transport_mode="static",
+        )
+        request = build_feedback_replan_request(
+            {
+                "gripper_force": 42.0,
+                "lift_force": 42.0,
+                "transfer_force": 42.0,
+                "transport_velocity": 0.22,
+                "placement_velocity": 0.18,
+                "lift_clearance": 0.06,
+            },
+            signal,
+            "increase",
+            step=4.0,
+        )
+        self.assertEqual(request["stage_bias"], "lift")
+        self.assertEqual(request["phase_observation"]["phase"], "lift")
+        self.assertEqual(request["requested_suffix_start"], "lift")
+
+    def test_lift_feedback_replan_uses_counterfactual_suffix_repair(self):
+        _, belief = self._build_summary_and_belief()
+        previous_params = {
+            "gripper_force": 42.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.22,
+            "lift_force": 42.0,
+            "transfer_force": 42.0,
+            "placement_velocity": 0.18,
+            "transfer_alignment": 0.0,
+            "lift_clearance": 0.06,
+            "confidence": 0.62,
+            "uncertainty_std": 0.11,
+            **belief.to_trace_dict(),
+            "stage_plan": [],
+        }
+        previous_params["belief_state"] = {
+            **previous_params["belief_state"],
+            "mass_band": "heavy",
+            "dynamic_load_band": "high",
+            "center_of_mass_risk": 0.72,
+            "alignment_confidence": 0.34,
+            "lift_stage_confidence": 0.41,
+        }
+        previous_params["task_constraints"] = {
+            **previous_params["task_constraints"],
+            "preferred_transport_mode": "static",
+        }
+        signal = FeedbackSignal(
+            success=False,
+            gripper_force=42.0,
+            distance=0.02,
+            steps=12,
+            transport_velocity=0.22,
+            lift_clearance=0.06,
+            slip_risk=0.08,
+            compression_risk=0.05,
+            stability_score=0.36,
+            velocity_risk=0.04,
+            clearance_risk=0.22,
+            lift_hold_risk=0.44,
+            transfer_sway_risk=0.0,
+            placement_settle_risk=0.0,
+            failure_bucket="lift_hold_fail",
+            dynamic_transport_mode="static",
+        )
+        request = build_feedback_replan_request(previous_params, signal, "increase", step=4.0)
+        updated = replan_control_plan(previous_params, request)
+        self.assertEqual(updated["execution_feedback_mode"], "suffix_counterfactual_replan")
+        self.assertEqual(updated["counterfactual_replan_trace"][0]["start_phase"], "lift")
+        self.assertEqual(updated["feedback_replan_trace"]["requested_suffix_start"], "lift")
+
     def test_build_execution_prior_marks_heavy_static_case(self):
         prior = build_execution_prior(
             {
