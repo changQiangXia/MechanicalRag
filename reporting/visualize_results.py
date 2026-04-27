@@ -120,6 +120,12 @@ def _task_names(sim_rows: list[dict]) -> list[str]:
     return [row["task_id"] for row in sim_rows]
 
 
+def _set_task_xticklabels(ax, x, tasks: list[str]) -> None:
+    ax.set_xticks(x)
+    ax.set_xticklabels(tasks)
+    plt.setp(ax.get_xticklabels(), rotation=18, ha="right", rotation_mode="anchor")
+
+
 def plot_qa_summary(qa_detail: dict, output_dir: Path) -> None:
     summaries = qa_detail["summaries"]
     methods = list(summaries.keys())
@@ -234,8 +240,7 @@ def plot_sim_success(sim_rows: list[dict], output_dir: Path) -> None:
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("Success Rate")
     ax.set_title("Simulation Success Rate Comparison")
-    ax.set_xticks(x)
-    ax.set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(ax, x, tasks)
     ax.legend()
     _save(fig, output_dir / "simulation_success_rates.png")
 
@@ -267,8 +272,7 @@ def plot_sim_success_ci(sim_rows: list[dict], output_dir: Path) -> None:
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("Success Rate")
     ax.set_title("Simulation Success Rate with 95% CI")
-    ax.set_xticks(x)
-    ax.set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(ax, x, tasks)
     ax.legend()
     _save(fig, output_dir / "simulation_success_ci.png")
 
@@ -290,8 +294,7 @@ def plot_sim_time_steps(sim_rows: list[dict], output_dir: Path) -> None:
     axes[0].set_title("Simulation Time")
     axes[1].set_ylabel("Avg Steps")
     axes[1].set_title("Simulation Steps")
-    axes[1].set_xticks(x)
-    axes[1].set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(axes[1], x, tasks)
     axes[0].legend()
     _save(fig, output_dir / "simulation_time_steps.png")
 
@@ -310,8 +313,7 @@ def plot_sim_force(sim_rows: list[dict], output_dir: Path) -> None:
         ax.plot(x, forces, marker="o", linewidth=2, label=METHOD_LABELS.get(method, method))
     ax.set_ylabel("Gripper Force (N)")
     ax.set_title("Predicted Force and Reference Range")
-    ax.set_xticks(x)
-    ax.set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(ax, x, tasks)
     ax.legend()
     _save(fig, output_dir / "simulation_force_ranges.png")
 
@@ -329,8 +331,7 @@ def plot_sim_distance_error(sim_rows: list[dict], output_dir: Path) -> None:
         ax.bar(x + offset, values, width=width, label=METHOD_LABELS.get(method, method))
     ax.set_ylabel("Avg Distance Error")
     ax.set_title("Simulation Distance Error")
-    ax.set_xticks(x)
-    ax.set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(ax, x, tasks)
     ax.legend()
     _save(fig, output_dir / "simulation_distance_error.png")
 
@@ -351,8 +352,7 @@ def plot_sim_force_deviation(sim_rows: list[dict], output_dir: Path) -> None:
         ax.bar(x + offset, values, width=width, label=METHOD_LABELS.get(method, method))
     ax.set_ylabel("Absolute Force Deviation (N)")
     ax.set_title("Deviation from Reference Force Center")
-    ax.set_xticks(x)
-    ax.set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(ax, x, tasks)
     ax.legend()
     _save(fig, output_dir / "simulation_force_deviation.png")
 
@@ -370,8 +370,7 @@ def plot_sim_approach_height(sim_rows: list[dict], output_dir: Path) -> None:
         ax.plot(x, heights, marker="o", linewidth=2, label=METHOD_LABELS.get(method, method))
     ax.set_ylabel("Approach Height (m)")
     ax.set_title("Approach Height Comparison")
-    ax.set_xticks(x)
-    ax.set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(ax, x, tasks)
     ax.legend()
     _save(fig, output_dir / "simulation_approach_height.png")
 
@@ -391,8 +390,7 @@ def plot_sim_control_plan(sim_rows: list[dict], output_dir: Path) -> None:
     axes[0].set_title("Transport Velocity Comparison")
     axes[1].set_ylabel("Lift Clearance (m)")
     axes[1].set_title("Lift Clearance Comparison")
-    axes[1].set_xticks(x)
-    axes[1].set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(axes[1], x, tasks)
     axes[0].legend()
     _save(fig, output_dir / "simulation_control_plan.png")
 
@@ -437,8 +435,7 @@ def plot_sim_success_gain(sim_rows: list[dict], output_dir: Path) -> None:
     ax.axhline(0.0, color="#555555", linewidth=1)
     ax.set_ylabel("Success Rate Gain")
     ax.set_title(f"{primary_label} Gain over Baselines")
-    ax.set_xticks(x)
-    ax.set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(ax, x, tasks)
     ax.legend()
     _save(fig, output_dir / "simulation_rag_gain.png")
 
@@ -486,8 +483,7 @@ def plot_multi_seed_success(sim_rows: list[dict], output_dir: Path) -> None:
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("Mean Success Rate")
     ax.set_title("Multi-seed Success Rate")
-    ax.set_xticks(x)
-    ax.set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(ax, x, tasks)
     ax.legend()
     _save(fig, output_dir / "simulation_multi_seed_success.png")
 
@@ -520,8 +516,7 @@ def plot_sim_belief_diagnostics(sim_rows: list[dict], output_dir: Path) -> None:
     axes[1].set_ylim(0, 1.05)
     axes[1].set_ylabel("Conservative Rate")
     axes[1].set_title("RAG Uncertainty Conservative Mode Rate")
-    axes[1].set_xticks(x)
-    axes[1].set_xticklabels(tasks, rotation=18)
+    _set_task_xticklabels(axes[1], x, tasks)
     _save(fig, output_dir / "simulation_belief_diagnostics.png")
 
 
