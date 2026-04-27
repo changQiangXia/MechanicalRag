@@ -57,6 +57,19 @@ def _plan_mean(row: dict, method: str, field: str, default=None):
     return default
 
 
+def _mean_method_gap(rows: list[dict], left_method: str, right_method: str, field: str) -> float | None:
+    gaps = []
+    for row in rows:
+        left = _method_metric(row, left_method, field)
+        right = _method_metric(row, right_method, field)
+        if left is None or right is None:
+            continue
+        gaps.append(float(left) - float(right))
+    if not gaps:
+        return None
+    return sum(gaps) / len(gaps)
+
+
 def _flatten_method_row(row: dict) -> dict:
     flat = dict(row)
     methods = row.get("methods")
@@ -112,6 +125,40 @@ def _flatten_method_row(row: dict) -> dict:
 
 
 def _flatten_benchmark_row(row: dict) -> dict:
+    if isinstance(row.get("methods"), dict):
+        flat = _flatten_method_row(row)
+        methods = row["methods"]
+        primary_method = "rag_feedback" if "rag_feedback" in methods else ("rag" if "rag" in methods else next(iter(methods)))
+        payload = methods[primary_method]
+        scalar_fields = (
+            "success_rate_mean",
+            "success_rate_std",
+            "avg_time_sec_mean",
+            "avg_time_sec_std",
+            "avg_steps_mean",
+            "avg_steps_std",
+            "avg_distance_error_mean",
+            "avg_distance_error_std",
+        )
+        for field in scalar_fields:
+            if field in payload:
+                flat[field] = payload[field]
+        for key, value in payload.get("avg_risks", {}).items():
+            flat[f"avg_{key}"] = value
+        for key, value in payload.get("failure_rates", {}).items():
+            flat[key] = value
+        for key, value in payload.get("planner_diagnostics", {}).items():
+            flat[key] = value
+        for key, value in payload.get("executed_plan_stats", {}).get("mean", {}).items():
+            flat[f"{key}_mean"] = value
+        for key, value in payload.get("executed_plan_stats", {}).items():
+            if key.endswith("_mode"):
+                flat[key[:-5]] = value
+        ref_stats = payload.get("reference_force_deviation_stats", {})
+        if ref_stats.get("mean") is not None:
+            flat["reference_force_deviation_mean"] = ref_stats["mean"]
+        return flat
+
     flat = dict(row)
     scalar_fields = (
         "success_rate",
@@ -260,54 +307,86 @@ def build_summary(
         lines.append("")
 
     lines.append("五、仿真对比重点")
-    avg_rag_gain = sum(
-        row["rag_success_rate_mean"] - row["direct_llm_success_rate_mean"] for row in sim_multi_seed
-    ) / len(sim_multi_seed)
-    avg_heuristic_gain = sum(
-        row["rag_success_rate_mean"] - row.get("task_heuristic_success_rate_mean", 0.0) for row in sim_multi_seed
-    ) / len(sim_multi_seed)
-    learned_available = any("rag_learned_success_rate_mean" in row for row in sim_multi_seed)
-    lines.append(f"- 多 seed 平均上，RAG 相对 Direct LLM 的成功率提升为 {_format_pct(avg_rag_gain)}。")
-    lines.append(f"- 多 seed 平均上，RAG 相对 Task Heuristic 基线的成功率提升为 {_format_pct(avg_heuristic_gain)}。")
-    if learned_available:
-        avg_learned_gain = sum(
-            row["rag_success_rate_mean"] - row.get("rag_learned_success_rate_mean", 0.0) for row in sim_multi_seed
-        ) / len(sim_multi_seed)
-        lines.append(f"- 多 seed 平均上，RAG 相对独立 learned baseline 的成功率提升为 {_format_pct(avg_learned_gain)}。")
-    rag_evidence_support = [
-        row.get("rag_evidence_support_score_mean") for row in sim_multi_seed if row.get("rag_evidence_support_score_mean") is not None
-    ]
-    if rag_evidence_support:
-        lines.append(f"- 多 seed 平均上，RAG 控制计划的证据支持分为 {sum(rag_evidence_support)/len(rag_evidence_support):.2f}。")
-    rag_belief_coverages = [
-        row.get("rag_belief_state_coverage_mean")
-        for row in sim_multi_seed
-        if row.get("rag_belief_state_coverage_mean") is not None
-    ]
-    if rag_belief_coverages:
+    primary_method = (
+        "rag_feedback"
+        if any(_method_metric(row, "rag_feedback", "success_rate_mean") is not None for row in sim_multi_seed)
+        else "rag"
+    )
+    primary_label = "RAG + Feedback" if primary_method == "rag_feedback" else "RAG"
+
+    def _primary_metric(row: dict, field: str, default=None):
+        return _method_metric(row, primary_method, field, default)
+
+    def _primary_plan(row: dict, field: str, default=None):
+        return _plan_mean(row, primary_method, field, default)
+
+    seed_only_gain = None
+    if primary_method == "rag_feedback":
+        seed_only_gain = _mean_method_gap(sim_multi_seed, "rag_feedback", "rag", "success_rate_mean")
+    direct_gain = _mean_method_gap(sim_multi_seed, primary_method, "direct_llm", "success_rate_mean")
+    heuristic_gain = _mean_method_gap(sim_multi_seed, primary_method, "task_heuristic", "success_rate_mean")
+    fixed_gain = _mean_method_gap(sim_multi_seed, primary_method, "fixed", "success_rate_mean")
+    learned_gain = _mean_method_gap(sim_multi_seed, primary_method, "rag_learned", "success_rate_mean")
+
+    if seed_only_gain is not None:
         lines.append(
-            f"- 多 seed 平均上，RAG belief state coverage 为 {sum(rag_belief_coverages)/len(rag_belief_coverages):.2f}。"
+            f"- 多 seed 平均上，{primary_label} 相对 RAG seed-only 的成功率提升为 {_format_pct(seed_only_gain)}。"
         )
-    rag_conservative_rates = [
-        row.get("rag_uncertainty_conservative_mode_mean")
-        for row in sim_multi_seed
-        if row.get("rag_uncertainty_conservative_mode_mean") is not None
-    ]
-    if rag_conservative_rates:
+    if direct_gain is not None:
         lines.append(
-            f"- 多 seed 平均上，RAG uncertainty conservative mode 的触发率为 "
-            f"{_format_pct(sum(rag_conservative_rates)/len(rag_conservative_rates))}。"
+            f"- 多 seed 平均上，{primary_label} 相对 Direct LLM 的成功率提升为 {_format_pct(direct_gain)}。"
         )
-    rag_solver_choices = [
-        row.get("rag_solver_selected_candidate")
-        for row in sim_multi_seed
-        if row.get("rag_solver_selected_candidate") is not None
-    ]
-    if rag_solver_choices:
-        top_solver, top_count = Counter(rag_solver_choices).most_common(1)[0]
+    if heuristic_gain is not None:
         lines.append(
-            f"- 当前多 seed 结果中，RAG 最常选中的 solver 候选是 `{top_solver}`，"
-            f"覆盖 {top_count}/{len(rag_solver_choices)} 个任务。"
+            f"- 多 seed 平均上，{primary_label} 相对 Task Heuristic 基线的成功率提升为 {_format_pct(heuristic_gain)}。"
+        )
+    elif fixed_gain is not None:
+        lines.append(
+            f"- 多 seed 平均上，{primary_label} 相对 Fixed 基线的成功率提升为 {_format_pct(fixed_gain)}。"
+        )
+    if learned_gain is not None:
+        lines.append(
+            f"- 多 seed 平均上，{primary_label} 相对独立 learned baseline 的成功率提升为 {_format_pct(learned_gain)}。"
+        )
+
+    primary_evidence_support = [
+        _primary_metric(row, "evidence_support_score_mean")
+        for row in sim_multi_seed
+        if _primary_metric(row, "evidence_support_score_mean") is not None
+    ]
+    if primary_evidence_support:
+        lines.append(
+            f"- 多 seed 平均上，{primary_label} 控制计划的证据支持分为 {sum(primary_evidence_support)/len(primary_evidence_support):.2f}。"
+        )
+    primary_belief_coverages = [
+        _primary_metric(row, "belief_state_coverage_mean")
+        for row in sim_multi_seed
+        if _primary_metric(row, "belief_state_coverage_mean") is not None
+    ]
+    if primary_belief_coverages:
+        lines.append(
+            f"- 多 seed 平均上，{primary_label} belief state coverage 为 {sum(primary_belief_coverages)/len(primary_belief_coverages):.2f}。"
+        )
+    primary_conservative_rates = [
+        _primary_metric(row, "uncertainty_conservative_mode_mean")
+        for row in sim_multi_seed
+        if _primary_metric(row, "uncertainty_conservative_mode_mean") is not None
+    ]
+    if primary_conservative_rates:
+        lines.append(
+            f"- 多 seed 平均上，{primary_label} uncertainty conservative mode 的触发率为 "
+            f"{_format_pct(sum(primary_conservative_rates)/len(primary_conservative_rates))}。"
+        )
+    primary_solver_choices = [
+        _primary_metric(row, "solver_selected_candidate")
+        for row in sim_multi_seed
+        if _primary_metric(row, "solver_selected_candidate") is not None
+    ]
+    if primary_solver_choices:
+        top_solver, top_count = Counter(primary_solver_choices).most_common(1)[0]
+        lines.append(
+            f"- 当前多 seed 结果中，{primary_label} 最常选中的 solver 候选是 `{top_solver}`，"
+            f"覆盖 {top_count}/{len(primary_solver_choices)} 个任务。"
         )
 
     evidence_ablation_path = Path(sim_multi_seed_path).with_name("simulation_evidence_ablation.json")
@@ -428,61 +507,63 @@ def build_summary(
     if split_summary_path.exists():
         split_summary = _load_json(str(split_summary_path))
         rag_test = next((row for row in split_summary if row["task_split"] == "test"), None)
-        if rag_test is not None and rag_test.get("rag_success_rate_mean") is not None:
+        split_field = f"{primary_method}_success_rate_mean"
+        if rag_test is not None and rag_test.get(split_field) is not None:
             lines.append(
-                f"- split 汇总显示 test 任务上 RAG 平均成功率为 {rag_test['rag_success_rate_mean']:.4f}，"
+                f"- split 汇总显示 test 任务上 {primary_label} 平均成功率为 {rag_test[split_field]:.4f}，"
                 f"便于和 train/val 做泛化对照。"
             )
 
     challenge_summary_path = Path(sim_multi_seed_path).with_name("simulation_challenge_summary.json")
     if challenge_summary_path.exists():
         challenge_summary = _load_json(str(challenge_summary_path))
+        challenge_field = f"{primary_method}_success_rate_mean"
         hard_tag = min(
-            (row for row in challenge_summary if row.get("rag_success_rate_mean") is not None),
-            key=lambda row: row["rag_success_rate_mean"],
+            (row for row in challenge_summary if row.get(challenge_field) is not None),
+            key=lambda row: row[challenge_field],
             default=None,
         )
         if hard_tag is not None:
             lines.append(
-                f"- challenge 汇总显示 RAG 当前最弱的挑战标签是 {hard_tag['challenge_tag']}，"
-                f"平均成功率 {hard_tag['rag_success_rate_mean']:.4f}。"
+                f"- challenge 汇总显示 {primary_label} 当前最弱的挑战标签是 {hard_tag['challenge_tag']}，"
+                f"平均成功率 {hard_tag[challenge_field]:.4f}。"
             )
 
     targeted_rows = {row["task_id"]: row for row in sim_multi_seed}
     benchmark_rows = {row["task_id"]: row for row in sim_benchmark}
     rubber_row = targeted_rows.get("pick_rubber")
     if rubber_row is not None:
-        rag_rate = rubber_row.get("rag_success_rate_mean")
-        heuristic_rate = rubber_row.get("task_heuristic_success_rate_mean")
+        rag_rate = _primary_metric(rubber_row, "success_rate_mean")
+        heuristic_rate = _method_metric(rubber_row, "task_heuristic", "success_rate_mean")
         if rag_rate is not None and heuristic_rate is not None:
             lines.append(
-                f"- `pick_rubber` 当前 RAG 平均成功率为 {rag_rate:.4f}，相对 task_heuristic 提升 "
+                f"- `pick_rubber` 当前 {primary_label} 平均成功率为 {rag_rate:.4f}，相对 task_heuristic 提升 "
                 f"{_format_pct(rag_rate - heuristic_rate)}。"
             )
     smooth_row = targeted_rows.get("pick_smooth_metal")
     if smooth_row is not None:
-        rag_rate = smooth_row.get("rag_success_rate_mean")
-        heuristic_rate = smooth_row.get("task_heuristic_success_rate_mean")
+        rag_rate = _primary_metric(smooth_row, "success_rate_mean")
+        heuristic_rate = _method_metric(smooth_row, "task_heuristic", "success_rate_mean")
         if rag_rate is not None and heuristic_rate is not None:
             delta = rag_rate - heuristic_rate
             relation = "追平" if abs(delta) < 1e-9 else ("领先" if delta > 0 else "落后")
             lines.append(
-                f"- `pick_smooth_metal` 当前 RAG 平均成功率为 {rag_rate:.4f}，已{relation} task_heuristic"
+                f"- `pick_smooth_metal` 当前 {primary_label} 平均成功率为 {rag_rate:.4f}，已{relation} task_heuristic"
                 + ("" if abs(delta) < 1e-9 else f" {_format_pct(abs(delta))}")
                 + "。"
             )
     smooth_fast_row = targeted_rows.get("pick_smooth_metal_fast")
     if smooth_fast_row is not None:
-        rag_rate = smooth_fast_row.get("rag_success_rate_mean")
-        heuristic_rate = smooth_fast_row.get("task_heuristic_success_rate_mean")
-        dynamic_mode = smooth_fast_row.get("rag_dynamic_transport_mode")
-        transfer_force = smooth_fast_row.get("rag_transfer_force_mean")
-        placement_velocity = smooth_fast_row.get("rag_placement_velocity_mean")
-        transfer_sway_risk = smooth_fast_row.get("rag_avg_transfer_sway_risk_mean")
-        placement_settle_risk = smooth_fast_row.get("rag_avg_placement_settle_risk_mean")
+        rag_rate = _primary_metric(smooth_fast_row, "success_rate_mean")
+        heuristic_rate = _method_metric(smooth_fast_row, "task_heuristic", "success_rate_mean")
+        dynamic_mode = _primary_metric(smooth_fast_row, "dynamic_transport_mode")
+        transfer_force = _primary_plan(smooth_fast_row, "transfer_force")
+        placement_velocity = _primary_plan(smooth_fast_row, "placement_velocity")
+        transfer_sway_risk = _primary_metric(smooth_fast_row, "avg_transfer_sway_risk_mean")
+        placement_settle_risk = _primary_metric(smooth_fast_row, "avg_placement_settle_risk_mean")
         if rag_rate is not None and heuristic_rate is not None:
             lines.append(
-                f"- `pick_smooth_metal_fast` 当前 RAG 平均成功率为 {rag_rate:.4f}，相对 task_heuristic 提升 "
+                f"- `pick_smooth_metal_fast` 当前 {primary_label} 平均成功率为 {rag_rate:.4f}，相对 task_heuristic 提升 "
                 f"{_format_pct(rag_rate - heuristic_rate)}。"
             )
         if dynamic_mode is not None and dynamic_mode != "static":
@@ -502,30 +583,30 @@ def build_summary(
             )
     heavy_row = targeted_rows.get("pick_metal_heavy")
     if heavy_row is not None:
-        rag_rate = heavy_row.get("rag_success_rate_mean")
-        heuristic_rate = heavy_row.get("task_heuristic_success_rate_mean")
+        rag_rate = _primary_metric(heavy_row, "success_rate_mean")
+        heuristic_rate = _method_metric(heavy_row, "task_heuristic", "success_rate_mean")
         if rag_rate is not None and heuristic_rate is not None:
             lines.append(
-                f"- `pick_metal_heavy` 当前 RAG 平均成功率为 {rag_rate:.4f}，相对 task_heuristic 提升 "
+                f"- `pick_metal_heavy` 当前 {primary_label} 平均成功率为 {rag_rate:.4f}，相对 task_heuristic 提升 "
                 f"{_format_pct(rag_rate - heuristic_rate)}。"
             )
     large_far_row = targeted_rows.get("pick_large_part_far")
     if large_far_row is not None:
-        rag_rate = large_far_row.get("rag_success_rate_mean")
-        heuristic_rate = large_far_row.get("task_heuristic_success_rate_mean")
-        sway_risk = large_far_row.get("rag_avg_transfer_sway_risk_mean")
-        lift_risk = large_far_row.get("rag_avg_lift_hold_risk_mean")
-        settle_risk = large_far_row.get("rag_avg_placement_settle_risk_mean")
-        dominant_failure_mode = large_far_row.get("rag_dominant_failure_mode")
-        lift_fail_rate = large_far_row.get("rag_lift_hold_fail_rate_mean")
-        transfer_fail_rate = large_far_row.get("rag_transfer_sway_fail_rate_mean")
-        settle_fail_rate = large_far_row.get("rag_placement_settle_fail_rate_mean")
-        lift_force = large_far_row.get("rag_lift_force_mean")
-        transfer_alignment = large_far_row.get("rag_transfer_alignment_mean")
-        transfer_force = large_far_row.get("rag_transfer_force_mean")
-        dynamic_mode = large_far_row.get("rag_dynamic_transport_mode")
-        available_lift_stage_rules = large_far_row.get("rag_available_lift_stage_rules_mean")
-        used_lift_stage_rules = large_far_row.get("rag_used_lift_stage_rules_mean")
+        rag_rate = _primary_metric(large_far_row, "success_rate_mean")
+        heuristic_rate = _method_metric(large_far_row, "task_heuristic", "success_rate_mean")
+        sway_risk = _primary_metric(large_far_row, "avg_transfer_sway_risk_mean")
+        lift_risk = _primary_metric(large_far_row, "avg_lift_hold_risk_mean")
+        settle_risk = _primary_metric(large_far_row, "avg_placement_settle_risk_mean")
+        dominant_failure_mode = _primary_metric(large_far_row, "dominant_failure_mode")
+        lift_fail_rate = _primary_metric(large_far_row, "lift_hold_fail_rate_mean")
+        transfer_fail_rate = _primary_metric(large_far_row, "transfer_sway_fail_rate_mean")
+        settle_fail_rate = _primary_metric(large_far_row, "placement_settle_fail_rate_mean")
+        lift_force = _primary_plan(large_far_row, "lift_force")
+        transfer_alignment = _primary_plan(large_far_row, "transfer_alignment")
+        transfer_force = _primary_plan(large_far_row, "transfer_force")
+        dynamic_mode = _primary_metric(large_far_row, "dynamic_transport_mode")
+        available_lift_stage_rules = _primary_metric(large_far_row, "available_lift_stage_rules_mean")
+        used_lift_stage_rules = _primary_metric(large_far_row, "used_lift_stage_rules_mean")
         if sway_risk is None:
             sway_risk = benchmark_rows.get("pick_large_part_far", {}).get("avg_transfer_sway_risk_mean")
         if lift_risk is None:
@@ -550,7 +631,7 @@ def build_summary(
             settle_fail_rate = benchmark_rows.get("pick_large_part_far", {}).get("placement_settle_fail_rate_mean")
         if rag_rate is not None and heuristic_rate is not None:
             lines.append(
-                f"- `pick_large_part_far` 当前 RAG 平均成功率为 {rag_rate:.4f}，相对 task_heuristic 提升 "
+                f"- `pick_large_part_far` 当前 {primary_label} 平均成功率为 {rag_rate:.4f}，相对 task_heuristic 提升 "
                 f"{_format_pct(rag_rate - heuristic_rate)}，但仍是当前最难任务。"
             )
         if (
@@ -568,9 +649,9 @@ def build_summary(
                 f"- `pick_large_part_far` 当前已不再只靠 large-part force band；lift-stage 证据可见性为 "
                 f"{available_lift_stage_rules:.2f}，实际使用率为 {used_lift_stage_rules:.2f}。"
             )
-        belief_coverage = large_far_row.get("rag_belief_state_coverage_mean")
-        conservative_rate = large_far_row.get("rag_uncertainty_conservative_mode_mean")
-        solver_choice = large_far_row.get("rag_solver_selected_candidate")
+        belief_coverage = _primary_metric(large_far_row, "belief_state_coverage_mean")
+        conservative_rate = _primary_metric(large_far_row, "uncertainty_conservative_mode_mean")
+        solver_choice = _primary_metric(large_far_row, "solver_selected_candidate")
         if belief_coverage is not None and conservative_rate is not None and solver_choice is not None:
             lines.append(
                 f"- `pick_large_part_far` 当前 belief coverage={belief_coverage:.4f}，"
@@ -602,14 +683,18 @@ def build_summary(
                 f"transfer_sway={_format_pct(transfer_fail_rate)} / "
                 f"placement_settle={_format_pct(settle_fail_rate)}。"
             )
-        placement_velocity = large_far_row.get("rag_placement_velocity_mean")
+        placement_velocity = _primary_plan(large_far_row, "placement_velocity")
         if placement_velocity is None:
             placement_velocity = benchmark_rows.get("pick_large_part_far", {}).get("placement_velocity_mean")
         if placement_velocity is not None:
             lines.append(
                 f"- round15 之后，`pick_large_part_far` 已不再把运输段速度直接沿用到落位段；当前显式 `placement_velocity` 为 {placement_velocity:.2f} m/s。"
             )
-        task_heuristic_placement_velocity = large_far_row.get("task_heuristic_placement_velocity_mean")
+        task_heuristic_placement_velocity = _method_metric(
+            large_far_row,
+            "task_heuristic",
+            "placement_velocity_mean",
+        )
         if (
             placement_velocity is not None
             and task_heuristic_placement_velocity is not None
@@ -640,19 +725,16 @@ def build_summary(
             "",
             "七、建议展示文件",
             "- outputs/current/qa_evaluation_detail.json",
-            "- outputs/current/simulation_benchmark_result.json",
-            "- outputs/current/simulation_comparison_multi_seed.json",
-            "- outputs/current/simulation_evidence_ablation.json",
-            "- outputs/current/simulation_evidence_dependence_summary.txt",
-            "- outputs/current/simulation_motion_ablation.json",
-            "- outputs/current/simulation_motion_dependence_summary.txt",
-            "- outputs/current/simulation_split_summary.txt",
-            "- outputs/current/simulation_challenge_summary.txt",
-            "- outputs/visualizations/qa_method_summary.png",
-            "- outputs/visualizations/qa_gain_over_direct_llm.png",
-            "- outputs/visualizations/simulation_rag_gain.png",
-            "- outputs/visualizations/simulation_multi_seed_success.png",
-            "- outputs/visualizations/simulation_control_plan.png",
+            "- outputs/current_observer_step_replan/simulation_benchmark_result.json",
+            "- outputs/current_observer_step_replan/simulation_benchmark_trial_records.json",
+            "- outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json",
+            "- outputs/current_observer_step_replan/simulation_comparison_multi_seed.json",
+            "- outputs/current_observer_step_replan/showcase_summary.txt",
+            "- outputs/current_observer_step_replan/visualizations/qa_method_summary.png",
+            "- outputs/current_observer_step_replan/visualizations/qa_gain_over_direct_llm.png",
+            "- outputs/current_observer_step_replan/visualizations/simulation_rag_gain.png",
+            "- outputs/current_observer_step_replan/visualizations/simulation_multi_seed_success.png",
+            "- outputs/current_observer_step_replan/visualizations/simulation_control_plan.png",
         ]
     )
 

@@ -4,29 +4,29 @@ n_trials_per_task=20, seeds=[42, 43, 44]
 
 任务                               参考力范围(N)     rag_成功率(mean±std) rag_feedback_成功率(mean±std) task_heuristic_成功率(mean±std) fixed_成功率(mean±std)
 ------------------------------------------------------------------------------------------------------------
-pick_smooth_metal/抓取光滑金属零件       30-50        65.00%±15.00% 96.67%±5.77% 75.00%±10.00% 40.00%±15.00%
+pick_smooth_metal/抓取光滑金属零件       30-50        65.00%±15.00% 91.67%±2.89% 75.00%±10.00% 40.00%±15.00%
     rag belief=0.696, conservative_rate=100.00%, solver=local_search:gripper_force:up
-pick_rubber/抓取橡胶零件               5-15         78.33%±14.43% 93.33%±2.89% 58.33%±11.55% 20.00%±8.66%
+pick_rubber/抓取橡胶零件               5-15         78.33%±14.43% 95.00%±5.00% 58.33%±11.55% 20.00%±8.66%
     rag belief=0.692, conservative_rate=100.00%, solver=uncertainty_guard
-pick_small_part/抓取小型机械零件         5-15         76.67%±18.93% 96.67%±2.89% 66.67%±7.64% 70.00%±0.00%
+pick_small_part/抓取小型机械零件         5-15         76.67%±18.93% 90.00%±8.66% 66.67%±7.64% 70.00%±0.00%
     rag belief=0.606, conservative_rate=100.00%, solver=uncertainty_guard
-pick_large_part/抓取大型零件           30-50        70.00%±10.00% 91.67%±7.64% 65.00%±5.00% 38.33%±2.89%
+pick_large_part/抓取大型零件           30-50        70.00%±10.00% 90.00%±0.00% 65.00%±5.00% 38.33%±2.89%
     rag belief=0.882, conservative_rate=100.00%, solver=uncertainty_guard
-pick_smooth_metal_fast/高速搬运光滑金属零件 35-50        75.00%±0.00% 83.33%±7.64% 60.00%±5.00% 55.00%±17.32%
+pick_smooth_metal_fast/高速搬运光滑金属零件 35-50        75.00%±0.00% 73.33%±11.55% 60.00%±5.00% 55.00%±17.32%
     rag belief=0.605, conservative_rate=100.00%, solver=local_search:gripper_force:up
-pick_small_part_fast/高速搬运小型机械零件  8-18         75.00%±10.00% 91.67%±2.89% 71.67%±7.64% 55.00%±20.00%
+pick_small_part_fast/高速搬运小型机械零件  8-18         75.00%±10.00% 95.00%±0.00% 71.67%±7.64% 55.00%±20.00%
     rag belief=0.737, conservative_rate=100.00%, solver=uncertainty_guard
-pick_thin_wall/抓取薄壁件             5-12         81.67%±5.77% 91.67%±5.77% 40.00%±13.23% 15.00%±8.66%
+pick_thin_wall/抓取薄壁件             5-12         81.67%±5.77% 95.00%±0.00% 40.00%±13.23% 15.00%±8.66%
     rag belief=0.738, conservative_rate=100.00%, solver=uncertainty_guard
-pick_rubber_fast/高速搬运橡胶零件        8-18         86.67%±2.89% 93.33%±2.89% 75.00%±10.00% 18.33%±7.64%
+pick_rubber_fast/高速搬运橡胶零件        8-18         86.67%±2.89% 93.33%±5.77% 75.00%±10.00% 18.33%±7.64%
     rag belief=0.737, conservative_rate=100.00%, solver=uncertainty_guard
-pick_large_part_far/长距离搬运大型零件    32-48        65.00%±13.23% 91.67%±10.41% 31.67%±5.77% 11.67%±7.64%
+pick_large_part_far/长距离搬运大型零件    32-48        65.00%±13.23% 91.67%±7.64% 31.67%±5.77% 11.67%±7.64%
     rag belief=0.569, conservative_rate=100.00%, solver=uncertainty_guard
 pick_metal_heavy/抓取重型光滑金属零件      30-50        0.00%±0.00% 0.00%±0.00% 48.33%±2.89% 28.33%±5.77%
     rag belief=0.735, conservative_rate=100.00%, solver=uncertainty_guard
-pick_thin_wall_fast/高速搬运薄壁件      8-16         56.67%±16.07% 88.33%±5.77% 48.33%±15.28% 11.67%±7.64%
+pick_thin_wall_fast/高速搬运薄壁件      8-16         56.67%±16.07% 85.00%±8.66% 48.33%±15.28% 11.67%±7.64%
     rag belief=0.688, conservative_rate=100.00%, solver=uncertainty_guard
-pick_metal_heavy_fast/高速搬运重型光滑金属零件 38-50        75.00%±8.66% 85.00%±5.00% 53.33%±7.64% 28.33%±12.58%
+pick_metal_heavy_fast/高速搬运重型光滑金属零件 38-50        75.00%±8.66% 86.67%±7.64% 53.33%±7.64% 28.33%±12.58%
     rag belief=0.605, conservative_rate=100.00%, solver=uncertainty_guard
 
 对比 JSON: outputs/current_observer_step_replan/simulation_comparison_multi_seed.json

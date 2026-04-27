@@ -1,0 +1,6010 @@
+[
+  {
+    "task_id": "pick_smooth_metal",
+    "task_label": "pick_smooth_metal/抓取光滑金属零件",
+    "task_description": "抓取光滑金属零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "low_friction",
+      "fragile"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3638,
+        "distance_error": 0.0318,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1438,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.04
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_rubber",
+    "task_label": "pick_rubber/抓取橡胶零件",
+    "task_description": "抓取橡胶零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "high_friction",
+      "compliant"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.3492,
+        "distance_error": 0.0355,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5969,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_small_part",
+    "task_label": "pick_small_part/抓取小型机械零件",
+    "task_description": "抓取小型机械零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "small",
+      "precision"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.8802,
+        "distance_error": 0.0243,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_large_part",
+    "task_label": "pick_large_part/抓取大型零件",
+    "task_description": "抓取大型零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "large",
+      "heavy"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.4622,
+        "distance_error": 0.0382,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1215,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1124
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_smooth_metal_fast",
+    "task_label": "pick_smooth_metal_fast/高速搬运光滑金属零件",
+    "task_description": "高速搬运光滑金属零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "low_friction",
+      "fragile",
+      "high_speed"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.3678,
+        "distance_error": 0.0272,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "high_speed_low_friction"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.1156,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0132
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_small_part_fast",
+    "task_label": "pick_small_part_fast/高速搬运小型机械零件",
+    "task_description": "高速搬运小型机械零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "small",
+      "precision",
+      "high_speed"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 1.7903,
+        "distance_error": 0.0267,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_thin_wall",
+    "task_label": "pick_thin_wall/抓取薄壁件",
+    "task_description": "抓取薄壁件",
+    "task_split": "val",
+    "challenge_tags": [
+      "thin_wall",
+      "fragile"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.8833,
+        "distance_error": 0.025,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5671,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_rubber_fast",
+    "task_label": "pick_rubber_fast/高速搬运橡胶零件",
+    "task_description": "高速搬运橡胶零件",
+    "task_split": "val",
+    "challenge_tags": [
+      "high_friction",
+      "compliant",
+      "high_speed"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.2775,
+        "distance_error": 0.0301,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.4767,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_large_part_far",
+    "task_label": "pick_large_part_far/长距离搬运大型零件",
+    "task_description": "长距离搬运大型零件",
+    "task_split": "val",
+    "challenge_tags": [
+      "large",
+      "heavy",
+      "long_transfer"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.1661,
+        "distance_error": 0.0293,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "long_transfer"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.19,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1342
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_metal_heavy",
+    "task_label": "pick_metal_heavy/抓取重型光滑金属零件",
+    "task_description": "抓取重型光滑金属零件",
+    "task_split": "test",
+    "challenge_tags": [
+      "low_friction",
+      "heavy",
+      "fragile"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": false,
+        "failure_bucket": "transfer_sway_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 4.2885,
+        "distance_error": 0.0474,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.3969,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_thin_wall_fast",
+    "task_label": "pick_thin_wall_fast/高速搬运薄壁件",
+    "task_description": "高速搬运薄壁件",
+    "task_split": "test",
+    "challenge_tags": [
+      "thin_wall",
+      "fragile",
+      "high_speed"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": false,
+        "failure_bucket": "placement_settle_fail",
+        "elapsed_sec": 2.4756,
+        "distance_error": 0.023,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.5256,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "pick_metal_heavy_fast",
+    "task_label": "pick_metal_heavy_fast/高速搬运重型光滑金属零件",
+    "task_description": "高速搬运重型光滑金属零件",
+    "task_split": "test",
+    "challenge_tags": [
+      "low_friction",
+      "heavy",
+      "fragile",
+      "high_speed"
+    ],
+    "method": "fixed",
+    "seed_plan": {
+      "gripper_force": 25.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.3,
+      "lift_clearance": 0.06
+    },
+    "planner_diagnostics": {},
+    "trial_records": [
+      {
+        "trial_index": 0,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 1,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 2,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 3,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 4,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 5,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 6,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 7,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 8,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 9,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 10,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 11,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 12,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 13,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 14,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 15,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 16,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 17,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 18,
+        "success": false,
+        "failure_bucket": "lift_hold_fail",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      },
+      {
+        "trial_index": 19,
+        "success": true,
+        "failure_bucket": "success",
+        "elapsed_sec": 3.9275,
+        "distance_error": 0.0467,
+        "feedback_retry_count": 0,
+        "step_replan_count": 0,
+        "terminal_plan": {
+          "gripper_force": 25.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.3,
+          "lift_clearance": 0.06,
+          "dynamic_transport_mode": "static"
+        },
+        "observer_trace": [],
+        "step_replan_trace": [],
+        "avg_risks": {
+          "slip_risk": 0.4274,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.1549
+        }
+      }
+    ]
+  }
+]

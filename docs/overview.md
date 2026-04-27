@@ -21,18 +21,21 @@ MechanicalRag 关注的是机械知识如何同时服务两个场景：
 - 当前仿真主链已经改成 `evidence -> belief -> seed synthesize -> local solve -> observer / step replan`
 - `env.py` 现在稳定输出 `observer_trace`；`rag_feedback` 命中风险阈值时会在单次 execution 内留下 `step_replan_trace`
 - 当前关键结果：
-  - `rag_feedback` 12 任务多 seed平均成功率 `0.8361`
-  - 相对 `rag` seed-only 路径，平均提升 `+0.1653`
-  - `pick_large_part_far = 0.9167 ± 0.1041`
-  - `pick_thin_wall_fast = 0.8833 ± 0.0577`
-  - `pick_smooth_metal_fast = 0.8333 ± 0.0764`
+  - `rag_feedback` 12 任务多 seed平均成功率 `0.8222`
+  - 相对 `rag` seed-only 路径，平均提升 `+0.1514`
+  - `pick_large_part_far = 0.9167 ± 0.0764`
+  - `pick_thin_wall_fast = 0.8500 ± 0.0866`
+  - `pick_smooth_metal_fast = 0.7333 ± 0.1155`
 - 当前主要问题：`pick_metal_heavy = 0.0000 ± 0.0000`
+- `simulation_benchmark_result.json`、`simulation_comparison_rag_vs_baseline.json`、`simulation_comparison_multi_seed.json` 现在使用 Schema V2：`methods.<method>.seed_plan` / `executed_plan_stats` / `planner_diagnostics`
+- `simulation_benchmark_trial_records.json` 提供逐 task / 逐 seed 的 execution 明细
 
 如果只想快速把握当前状态，应优先查看：
 
 - `README.md`
 - `simulation/README.md`
 - `outputs/current_observer_step_replan/simulation_benchmark_result.json`
+- `outputs/current_observer_step_replan/simulation_benchmark_trial_records.json`
 - `outputs/current_observer_step_replan/showcase_summary.txt`
 
 ## 3. 系统结构
@@ -128,9 +131,9 @@ python reporting/visualize_results.py --qa_json outputs/current/qa_evaluation_de
 ### 5.2 Simulation
 
 - `outputs/current_observer_step_replan/simulation_benchmark_result.json`
+- `outputs/current_observer_step_replan/simulation_benchmark_trial_records.json`
 - `outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json`
 - `outputs/current_observer_step_replan/simulation_comparison_multi_seed.json`
-- `outputs/current_observer_step_replan/simulation_benchmark_rag_feedback.json`
 - `outputs/current_observer_step_replan/showcase_summary.txt`
 - `outputs/current_observer_step_replan/visualizations/simulation_belief_diagnostics.png`
 - `outputs/current/simulation_benchmark_result.json`
@@ -154,4 +157,6 @@ python reporting/visualize_results.py --qa_json outputs/current/qa_evaluation_de
 - QA 评测统一在同一知识库、同一 split 定义和同一评分规则下运行，并额外输出 `retrieval`、`response_eval`、`evidence_trace` 以区分“证据命中”和“回答正确”。
 - simulation 对比统一使用同一任务集、同一 `n_trials`、同一 seed 预算和同一环境判定逻辑。
 - `rag`、`direct_llm`、`fixed`、`rag_feedback` 等方法都不能直接读取 `reference_force_range`；该字段只保留在结果层做分析统计。
+- `simulation_benchmark_result.json`、`simulation_comparison_rag_vs_baseline.json`、`simulation_comparison_multi_seed.json` 当前都按 `methods.<method>` 暴露控制结果：`seed_plan` 是初始 planner proposal，`executed_plan_stats` 是 task 级 terminal-plan 聚合，`planner_diagnostics` 记录 belief / solver 统计。
+- `simulation_benchmark_trial_records.json` 当前按 task 输出 `trial_records`，并保留 seed 维度上下文，方便追 observer / step-replan 的真实执行轨迹。
 - simulation 输出包含 95% CI、多 seed `mean±std`、`train / val / test` split 汇总、`challenge_tags` challenge 汇总、证据支持度 / 冲突统计、距离误差、稳定度、阶段化风险，以及 `rag` 对 `rag_generic_only` / `rag_no_motion_rules` 的双消融。

@@ -400,26 +400,43 @@ def plot_sim_control_plan(sim_rows: list[dict], output_dir: Path) -> None:
 def plot_sim_success_gain(sim_rows: list[dict], output_dir: Path) -> None:
     tasks = _task_names(sim_rows)
     x = np.arange(len(tasks))
-    rag_gain_vs_direct = [
-        float(_method_metric(row, "rag", "success_rate", 0.0))
-        - float(_method_metric(row, "direct_llm", "success_rate", 0.0))
+    primary_method = (
+        "rag_feedback"
+        if any(_method_metric(row, "rag_feedback", "success_rate", np.nan) == _method_metric(row, "rag_feedback", "success_rate", np.nan) for row in sim_rows)
+        else "rag"
+    )
+    baseline_method = (
+        "rag"
+        if primary_method == "rag_feedback"
+        and any(_method_metric(row, "rag", "success_rate", np.nan) == _method_metric(row, "rag", "success_rate", np.nan) for row in sim_rows)
+        else (
+            "direct_llm"
+            if any(_method_metric(row, "direct_llm", "success_rate", np.nan) == _method_metric(row, "direct_llm", "success_rate", np.nan) for row in sim_rows)
+            else ("task_heuristic" if any(_method_metric(row, "task_heuristic", "success_rate", np.nan) == _method_metric(row, "task_heuristic", "success_rate", np.nan) for row in sim_rows) else "fixed")
+        )
+    )
+    primary_label = METHOD_LABELS.get(primary_method, primary_method)
+    baseline_label = METHOD_LABELS.get(baseline_method, baseline_method)
+    primary_gain_vs_baseline = [
+        float(_method_metric(row, primary_method, "success_rate", 0.0))
+        - float(_method_metric(row, baseline_method, "success_rate", 0.0))
         for row in sim_rows
     ]
     heuristic_method = "task_heuristic" if any(_method_metric(row, "task_heuristic", "success_rate", np.nan) == _method_metric(row, "task_heuristic", "success_rate", np.nan) for row in sim_rows) else "fixed"
-    rag_gain_vs_heuristic = [
-        float(_method_metric(row, "rag", "success_rate", 0.0))
+    primary_gain_vs_heuristic = [
+        float(_method_metric(row, primary_method, "success_rate", 0.0))
         - float(_method_metric(row, heuristic_method, "success_rate", 0.0))
         for row in sim_rows
     ]
-    heuristic_label = "RAG - Task Heuristic" if heuristic_method == "task_heuristic" else "RAG - Fixed"
+    heuristic_label = f"{primary_label} - Task Heuristic" if heuristic_method == "task_heuristic" else f"{primary_label} - Fixed"
 
     width = 0.34
     fig, ax = plt.subplots(figsize=(12, 5))
-    ax.bar(x - width / 2, rag_gain_vs_direct, width, label="RAG - Direct LLM", color="#2a9d8f")
-    ax.bar(x + width / 2, rag_gain_vs_heuristic, width, label=heuristic_label, color="#e76f51")
+    ax.bar(x - width / 2, primary_gain_vs_baseline, width, label=f"{primary_label} - {baseline_label}", color="#2a9d8f")
+    ax.bar(x + width / 2, primary_gain_vs_heuristic, width, label=heuristic_label, color="#e76f51")
     ax.axhline(0.0, color="#555555", linewidth=1)
     ax.set_ylabel("Success Rate Gain")
-    ax.set_title("RAG Gain over Baselines")
+    ax.set_title(f"{primary_label} Gain over Baselines")
     ax.set_xticks(x)
     ax.set_xticklabels(tasks, rotation=18)
     ax.legend()

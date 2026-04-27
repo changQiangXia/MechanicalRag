@@ -36,6 +36,24 @@ class ReportingSchemaTest(unittest.TestCase):
         self.assertEqual(showcase._method_metric(row, "rag_feedback", "success_rate_mean"), 0.84)
         self.assertEqual(showcase._method_metric(row, "task_heuristic", "success_rate_mean"), 0.61)
 
+    def test_showcase_gap_helper_skips_missing_baseline(self):
+        rows = [
+            {
+                "task_id": "pick_demo",
+                "methods": {
+                    "rag_feedback": {"success_rate_mean": 0.84},
+                    "task_heuristic": {"success_rate_mean": 0.61},
+                },
+            }
+        ]
+        self.assertAlmostEqual(
+            showcase._mean_method_gap(rows, "rag_feedback", "task_heuristic", "success_rate_mean"),
+            0.23,
+        )
+        self.assertIsNone(
+            showcase._mean_method_gap(rows, "rag_feedback", "direct_llm", "success_rate_mean"),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

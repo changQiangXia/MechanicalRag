@@ -1,36 +1,127 @@
-MechanicalRag observer / step-replan showcase
-============================================
+MechanicalRag 展示摘要
+========================================================================
 
-Date: 2026-04-27 UTC
-Output directory: outputs/current_observer_step_replan/
+一、QA 结果总览
+- direct_llm: strict=0.00, weighted=0.09, correct=0, incorrect=29, semantic=0.58, numeric=0.17, abstain_r=0.00, cf_flip=0.00, support=0.00
+  split=core: strict=0.00, weighted=0.25, n=8
+  split=paraphrase: strict=0.00, weighted=0.12, n=4
+  split=robustness: strict=0.00, weighted=0.25, n=2
+  split=compositional: strict=0.00, weighted=0.00, n=3
+  split=procedure: strict=0.00, weighted=0.00, n=2
+  split=holdout: strict=0.00, weighted=0.00, n=4
+  split=counterfactual: strict=0.00, weighted=0.00, n=8
+  split=ood: strict=0.00, weighted=0.00, n=4
+- base_rag: strict=0.20, weighted=0.27, correct=7, incorrect=23, semantic=0.64, numeric=0.33, abstain_r=0.00, cf_flip=0.00, support=0.44
+  split=core: strict=0.25, weighted=0.38, n=8
+  split=paraphrase: strict=0.25, weighted=0.50, n=4
+  split=robustness: strict=0.50, weighted=0.50, n=2
+  split=compositional: strict=0.00, weighted=0.17, n=3
+  split=procedure: strict=0.50, weighted=0.50, n=2
+  split=holdout: strict=0.50, weighted=0.50, n=4
+  split=counterfactual: strict=0.00, weighted=0.00, n=8
+  split=ood: strict=0.00, weighted=0.00, n=4
+- improved_rag: strict=1.00, weighted=1.00, correct=35, incorrect=0, semantic=0.85, numeric=1.00, abstain_r=1.00, cf_flip=1.00, support=0.98
+  split=core: strict=1.00, weighted=1.00, n=8
+  split=paraphrase: strict=1.00, weighted=1.00, n=4
+  split=robustness: strict=1.00, weighted=1.00, n=2
+  split=compositional: strict=1.00, weighted=1.00, n=3
+  split=procedure: strict=1.00, weighted=1.00, n=2
+  split=holdout: strict=1.00, weighted=1.00, n=4
+  split=counterfactual: strict=1.00, weighted=1.00, n=8
+  split=ood: strict=1.00, weighted=1.00, n=4
+- problem_solving_rag: strict=1.00, weighted=1.00, correct=35, incorrect=0, semantic=0.85, numeric=1.00, abstain_r=1.00, cf_flip=1.00, support=0.98
+  split=core: strict=1.00, weighted=1.00, n=8
+  split=paraphrase: strict=1.00, weighted=1.00, n=4
+  split=robustness: strict=1.00, weighted=1.00, n=2
+  split=compositional: strict=1.00, weighted=1.00, n=3
+  split=procedure: strict=1.00, weighted=1.00, n=2
+  split=holdout: strict=1.00, weighted=1.00, n=4
+  split=counterfactual: strict=1.00, weighted=1.00, n=8
+  split=ood: strict=1.00, weighted=1.00, n=4
+- 当前已实现全量 strict 命中的 QA 方法：improved_rag, problem_solving_rag。
 
-What changed
-------------
-- Control path is now: evidence -> belief -> belief_constraint_synthesis seed -> local solve -> observer / step replan.
-- env.py now emits execution-time observer snapshots.
-- rag_feedback now replans inside a single execution when stage risk crosses a trigger threshold.
+二、代表性问答样例
+- [core] 问题：抓取光滑金属零件时，夹爪力应控制在什么范围？
+  参考：建议控制在30-50N。
+  direct_llm: incorrect | 抓取光滑金属零件时，夹爪力应控制在15-20N范围内。
+  base_rag: incorrect | 22. 物理先验知识：摩擦相关——抓取光滑金属零件时，需增大夹爪力（30-50N），避免因摩擦力不足导致工件滑落；抓取橡胶零件时，夹爪力控制在5-15N，防止零件变形。
+  improved_rag: correct | 抓取光滑金属零件时，夹爪力建议控制在30-50N。
+  problem_solving_rag: correct | 抓取光滑金属零件时，夹爪力建议控制在30-50N。
 
-Headline results
-----------------
-- rag_feedback 12-task multi-seed mean success rate: 0.8361
-- rag 12-task multi-seed mean success rate: 0.6708
-- rag_feedback over rag delta: +0.1653
+- [core] 问题：薄壁件抓取时需要注意什么？
+  参考：要避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+  direct_llm: incorrect | 抓取前需检查零件尺寸和形状，确保抓取面平整光滑，避免碰撞损伤。
+  base_rag: correct | 避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+  improved_rag: correct | 避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
+  problem_solving_rag: correct | 避免径向夹持导致变形，优先采用多点分散支撑或真空吸附。
 
-Key task outcomes
------------------
-- pick_large_part_far: 0.9167 ± 0.1041
-- pick_thin_wall_fast: 0.8833 ± 0.0577
-- pick_smooth_metal_fast: 0.8333 ± 0.0764
-- pick_metal_heavy_fast: 0.8500 ± 0.0500
-- pick_metal_heavy: 0.0000 ± 0.0000
+- [holdout] 问题：真空吸盘更适合哪类表面？
+  参考：更适合光滑表面。
+  direct_llm: incorrect | 真空吸盘适合金属表面。
+  base_rag: correct | 适用于光滑表面
+  improved_rag: correct | 真空度可达-80kPa，适配光滑表面，硅胶吸盘耐磨。
+  problem_solving_rag: correct | 真空度可达-80kPa，适配光滑表面，硅胶吸盘耐磨。
 
-Execution-loop notes
---------------------
-- observer_trace is present for rag_feedback executions.
-- step_replan_trace appears only when execution margins actually cross the trigger threshold.
-- In the current benchmark, replan triggers are sparse rather than universal.
+三、拒答样例
+- [ood] 问题：机械臂焊接铝板时推荐焊接电流是多少？
+  direct_llm: incorrect | 15-30A
+  base_rag: incorrect | 10-30安培
+  improved_rag: correct | 当前知识库未提供足够证据，无法可靠回答该问题。
+  problem_solving_rag: correct | 当前知识库未提供足够证据，无法可靠回答该问题。
 
-Main remaining gap
-------------------
-- Static heavy smooth-metal pickup still fails at the environment layer.
-- The current observer is a lightweight execution-time estimator, not a full posterior filter or MPC stack.
+四、反事实证据依赖样例
+- [counterfactual] 问题：机械臂标定后，为什么需要进行复位操作？
+  排除条目：13
+  原始题：机械臂标定后，为什么需要进行复位操作？
+  direct_llm 原题: partial | 因为机械臂的运动轨迹和位置会随时间变化，需要定期复位以保持其精确性。
+  direct_llm 删证据后: incorrect | 因为机械臂的运动轨迹和位置会随时间变化，需要定期复位以保持其精确性。
+  base_rag 原题: partial | 为了保证机械臂在标定完成后能够正确返回到初始的安全位置，以避免因标定过程中出现的误差导致的设备损坏或人员伤害。
+  base_rag 删证据后: incorrect | 为了保证机械臂在标定完成后能够正确返回到初始的安全位置，以避免因标定过程中出现的误差导致的设备损坏或人员伤害。
+  improved_rag 原题: correct | 标定后需进行复位操作，复位至初始安全位置。
+  improved_rag 删证据后: correct | 当前知识库未提供足够证据，无法可靠回答该问题。
+  problem_solving_rag 原题: correct | 标定后需进行复位操作，复位至初始安全位置。
+  problem_solving_rag 删证据后: correct | 当前知识库未提供足够证据，无法可靠回答该问题。
+
+五、仿真对比重点
+- 多 seed 平均上，RAG + Feedback 相对 RAG seed-only 的成功率提升为 15.14%。
+- 多 seed 平均上，RAG + Feedback 相对 Task Heuristic 基线的成功率提升为 24.44%。
+- 多 seed 平均上，RAG + Feedback 控制计划的证据支持分为 3.24。
+- 多 seed 平均上，RAG + Feedback belief state coverage 为 0.69。
+- 多 seed 平均上，RAG + Feedback uncertainty conservative mode 的触发率为 100.00%。
+- 当前多 seed 结果中，RAG + Feedback 最常选中的 solver 候选是 `uncertainty_guard`，覆盖 10/12 个任务。
+- split 汇总显示 test 任务上 RAG + Feedback 平均成功率为 0.5722，便于和 train/val 做泛化对照。
+- challenge 汇总显示 RAG + Feedback 当前最弱的挑战标签是 low_friction，平均成功率 0.6292。
+- `pick_rubber` 当前 RAG + Feedback 平均成功率为 0.9500，相对 task_heuristic 提升 36.67%。
+- `pick_smooth_metal` 当前 RAG + Feedback 平均成功率为 0.9167，已领先 task_heuristic 16.67%。
+- `pick_smooth_metal_fast` 当前 RAG + Feedback 平均成功率为 0.7333，相对 task_heuristic 提升 13.33%。
+- round16 之后，`pick_smooth_metal_fast` 已进入 `high_speed_low_friction` dynamic transport mode，不再只靠单一静态抓取参数解释高速运输失败。
+- `pick_smooth_metal_fast` 当前显式使用 stage-specific 动态运输控制： transfer_force=43.05N, placement_velocity=0.21m/s。
+- `pick_smooth_metal_fast` 当前不再出现“stage fail 有值但 risk 全 0”的薄语义： transfer_sway_risk=0.0000, placement_settle_risk=0.0000。
+- `pick_metal_heavy` 当前 RAG + Feedback 平均成功率为 0.0000，相对 task_heuristic 提升 -48.33%。
+- `pick_large_part_far` 当前 RAG + Feedback 平均成功率为 0.9167，相对 task_heuristic 提升 60.00%，但仍是当前最难任务。
+- round19 之后，`pick_large_part_far` 已把 long-transfer 的起吊保持链补厚成显式 `long_transfer` 控制计划： lift_force=37.47N, transfer_alignment=0.94, transfer_force=37.31N。
+- `pick_large_part_far` 当前已不再只靠 large-part force band；lift-stage 证据可见性为 1.00，实际使用率为 1.00。
+- `pick_large_part_far` 当前 belief coverage=0.5694，conservative mode 触发率为 100.00%，主导 solver 为 `uncertainty_guard`。
+- `pick_large_part_far` 当前已显式建模 long-transfer `transfer_sway_risk`，平均值为 0.0182。
+- `pick_large_part_far` 当前已拆成 stage-specific failure model： lift_hold=0.0100, transfer_sway=0.0182, placement_settle=0.0344，主导失败模式为 `placement_settle_fail`。
+- `pick_large_part_far` 的 stage fail rate 当前为 lift_hold=1.67% / transfer_sway=1.67% / placement_settle=5.00%。
+- round15 之后，`pick_large_part_far` 已不再把运输段速度直接沿用到落位段；当前显式 `placement_velocity` 为 0.12 m/s。
+- 最难任务：pick_metal_heavy，平均成功率 0.0000，稳定度 0.7628。
+- 最稳任务：pick_rubber，平均成功率 0.9500，稳定度 0.9249。
+
+六、当前证据边界
+- QA 结果应解读为“当前知识库 + 当前 split 划分”上的结果，不直接外推为强泛化能力。
+- 仿真 benchmark 的成功判定已基于物体属性和执行观测独立建模，reference_force_range 只用于分析输出。
+
+七、建议展示文件
+- outputs/current/qa_evaluation_detail.json
+- outputs/current_observer_step_replan/simulation_benchmark_result.json
+- outputs/current_observer_step_replan/simulation_benchmark_trial_records.json
+- outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json
+- outputs/current_observer_step_replan/simulation_comparison_multi_seed.json
+- outputs/current_observer_step_replan/showcase_summary.txt
+- outputs/current_observer_step_replan/visualizations/qa_method_summary.png
+- outputs/current_observer_step_replan/visualizations/qa_gain_over_direct_llm.png
+- outputs/current_observer_step_replan/visualizations/simulation_rag_gain.png
+- outputs/current_observer_step_replan/visualizations/simulation_multi_seed_success.png
+- outputs/current_observer_step_replan/visualizations/simulation_control_plan.png

@@ -15,12 +15,14 @@
 - `round20` placement-stage 实验：`outputs/current_round20_sim/simulation_benchmark_result.json`
 - 当前控制链已经改成 `evidence -> belief -> seed synthesize -> local solve -> observer / step replan`
 - `observer_trace` 现在来自 `env.py` 的执行期观测；`step_replan_trace` 会在单次 execution 内记录 replan 触发点
-- `rag_feedback` 12 任务多 seed平均成功率 `0.8361`
-- 相对 `rag` seed-only 路径，平均成功率提升 `+0.1653`
-- `pick_large_part_far = 0.9167 ± 0.1041`
-- `pick_thin_wall_fast = 0.8833 ± 0.0577`
-- `pick_smooth_metal_fast = 0.8333 ± 0.0764`
+- `rag_feedback` 12 任务多 seed平均成功率 `0.8222`
+- 相对 `rag` seed-only 路径，平均成功率提升 `+0.1514`
+- `pick_large_part_far = 0.9167 ± 0.0764`
+- `pick_thin_wall_fast = 0.8500 ± 0.0866`
+- `pick_smooth_metal_fast = 0.7333 ± 0.1155`
 - 当前主要剩余问题：`pick_metal_heavy = 0.0000 ± 0.0000`
+- `simulation_benchmark_result.json`、`simulation_comparison_rag_vs_baseline.json`、`simulation_comparison_multi_seed.json` 现在使用 Schema V2：主 summary 在 `methods.<method>` 下，控制计划看 `seed_plan` 和 `executed_plan_stats`
+- `simulation_benchmark_trial_records.json` 提供逐 task / 逐 seed 的 execution 明细，包含 `terminal_plan`、`observer_trace` 和 `step_replan_trace`
 
 ## 当前边界
 
@@ -31,6 +33,8 @@
 - 当前控制计划包含 `gripper_force`、`lift_force`、`transfer_force`、`transfer_alignment`、`approach_height`、`transport_velocity`、`placement_velocity`、`lift_clearance` 八个参数。
 - `RAGController` 会输出结构化证据轨迹，以及 `belief_state`、`task_constraints`、`uncertainty_profile`、`seed_mode`、`seed_plan`、`solver_selected_candidate`、`solver_score_breakdown` 等诊断字段；这些字段当前仍是轻量状态估计与局部求解日志，而不是完整后验滤波与优化规划日志。
 - `feedback.py` 当前显式使用 `lift_hold_risk`、`transfer_sway_risk`、`placement_settle_risk` 做阶段化调参，而不是只依赖泛化 `stability_score`。
+- `runner.py` 当前把 task-level 终态控制计划序列化到 `executed_plan_stats`，不再把“最后一次 trial 的参数”伪装成全任务 summary。
+- `simulation_benchmark_trial_records.json` 会把单次 execution 的 terminal control plan、observer snapshot 和 step-replan trace 单独落盘。
 
 ## 当前结构
 
@@ -104,6 +108,7 @@ benchmark 汇总的 `reference_force_range` 只是分析指标，方便比较“
 - `rag_learned` baseline 使用环境 teacher 标签训练，不再读取 RAG 银标参数
 
 输出除成功率外，还包含 95% CI、多 seed `mean±std`、按 `train / val / test` 聚合的 split 汇总、按 `challenge_tags` 聚合的 challenge 汇总、证据支持度 / 冲突统计、距离误差、稳定度以及阶段化风险指标。
+当前 benchmark / comparison 主 summary 都在 `methods.<method>` 下暴露 `seed_plan`、`executed_plan_stats`、`planner_diagnostics`，配套明细则在 `simulation_benchmark_trial_records.json` 的 `trial_records` 中保留 seed 和 observer / step-replan 上下文。
 
 ## 运行
 
@@ -115,6 +120,7 @@ python -m simulation.benchmark --compare_feedback --n_trials 20 --seed 42 --outp
 python -m simulation.benchmark --compare_evidence_ablation --n_trials 20 --seeds 42 43 44 --output_dir outputs/current
 python -m simulation.benchmark --compare_motion_ablation --n_trials 20 --seeds 42 43 44 --output_dir outputs/current
 python -m simulation.benchmark --compare_multi_seed --n_trials 20 --seeds 42 43 44 --multi_seed_methods rag rag_feedback task_heuristic fixed --output_dir outputs/current_observer_step_replan
+python reporting/generate_showcase.py --qa_json outputs/current/qa_evaluation_detail.json --sim_json outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json --sim_multi_seed_json outputs/current_observer_step_replan/simulation_comparison_multi_seed.json --sim_benchmark_json outputs/current_observer_step_replan/simulation_benchmark_result.json --output outputs/current_observer_step_replan/showcase_summary.txt
 ```
 
 ## 当前限制

@@ -121,6 +121,8 @@ QA 流程被拆成三段：
 - runner 负责试验执行
 - reporting 负责序列化和表格输出
 - benchmark 负责参数解析和命令分发
+- `simulation_benchmark_result.json` 现在使用 Schema V2：`seed_plan` 表示初始 planner proposal，`executed_plan_stats` 表示 task 级 terminal-plan 聚合，`planner_diagnostics` 单独暴露 belief / solver 统计
+- `simulation_benchmark_trial_records.json` 作为配套明细文件，逐 task 输出 `trial_records`，并保留 seed 上下文、`observer_trace` 与 `step_replan_trace`
 
 ### 5.3 fallback
 
@@ -145,6 +147,19 @@ QA 流程被拆成三段：
 - `outputs/current_observer_step_replan/`
 - `outputs/current/`
 - `outputs/current_round20_sim/`
+
+其中 `outputs/current_observer_step_replan/` 当前的核心 simulation 产物包括：
+
+- `simulation_benchmark_result.json`
+  - 多 seed task-level summary
+  - 主体在 `methods.<method>` 下，避免再把终态控制计划压扁到旧 `params_used`
+- `simulation_benchmark_trial_records.json`
+  - 逐 task / 逐 seed 的 execution 明细
+  - 每条 trial 保留 `terminal_plan`、`observer_trace`、`step_replan_trace`
+- `simulation_comparison_rag_vs_baseline.json`
+  - 单 seed 方法对比，使用嵌套 `methods.<method>` payload
+- `simulation_comparison_multi_seed.json`
+  - 多 seed 方法对比，同样使用嵌套 `methods.<method>` payload，并把 planner / executed-plan 聚合保留在 method payload 内
 
 历史与归档：
 

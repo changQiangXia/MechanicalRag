@@ -4,29 +4,29 @@ seeds=[42, 43, 44], n_trials_per_seed=20, total_trials=60
 
 任务                               成功率(mean±std)      稳定度(mean±std)      时间(mean±std)      
 ------------------------------------------------------------------------------------------------------------
-pick_smooth_metal/抓取光滑金属零件       96.67%±5.77% 0.793±0.014 4.377s±0.220
-    belief=0.000, conservative_rate=0.00%, solver=rule_aggregate
-pick_rubber/抓取橡胶零件               93.33%±2.89% 0.925±0.001 3.044s±0.347
-    belief=0.204, conservative_rate=33.33%, solver=rule_aggregate
-pick_small_part/抓取小型机械零件         96.67%±2.89% 0.858±0.012 2.140s±0.138
-    belief=0.000, conservative_rate=0.00%, solver=rule_aggregate
-pick_large_part/抓取大型零件           91.67%±7.64% 0.906±0.012 6.414s±0.632
-    belief=0.000, conservative_rate=0.00%, solver=rule_aggregate
-pick_smooth_metal_fast/高速搬运光滑金属零件 83.33%±7.64% 0.677±0.001 4.395s±0.301
-    belief=0.350, conservative_rate=66.67%, solver=local_search:transfer_alignment:up
-pick_small_part_fast/高速搬运小型机械零件  91.67%±2.89% 0.941±0.013 2.130s±0.219
-    belief=0.000, conservative_rate=0.00%, solver=rule_aggregate
-pick_thin_wall/抓取薄壁件             91.67%±5.77% 0.972±0.001 3.929s±0.321
-    belief=0.000, conservative_rate=0.00%, solver=rule_aggregate
-pick_rubber_fast/高速搬运橡胶零件        93.33%±2.89% 0.755±0.018 2.994s±0.215
-    belief=0.438, conservative_rate=66.67%, solver=local_search:lift_clearance:up
-pick_large_part_far/长距离搬运大型零件    91.67%±10.41% 0.967±0.001 8.592s±0.923
-    belief=0.000, conservative_rate=0.00%, solver=rule_aggregate
+pick_smooth_metal/抓取光滑金属零件       91.67%±2.89% 0.781±0.014 4.190s±0.169
+    belief=0.696, conservative_rate=100.00%, solver=local_search:gripper_force:up
+pick_rubber/抓取橡胶零件               95.00%±5.00% 0.925±0.001 3.044s±0.287
+    belief=0.692, conservative_rate=100.00%, solver=uncertainty_guard
+pick_small_part/抓取小型机械零件         90.00%±8.66% 0.852±0.016 2.080s±0.180
+    belief=0.606, conservative_rate=100.00%, solver=uncertainty_guard
+pick_large_part/抓取大型零件           90.00%±0.00% 0.901±0.011 6.699s±0.574
+    belief=0.882, conservative_rate=100.00%, solver=uncertainty_guard
+pick_smooth_metal_fast/高速搬运光滑金属零件 73.33%±11.55% 0.677±0.001 4.454s±0.254
+    belief=0.605, conservative_rate=100.00%, solver=local_search:gripper_force:up
+pick_small_part_fast/高速搬运小型机械零件  95.00%±0.00% 0.943±0.006 2.092s±0.088
+    belief=0.737, conservative_rate=100.00%, solver=uncertainty_guard
+pick_thin_wall/抓取薄壁件             95.00%±0.00% 0.972±0.001 3.868s±0.107
+    belief=0.738, conservative_rate=100.00%, solver=uncertainty_guard
+pick_rubber_fast/高速搬运橡胶零件        93.33%±5.77% 0.751±0.032 3.043s±0.298
+    belief=0.737, conservative_rate=100.00%, solver=uncertainty_guard
+pick_large_part_far/长距离搬运大型零件    91.67%±7.64% 0.963±0.002 9.064s±1.068
+    belief=0.569, conservative_rate=100.00%, solver=uncertainty_guard
 pick_metal_heavy/抓取重型光滑金属零件      0.00%±0.00% 0.763±0.000 14.784s±0.000
-    belief=0.000, conservative_rate=0.00%, solver=rule_aggregate
-pick_thin_wall_fast/高速搬运薄壁件      88.33%±5.77% 0.815±0.001 3.812s±0.268
-    belief=0.000, conservative_rate=0.00%, solver=rule_aggregate
-pick_metal_heavy_fast/高速搬运重型光滑金属零件 85.00%±5.00% 0.918±0.020 5.721s±0.415
-    belief=0.000, conservative_rate=0.00%, solver=rule_aggregate
+    belief=0.735, conservative_rate=100.00%, solver=uncertainty_guard
+pick_thin_wall_fast/高速搬运薄壁件      85.00%±8.66% 0.816±0.003 4.164s±0.537
+    belief=0.688, conservative_rate=100.00%, solver=uncertainty_guard
+pick_metal_heavy_fast/高速搬运重型光滑金属零件 86.67%±7.64% 0.895±0.020 6.205s±0.411
+    belief=0.605, conservative_rate=100.00%, solver=uncertainty_guard
 
 JSON: outputs/current_observer_step_replan/simulation_benchmark_result.json

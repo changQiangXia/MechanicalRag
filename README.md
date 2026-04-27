@@ -19,20 +19,23 @@
 - `env.py` 现在会输出执行期 `observer_trace`；`rag_feedback` 在命中风险触发条件时会在单次 execution 内生成 `step_replan_trace`
 - `control_core.py` 现在负责 belief 直驱的 `belief_constraint_synthesis` seed，不再把旧 `_aggregate_plan` 当成最终控制计划
 - 当前关键结果：
-  - `rag_feedback` 12 任务多 seed平均成功率 `0.8361`
-  - 相对当前 `rag` seed-only 路径，`rag_feedback` 多 seed平均成功率提升 `+0.1653`
-  - `pick_large_part_far = 91.67% ± 10.41%`
-  - `pick_thin_wall_fast = 88.33% ± 5.77%`
-  - `pick_smooth_metal_fast = 83.33% ± 7.64%`
+  - `rag_feedback` 12 任务多 seed平均成功率 `0.8222`
+  - 相对当前 `rag` seed-only 路径，`rag_feedback` 多 seed平均成功率提升 `+0.1514`
+  - `pick_large_part_far = 91.67% ± 7.64%`
+  - `pick_thin_wall_fast = 85.00% ± 8.66%`
+  - `pick_smooth_metal_fast = 73.33% ± 11.55%`
 - 当前主要问题：
   - `pick_metal_heavy = 0.00% ± 0.00%`，主导失败模式是 `physics_fail`
-  - step 级重规划已经进主链，但当前触发仍偏稀疏，只在风险阈值命中时才会进入 `step_replan_trace`
+- step 级重规划已经进主链，但当前触发仍偏稀疏，只在风险阈值命中时才会进入 `step_replan_trace`
+- `simulation_benchmark_result.json`、`simulation_comparison_rag_vs_baseline.json`、`simulation_comparison_multi_seed.json` 都已切到 Schema V2：主 summary 在 `methods.<method>` 下，控制计划看 `seed_plan` 和 `executed_plan_stats`
+- `simulation_benchmark_trial_records.json` 提供逐 task / 逐 seed 的 execution log；单条 trial 会保留 `terminal_plan`、`observer_trace` 和 `step_replan_trace`
 
 如果只想看最新有效状态，优先看：
 
 - [docs/overview.md](docs/overview.md)
 - [simulation/README.md](simulation/README.md)
 - [simulation_benchmark_result.json](outputs/current_observer_step_replan/simulation_benchmark_result.json)
+- [simulation_benchmark_trial_records.json](outputs/current_observer_step_replan/simulation_benchmark_trial_records.json)
 - [simulation_comparison_rag_vs_baseline.json](outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json)
 - [simulation_comparison_multi_seed.json](outputs/current_observer_step_replan/simulation_comparison_multi_seed.json)
 - [showcase_summary.txt](outputs/current_observer_step_replan/showcase_summary.txt)
@@ -70,7 +73,7 @@
 - `simulation/control_core.py` 新增 belief 直驱的 `belief_constraint_synthesis` seed；`solver` 的 base candidate 不再表达成旧 `rule_aggregate` 主导。
 - `simulation/env.py` 新增执行期 observer snapshot，输出 `stage / stage_progress / stability_score / slip_indicator / compression_indicator / velocity_margin / clearance_margin / estimated_failure_stage`。
 - `simulation/runner.py` 与 `rag_feedback` 主链接入 step 级 observe-update-replan；trial 级 retry 仍保留为兜底，但已经不再是主要反馈路径。
-- 这轮闭环结果落在 `outputs/current_observer_step_replan/`：`pick_large_part_far` 明显拉升到 `91.67% ± 10.41%`，`pick_thin_wall_fast` 拉升到 `88.33% ± 5.77%`，但 `pick_metal_heavy` 仍然完全失败，后续重点已经从“有没有 observer”转成“observer 如何更稳定地驱动 static heavy-metal 修复”。
+- 这轮闭环结果落在 `outputs/current_observer_step_replan/`：`pick_large_part_far` 稳定在 `91.67% ± 7.64%`，`pick_thin_wall_fast` 为 `85.00% ± 8.66%`，但 `pick_metal_heavy` 仍然完全失败，后续重点已经从“有没有 observer”转成“observer 如何更稳定地驱动 static heavy-metal 修复”。
 
 ### 轮次索引
 
@@ -166,6 +169,7 @@ python -m simulation.benchmark --compare_evidence_ablation --n_trials 20 --seeds
 python -m simulation.benchmark --compare_motion_ablation --n_trials 20 --seeds 42 43 44 --output_dir outputs/current
 python -m simulation.benchmark --compare_multi_seed --n_trials 20 --seeds 42 43 44 --multi_seed_methods rag rag_feedback task_heuristic fixed --output_dir outputs/current_observer_step_replan
 python reporting/visualize_results.py --qa_json outputs/current/qa_evaluation_detail.json --sim_json outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json --sim_multi_seed_json outputs/current_observer_step_replan/simulation_comparison_multi_seed.json --output_dir outputs/current_observer_step_replan/visualizations
+python reporting/generate_showcase.py --qa_json outputs/current/qa_evaluation_detail.json --sim_json outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json --sim_multi_seed_json outputs/current_observer_step_replan/simulation_comparison_multi_seed.json --sim_benchmark_json outputs/current_observer_step_replan/simulation_benchmark_result.json --output outputs/current_observer_step_replan/showcase_summary.txt
 ```
 
 ## 关键输出
@@ -176,9 +180,9 @@ python reporting/visualize_results.py --qa_json outputs/current/qa_evaluation_de
   - `outputs/current/problem_solving_result.txt`
 - 最新 observer / step-replan 结果：
   - `outputs/current_observer_step_replan/simulation_benchmark_result.json`
+  - `outputs/current_observer_step_replan/simulation_benchmark_trial_records.json`
   - `outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json`
   - `outputs/current_observer_step_replan/simulation_comparison_multi_seed.json`
-  - `outputs/current_observer_step_replan/simulation_benchmark_rag_feedback.json`
   - `outputs/current_observer_step_replan/showcase_summary.txt`
   - `outputs/current_observer_step_replan/visualizations/`
 - `round19` 历史基线：
@@ -238,6 +242,8 @@ Simulation 成功率增益：
 - QA 评测统一运行在同一知识库、同一 split 和同一评分规则上，并输出词面命中、语义相似、数值一致性、流程顺序、拒答行为与证据命中分离统计。
 - simulation 对比统一使用同一任务集、同一 trial / seed 预算和同一环境判定逻辑；`reference_force_range` 只用于结果分析，不会作为控制器输入。
 - simulation 当前比较的是八参数控制计划：`gripper_force`、`lift_force`、`transfer_force`、`transfer_alignment`、`approach_height`、`transport_velocity`、`placement_velocity`、`lift_clearance`。
+- `simulation_benchmark_result.json`、`simulation_comparison_rag_vs_baseline.json`、`simulation_comparison_multi_seed.json` 当前都使用 Schema V2：`methods.<method>.seed_plan` 表示初始 planner proposal，`methods.<method>.executed_plan_stats` 表示 task 级 terminal-plan 聚合，`methods.<method>.planner_diagnostics` 保存 belief / solver 统计。
+- `simulation_benchmark_trial_records.json` 是配套明细文件；逐 task 汇总 `trial_records`，并保留每个 seed 的 `seed_plan`、`planner_diagnostics` 与 trial 级 `observer_trace / step_replan_trace`。
 - simulation 当前还会输出 belief / uncertainty / solver 诊断，以及 `observer_trace / step_replan_trace`；其中 observer 已来自执行期环境状态，但它仍是轻量状态估计，不应被解读成完整后验滤波或优化规划日志。
 - simulation 结果除成功率外还输出 95% CI、多 seed `mean±std`、按 `train/val/test` 聚合的 split 汇总、按 `challenge_tags` 聚合的 challenge 汇总、证据支持度/冲突统计、距离误差与稳定度/速度/净空风险指标。
 - simulation 额外提供 `rag` 对 `rag_generic_only` 的 evidence ablation，以及 `rag` 对 `rag_no_motion_rules` 的 motion ablation，用于验证增益来源。

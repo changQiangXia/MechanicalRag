@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -268,6 +271,146 @@ class BenchmarkSchemaTest(unittest.TestCase):
 
         self.assertEqual(rows[0]["methods"]["rag_feedback"]["executed_plan_stats"]["mean"]["gripper_force"], 12.0)
         self.assertEqual(rows[0]["methods"]["rag_feedback"]["planner_diagnostics"]["belief_state_coverage_mean"], 0.8)
+
+    def test_multi_seed_trial_record_serializer_keeps_seed_context(self):
+        base = runner.BenchmarkResult(
+            task_id="pick_demo",
+            task_description="测试抓取任务",
+            task_split="test",
+            reference_force_range=(10.0, 14.0),
+            n_trials=2,
+            success_count=2,
+            success_rate=1.0,
+            avg_time=1.0,
+            avg_steps=12.0,
+            avg_distance_error=0.0,
+            ci95_low=0.5,
+            ci95_high=1.0,
+            reference_force_deviation_stats={"mean": 1.0, "std": 0.0, "min": 1.0, "max": 1.0},
+            avg_slip_risk=0.1,
+            avg_compression_risk=0.0,
+            avg_velocity_risk=0.0,
+            avg_clearance_risk=0.0,
+            avg_lift_hold_risk=0.1,
+            avg_transfer_sway_risk=0.0,
+            avg_placement_settle_risk=0.0,
+            avg_stability_score=0.9,
+            physics_fail_rate=0.0,
+            lift_hold_fail_rate=0.0,
+            transfer_sway_fail_rate=0.0,
+            placement_settle_fail_rate=0.0,
+            dominant_failure_mode="none",
+            seed_plan={"gripper_force": 12.0},
+            executed_plan_stats={"mean": {"gripper_force": 12.0}},
+            planner_diagnostics={"belief_state_coverage": 0.8},
+            trial_records=[{"trial_index": 0, "terminal_plan": {"gripper_force": 12.0}}],
+            method="rag_feedback",
+        )
+
+        rows = runner._serialize_multi_seed_trial_records(
+            per_seed_results={42: [base], 43: [base]},
+            method="rag_feedback",
+            seeds=[42, 43],
+        )
+
+        self.assertEqual(rows[0]["trial_record_count"], 2)
+        self.assertEqual(rows[0]["trial_records"][0]["seed"], 42)
+        self.assertEqual(rows[0]["trial_records"][1]["seed"], 43)
+
+    def test_multi_seed_comparison_emits_nested_method_payload(self):
+        rag_seed_42 = runner.BenchmarkResult(
+            task_id="pick_demo",
+            task_description="测试抓取任务",
+            task_split="test",
+            reference_force_range=(10.0, 14.0),
+            n_trials=2,
+            success_count=2,
+            success_rate=1.0,
+            avg_time=1.0,
+            avg_steps=12.0,
+            avg_distance_error=0.0,
+            ci95_low=0.5,
+            ci95_high=1.0,
+            reference_force_deviation_stats={"mean": 1.0, "std": 0.0, "min": 1.0, "max": 1.0},
+            avg_slip_risk=0.1,
+            avg_compression_risk=0.0,
+            avg_velocity_risk=0.0,
+            avg_clearance_risk=0.0,
+            avg_lift_hold_risk=0.1,
+            avg_transfer_sway_risk=0.0,
+            avg_placement_settle_risk=0.0,
+            avg_stability_score=0.9,
+            physics_fail_rate=0.0,
+            lift_hold_fail_rate=0.0,
+            transfer_sway_fail_rate=0.0,
+            placement_settle_fail_rate=0.0,
+            dominant_failure_mode="none",
+            seed_plan={"gripper_force": 12.0},
+            executed_plan_stats={
+                "mean": {"gripper_force": 12.0, "placement_velocity": 0.21},
+                "dynamic_transport_mode_mode": "static",
+            },
+            planner_diagnostics={
+                "belief_state_coverage": 0.8,
+                "solver_selected_candidate": "belief_seed",
+                "evidence_support_score": 4.5,
+            },
+            trial_records=[],
+            method="rag_feedback",
+        )
+        rag_seed_43 = runner.BenchmarkResult(
+            **{
+                **rag_seed_42.__dict__,
+                "success_rate": 0.8,
+                "executed_plan_stats": {
+                    "mean": {"gripper_force": 13.0, "placement_velocity": 0.23},
+                    "dynamic_transport_mode_mode": "dynamic",
+                },
+            }
+        )
+        heuristic_seed_42 = runner.BenchmarkResult(
+            **{
+                **rag_seed_42.__dict__,
+                "success_rate": 0.4,
+                "planner_diagnostics": {"belief_state_coverage": 0.2},
+                "method": "task_heuristic",
+            }
+        )
+        heuristic_seed_43 = runner.BenchmarkResult(
+            **{
+                **heuristic_seed_42.__dict__,
+                "success_rate": 0.5,
+            }
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir, \
+             patch.object(runner, "BENCHMARK_TASKS", [_task()]), \
+             patch.object(
+                 runner,
+                 "_run_benchmark_method_results",
+                 side_effect=[
+                     {"rag_feedback": [rag_seed_42], "task_heuristic": [heuristic_seed_42]},
+                     {"rag_feedback": [rag_seed_43], "task_heuristic": [heuristic_seed_43]},
+                 ],
+             ):
+            rows = runner.run_benchmark_comparison_multi_seed(
+                n_trials_per_task=2,
+                seeds=[42, 43],
+                output_dir=tmpdir,
+                methods=["rag_feedback", "task_heuristic"],
+            )
+
+            split_rows = json.loads(
+                (Path(tmpdir) / "simulation_split_summary.json").read_text(encoding="utf-8")
+            )
+
+        method_row = rows[0]["methods"]["rag_feedback"]
+        self.assertAlmostEqual(method_row["success_rate_mean"], 0.9)
+        self.assertEqual(method_row["planner_diagnostics"]["belief_state_coverage_mean"], 0.8)
+        self.assertEqual(method_row["executed_plan_stats"]["mean"]["gripper_force"], 12.5)
+        self.assertEqual(method_row["failure_rates"]["dominant_failure_mode"], "none")
+        self.assertNotIn("rag_feedback_success_rate_mean", rows[0])
+        self.assertEqual(split_rows[0]["rag_feedback_success_rate_mean"], 0.9)
 
 
 if __name__ == "__main__":
