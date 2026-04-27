@@ -90,6 +90,7 @@ QA 流程被拆成三段：
   - 单独建模 `TaskConstraintSet`、`UncertaintyProfile` 与 `StageIntent`
   - 通过 lightweight solver 在多组 candidate control plan 中做选择
   - 向上层返回 `belief_state`、`belief_state_coverage`、`uncertainty_conservative_mode`、`solver_selected_candidate` 等诊断字段
+  - 但它当前本质上仍是规则派生的符号化中间层与候选重打分适配层，不是观测后验估计器或真正的优化求解器
 
 - `simulation/env.py`
   - 根据质量、摩擦、fragility、尺寸、接近高度等物体属性推导内部力学窗口
@@ -156,4 +157,5 @@ QA 流程被拆成三段：
 - QA 仍然保留受控模板，但模板现在服务于“证据约束回答”，不再直接伪装成独立方法增益。
 - 仿真仍然是简化控制问题，不是完整机械臂控制栈；但评测边界已经比之前干净。
 - control-core thickening 目前只带来了轻微平均增益，并没有统一优于 `round19`；中等难度任务上的回落说明 belief / solver 层之后还需要 observer / local replan。
+- 更具体地说，当前 `belief_state` 主要是任务关键词和规则命中的派生状态，`uncertainty_profile` 主要是 coverage / gap 统计，`solver` 主要是候选模板重打分，而且它进入主链的位置仍偏后。
 - 为兼顾现有运行成本，仍保留 `direct_llm` / `fixed` / `rag_learned` 等基线，但它们都挂在统一 benchmark runner 上。

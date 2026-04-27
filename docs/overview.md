@@ -19,6 +19,7 @@ MechanicalRag 关注的是机械知识如何同时服务两个场景：
 - `round19` 历史基线：`outputs/current/`
 - `round20` 实验目录：`outputs/current_round20_sim/`
 - 新控制核新增显式 `belief_state`、`task_constraints`、`uncertainty_profile` 与 solver candidate 选择
+- 但这层当前仍是规则派生的符号化中间层，不应被表述成观测后验估计或优化求解
 - 当前关键结果：
   - `pick_large_part_far = 0.6500 ± 0.1323`
   - `pick_smooth_metal_fast = 0.8167 ± 0.0289`
@@ -53,12 +54,14 @@ MechanicalRag 关注的是机械知识如何同时服务两个场景：
 - `simulation/rag_controller.py`
   - 基于知识库证据和任务描述生成八参数控制计划
   - 当前流程是 `rule aggregation -> belief bundle -> candidate solve -> final plan`
+  - 其中 `belief bundle` 与 `candidate solve` 仍是叠加在旧规则聚合之后的后处理层
   - 支持 `rag_generic_only` evidence ablation
   - 支持 `rag_no_motion_rules` motion ablation
 
 - `simulation/control_core.py`
   - 显式建模 `ObjectBeliefState`、`TaskConstraintSet`、`UncertaintyProfile` 与 `StageIntent`
   - 负责 candidate control plan 打分、solver 选择与结构化诊断输出
+  - 当前更接近规则派生中间态和候选重打分适配层，而不是严格的状态估计器或规划求解器
 
 - `simulation/env.py`
   - 基于物体属性推导独立力学窗口
@@ -142,6 +145,7 @@ python reporting/generate_showcase.py --qa_json outputs/current/qa_evaluation_de
 - `reference_force_range` 和 `reference_approach_height` 只用于分析输出，不参与成功判定。
 - 仿真当前代码语义以 `outputs/current_core_thickening/` 为准；`round19/current` 继续保留为历史基线，`round20` 只保留为 placement-stage precision 实验归档。
 - control-core thickening 只带来了 `+0.0014` 的平均成功率提升，并没有统一优于 `round19`；`pick_smooth_metal` 与 `pick_metal_heavy` 仍各回落约 5 个百分点。
+- `belief_state` 当前主要由任务关键词和规则命中情况派生，`uncertainty_profile` 主要是覆盖率 / 缺口统计，`solver` 主要是少量候选模板重打分。
 - simulation evidence ablation 目前只覆盖对象特定 force rule，对速度 / 净空等更细粒度规则的删减实验仍未展开。
 
 ## 7. 对比口径

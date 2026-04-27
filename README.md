@@ -16,6 +16,7 @@
 - `round20` placement-stage 实验：`outputs/current_round20_sim/`
 - QA 当前有效输出仍在 `outputs/current/qa_evaluation_detail.json`
 - 新控制核新增显式 `belief_state -> uncertainty_profile -> solver` 链路，并把 `lift_hold_risk / transfer_sway_risk / placement_settle_risk` 接回 feedback、runner 与 reporting
+- 但这层当前仍是基于任务特征和规则覆盖情况的符号化后处理，不是观测后验状态估计，也不是优化求解器
 - 当前关键结果：
   - `pick_large_part_far = 65.00% ± 13.23%`，主导失败模式仍是 `placement_settle_fail`
   - `pick_smooth_metal_fast = 81.67% ± 2.89%`
@@ -64,6 +65,7 @@
 - `2026-04-27 control-core thickening`：在 `round19 / round20` 之后，为控制器补上显式 belief-state、task-constraint、uncertainty-profile 与 lightweight solver 层，形成 `rule aggregation -> belief bundle -> candidate solve -> final plan` 的新链路。
 - 新增 `simulation/control_core.py`，并让 `RAGController` 输出 `belief_state`、`task_constraints`、`uncertainty_profile`、`stage_plan`、`solver_candidate_scores`、`solver_selected_candidate` 等结构化诊断字段。
 - `feedback.py` 不再只看泛化 `stability_score`，而是显式使用 `lift_hold_risk`、`transfer_sway_risk`、`placement_settle_risk` 做阶段化调参。
+- 这层当前更准确的定位是“规则派生的符号化中间层 + 覆盖度守卫 + 候选重打分适配层”；它进入主链的位置仍偏后，还是叠加在旧规则聚合之后，而不是替代旧 `_aggregate_plan`。
 - 结果目录固定为 `outputs/current_core_thickening/`。这次实验保住了 `pick_large_part_far` 和 `pick_smooth_metal_fast` 两个核心动态任务，但 `pick_smooth_metal` 与 `pick_metal_heavy` 仍有回落，后续补强重点会落在 observer / local replan。
 
 ### 轮次索引
@@ -232,7 +234,7 @@ Simulation 成功率增益：
 - QA 评测统一运行在同一知识库、同一 split 和同一评分规则上，并输出词面命中、语义相似、数值一致性、流程顺序、拒答行为与证据命中分离统计。
 - simulation 对比统一使用同一任务集、同一 trial / seed 预算和同一环境判定逻辑；`reference_force_range` 只用于结果分析，不会作为控制器输入。
 - simulation 当前比较的是八参数控制计划：`gripper_force`、`lift_force`、`transfer_force`、`transfer_alignment`、`approach_height`、`transport_velocity`、`placement_velocity`、`lift_clearance`。
-- simulation 当前还会输出 belief / uncertainty / solver 诊断，包括 `belief_state_coverage`、`uncertainty_conservative_mode`、`solver_selected_candidate` 与 `solver_candidate_scores`，用于区分“规则本身不足”和“规则足够但解算偏保守”两类问题。
+- simulation 当前还会输出 belief / uncertainty / solver 诊断，包括 `belief_state_coverage`、`uncertainty_conservative_mode`、`solver_selected_candidate` 与 `solver_candidate_scores`；但这些字段当前更接近规则覆盖度与候选重打分诊断，不应被解读成严格的后验状态估计或不确定性传播。
 - simulation 结果除成功率外还输出 95% CI、多 seed `mean±std`、按 `train/val/test` 聚合的 split 汇总、按 `challenge_tags` 聚合的 challenge 汇总、证据支持度/冲突统计、距离误差与稳定度/速度/净空风险指标。
 - simulation 额外提供 `rag` 对 `rag_generic_only` 的 evidence ablation，以及 `rag` 对 `rag_no_motion_rules` 的 motion ablation，用于验证增益来源。
 
@@ -245,6 +247,7 @@ Simulation 成功率增益：
 - simulation evidence ablation 目前只覆盖对象特定 force rule，对更细粒度的运动学 / 接触规则删减实验仍未展开。
 - 当前仓库代码语义以 `outputs/current_core_thickening/` 为准；`outputs/current/round19` 继续保留为历史基线，`outputs/current_round20_sim/` 保留 placement-stage `placement_precision` 实验。
 - control-core thickening 只带来了 `+0.0014` 的平均成功率提升，并没有统一优于 `round19`；`pick_smooth_metal` 与 `pick_metal_heavy` 仍各回落约 5 个百分点，observer / local replan 仍未补上。
+- `belief_state` 当前主要由任务关键词和规则命中情况派生，`uncertainty_profile` 主要是覆盖率 / 缺口统计，`solver` 主要是少量候选模板重打分；因此它还不是完整意义上的状态估计、置信传播和规划求解。
 - 新增的多阶段控制计划仍是简化控制抽象，不等价于完整机器人轨迹优化与接触控制栈。
 
 ## 备注

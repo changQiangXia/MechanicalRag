@@ -127,3 +127,67 @@ def build_feedback_signal(
         failure_bucket=str(info.get("failure_bucket", "unknown_failure")),
         dynamic_transport_mode=str(info.get("dynamic_transport_mode", "static")),
     )
+
+
+def build_feedback_replan_request(
+    previous_params: dict[str, Any],
+    signal: FeedbackSignal,
+    suggestion: str,
+    step: float = 4.0,
+) -> dict[str, Any]:
+    stage_scores = {
+        "lift": max(signal.lift_hold_risk, 0.35 if signal.failure_bucket == "lift_hold_fail" else 0.0),
+        "transfer": max(signal.transfer_sway_risk, 0.35 if signal.failure_bucket == "transfer_sway_fail" else 0.0),
+        "place": max(signal.placement_settle_risk, 0.35 if signal.failure_bucket == "placement_settle_fail" else 0.0),
+    }
+    stage_bias = max(stage_scores, key=stage_scores.get) if any(value > 0.0 for value in stage_scores.values()) else "lift"
+    uncertainty_reasons: list[str] = [f"feedback_{stage_bias}_stage"]
+    if signal.slip_risk > signal.compression_risk + 0.08:
+        uncertainty_reasons.append("feedback_slip_risk")
+    if signal.compression_risk > signal.slip_risk + 0.08:
+        uncertainty_reasons.append("feedback_compression_risk")
+    if signal.velocity_risk > 0.18:
+        uncertainty_reasons.append("feedback_velocity_risk")
+    if signal.clearance_risk > 0.18:
+        uncertainty_reasons.append("feedback_clearance_risk")
+
+    param_deltas: dict[str, float] = {}
+    if suggestion == "increase":
+        param_deltas["gripper_force"] = min(2.0, max(0.6, step * 0.20))
+        param_deltas["transport_velocity"] = -0.02
+    elif suggestion == "decrease":
+        param_deltas["gripper_force"] = -min(1.5, max(0.4, step * 0.15))
+        param_deltas["transport_velocity"] = -0.01
+
+    if stage_bias == "lift":
+        param_deltas["lift_force"] = max(0.8, step * 0.18)
+        param_deltas["lift_clearance"] = 0.005
+        param_deltas["transport_velocity"] = min(param_deltas.get("transport_velocity", 0.0), -0.02)
+    elif stage_bias == "transfer":
+        param_deltas["transfer_force"] = max(0.7, step * 0.16)
+        param_deltas["transfer_alignment"] = 0.08
+        param_deltas["transport_velocity"] = min(param_deltas.get("transport_velocity", 0.0), -0.04)
+        param_deltas["placement_velocity"] = -0.02
+    elif stage_bias == "place":
+        param_deltas["placement_velocity"] = -0.04
+        param_deltas["lift_clearance"] = 0.003
+
+    failure_attribution = {
+        "lift": round(stage_scores["lift"], 4),
+        "transfer": round(stage_scores["transfer"], 4),
+        "place": round(stage_scores["place"], 4),
+        "slip_risk": round(signal.slip_risk, 4),
+        "compression_risk": round(signal.compression_risk, 4),
+        "velocity_risk": round(signal.velocity_risk, 4),
+        "clearance_risk": round(signal.clearance_risk, 4),
+    }
+    return {
+        "failure_bucket": signal.failure_bucket,
+        "stage_bias": stage_bias,
+        "suggestion": suggestion,
+        "uncertainty_reasons": uncertainty_reasons,
+        "failure_attribution": failure_attribution,
+        "param_deltas": {key: round(value, 4) for key, value in param_deltas.items()},
+        "previous_solver_mode": previous_params.get("solver_mode"),
+        "previous_solver_selected_candidate": previous_params.get("solver_selected_candidate"),
+    }

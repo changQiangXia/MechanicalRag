@@ -14,7 +14,12 @@ from langchain_community.vectorstores import Chroma
 
 from chroma_compat import get_chroma_client_settings
 from model_provider import resolve_model_path
-from .control_core import build_control_belief, solve_control_plan
+from .control_core import (
+    build_control_belief,
+    replan_control_plan,
+    solve_control_plan,
+    summarize_control_evidence,
+)
 
 
 TASK_DESCRIPTION_HINTS = (
@@ -380,11 +385,54 @@ def _aggregate_plan(
     else:
         selected_force_rules = specific_force_rules[:3] if specific_force_rules else generic_force_rules[:3]
 
+    selected_rules = rules[:3]
+    support_score = round(sum(rule["score"] for rule in selected_rules) / len(selected_rules), 4) if selected_rules else 0.0
+    force_conflict = 0
+    if specific_force_rules and generic_force_rules:
+        specific_center = sum(sum(rule["force_candidates"]) / len(rule["force_candidates"]) for rule in specific_force_rules[:2]) / min(2, len(specific_force_rules))
+        generic_center = sum(sum(rule["force_candidates"]) / len(rule["force_candidates"]) for rule in generic_force_rules[:2]) / min(2, len(generic_force_rules))
+        if abs(specific_center - generic_center) >= 6.0:
+            force_conflict += 1
+    if len(selected_force_rules) >= 2:
+        centers = [sum(rule["force_candidates"]) / len(rule["force_candidates"]) for rule in selected_force_rules]
+        if max(centers) - min(centers) >= 8.0:
+            force_conflict += 1
+
+    evidence_summary = summarize_control_evidence(
+        features=features,
+        rules=rules,
+        selected_force_rules=selected_force_rules,
+        specific_force_rules=specific_force_rules,
+        motion_rules=motion_rules,
+        numeric_motion_rules=numeric_motion_rules,
+        alignment_rules=alignment_rules,
+        lift_stage_rules=lift_stage_rules,
+        support_contact_rules=support_contact_rules,
+        default_force=default_force,
+    )
+    belief = build_control_belief(
+        features=features,
+        evidence_summary=evidence_summary,
+        dynamic_transport_mode=evidence_summary.preferred_transport_mode,
+        support_score=support_score,
+        conflict_count=force_conflict,
+        force_rule_mode=force_rule_mode,
+        motion_rule_mode=motion_rule_mode,
+        available_specific_force_rules=available_specific_force_rules,
+        available_motion_rules=available_motion_rules,
+        available_numeric_motion_rules=available_numeric_motion_rules,
+        available_alignment_rules=available_alignment_rules,
+        available_lift_stage_rules=available_lift_stage_rules,
+        available_support_contact_rules=available_support_contact_rules,
+    )
+
     force = default_force
     if selected_force_rules:
         weights = [max(0.5, rule["score"] + 0.8 * rule["specificity"]) for rule in selected_force_rules]
         candidates = [sum(rule["force_candidates"]) / len(rule["force_candidates"]) for rule in selected_force_rules]
         force = sum(weight * candidate for weight, candidate in zip(weights, candidates)) / sum(weights)
+    if evidence_summary.specific_force_confidence >= 0.2:
+        force = 0.65 * force + 0.35 * float(evidence_summary.force_center)
 
     force_margin = max((rule["force_margin"] for rule in rules), default=0.0)
     force += force_margin
@@ -399,6 +447,16 @@ def _aggregate_plan(
         if force < composite_force_floor:
             force = composite_force_floor
             calibration_notes.append("composite_force_floor")
+
+    belief_force_floor = None
+    if belief.uncertainty.conservative_mode:
+        belief_force_floor = max(
+            float(default_force),
+            float(evidence_summary.force_center) - 0.35 * float(evidence_summary.force_std),
+        )
+        if force < belief_force_floor:
+            force = belief_force_floor
+            calibration_notes.append("belief_force_floor")
 
     motion_aware_force_floor = None
     thin_wall_support_force_floor = None
@@ -463,6 +521,8 @@ def _aggregate_plan(
             weights = [max(0.5, rule["score"] + 0.5 * rule["specificity"]) for rule in height_targets]
             targets = [float(rule["approach_height_target"]) for rule in height_targets]
             height = sum(weight * target for weight, target in zip(weights, targets)) / sum(weights)
+    if belief.task_constraints.safety_priority >= 0.85 and belief.object_state.fragility_band == "high":
+        height = min(0.08, max(height, default_height))
 
     velocity = default_velocity if motion_rule_mode == "all" else NEUTRAL_TRANSPORT_VELOCITY
     if motion_rule_mode == "all":
@@ -479,6 +539,9 @@ def _aggregate_plan(
             if capped_velocity != velocity:
                 calibration_notes.append("composite_velocity_cap")
             velocity = capped_velocity
+    if belief.uncertainty.conservative_mode:
+        velocity = max(0.12, velocity - 0.015)
+        calibration_notes.append("belief_velocity_guard")
     long_transfer_velocity_band = None
     if motion_rule_mode == "all" and features["long_transfer"] and features["large"]:
         velocity_bands = [tuple(rule["velocity_band"]) for rule in numeric_motion_rules if rule.get("velocity_band") is not None]
@@ -495,7 +558,8 @@ def _aggregate_plan(
     placement_velocity = velocity
     long_transfer_placement_velocity_cap = None
     if motion_rule_mode == "all" and features["long_transfer"] and features["large"] and available_numeric_motion_rules:
-        long_transfer_placement_velocity_cap = round(max(0.12, min(velocity, 0.15)), 4)
+        precision_cap = 0.15 if belief.task_constraints.precision_priority < 0.85 else 0.14
+        long_transfer_placement_velocity_cap = round(max(0.12, min(velocity, precision_cap)), 4)
         placement_velocity = long_transfer_placement_velocity_cap
         if placement_velocity < velocity:
             calibration_notes.append("long_transfer_placement_velocity_cap")
@@ -503,6 +567,12 @@ def _aggregate_plan(
     clearance = default_clearance if motion_rule_mode == "all" else NEUTRAL_LIFT_CLEARANCE
     if motion_rule_mode == "all" and rules:
         clearance += max((rule["clearance_delta"] for rule in rules), default=0.0)
+    belief_clearance_floor = None
+    if belief.task_constraints.stability_priority >= 0.82:
+        belief_clearance_floor = 0.062 if belief.object_state.dynamic_load_band == "high" else 0.055
+        if clearance < belief_clearance_floor:
+            clearance = belief_clearance_floor
+            calibration_notes.append("belief_clearance_floor")
     thin_wall_support_clearance_cap = None
     rubber_material_clearance_floor = None
     long_transfer_numeric_clearance_floor = None
@@ -664,8 +734,8 @@ def _aggregate_plan(
 
     lift_force = force
     transfer_force = force
-    transfer_alignment = 0.0
-    dynamic_transport_mode = "static"
+    transfer_alignment = 0.0 if not belief.task_constraints.required_alignment else max(0.0, min(1.0, 0.55 + 0.25 * evidence_summary.alignment_confidence))
+    dynamic_transport_mode = evidence_summary.preferred_transport_mode
     high_speed_transfer_force_margin = None
     high_speed_placement_velocity_target = None
     dynamic_smooth_metal_clearance_floor = None
@@ -741,21 +811,19 @@ def _aggregate_plan(
         if transfer_force > force:
             calibration_notes.append("high_speed_transfer_force_margin")
 
-    force_conflict = 0
-    if specific_force_rules and generic_force_rules:
-        specific_center = sum(sum(rule["force_candidates"]) / len(rule["force_candidates"]) for rule in specific_force_rules[:2]) / min(2, len(specific_force_rules))
-        generic_center = sum(sum(rule["force_candidates"]) / len(rule["force_candidates"]) for rule in generic_force_rules[:2]) / min(2, len(generic_force_rules))
-        if abs(specific_center - generic_center) >= 6.0:
-            force_conflict += 1
-    if len(selected_force_rules) >= 2:
-        centers = [sum(rule["force_candidates"]) / len(rule["force_candidates"]) for rule in selected_force_rules]
-        if max(centers) - min(centers) >= 8.0:
-            force_conflict += 1
-
-    selected_rules = rules[:3]
-    support_score = round(sum(rule["score"] for rule in selected_rules) / len(selected_rules), 4) if selected_rules else 0.0
+    pre_solve_plan = {
+        "gripper_force": round(float(force), 4),
+        "approach_height": round(float(height), 4),
+        "transport_velocity": round(float(velocity), 4),
+        "lift_clearance": round(float(clearance), 4),
+        "lift_force": round(float(lift_force), 4),
+        "transfer_force": round(float(transfer_force), 4),
+        "placement_velocity": round(float(placement_velocity), 4),
+        "transfer_alignment": round(float(transfer_alignment), 4),
+    }
     belief = build_control_belief(
         features=features,
+        evidence_summary=evidence_summary,
         dynamic_transport_mode=dynamic_transport_mode,
         support_score=support_score,
         conflict_count=force_conflict,
@@ -769,16 +837,7 @@ def _aggregate_plan(
         available_support_contact_rules=available_support_contact_rules,
     )
     solved_plan, solver_trace = solve_control_plan(
-        {
-            "gripper_force": force,
-            "approach_height": height,
-            "transport_velocity": velocity,
-            "lift_clearance": clearance,
-            "lift_force": lift_force,
-            "transfer_force": transfer_force,
-            "placement_velocity": placement_velocity,
-            "transfer_alignment": transfer_alignment,
-        },
+        pre_solve_plan,
         belief,
     )
     force = solved_plan["gripper_force"]
@@ -831,6 +890,8 @@ def _aggregate_plan(
             and dynamic_transport_mode == "long_transfer"
             and long_transfer_lift_force_margin is not None
         ),
+        "pre_solve_plan": pre_solve_plan,
+        "belief_force_floor": belief_force_floor,
         "composite_force_floor": composite_force_floor,
         "motion_aware_force_floor": motion_aware_force_floor,
         "thin_wall_support_force_floor": thin_wall_support_force_floor,
@@ -866,6 +927,11 @@ def _aggregate_plan(
         "solver_selected_score": solver_trace["solver_selected_score"],
         "solver_score_breakdown": solver_trace["solver_score_breakdown"],
         "solver_candidate_scores": solver_trace["solver_candidate_scores"],
+        "solver_seed_candidate": solver_trace["solver_seed_candidate"],
+        "solver_seed_score": solver_trace["solver_seed_score"],
+        "solver_local_search_iterations": solver_trace["solver_local_search_iterations"],
+        "solver_local_search_improvement": solver_trace["solver_local_search_improvement"],
+        "solver_local_search_trace": solver_trace["solver_local_search_trace"],
         "solver_adjustment_notes": solver_trace["solver_adjustment_notes"],
         "calibration_notes": calibration_notes,
     }
@@ -1098,6 +1164,7 @@ class RAGController:
             "evidence_conflict_count": trace["conflict_count"],
             "force_rule_mode": trace["force_rule_mode"],
             "motion_rule_mode": trace["motion_rule_mode"],
+            "evidence_state_summary": trace["evidence_state_summary"],
             "belief_state": trace["belief_state"],
             "task_constraints": trace["task_constraints"],
             "uncertainty_profile": trace["uncertainty_profile"],
@@ -1110,6 +1177,11 @@ class RAGController:
             "solver_selected_score": trace["solver_selected_score"],
             "solver_score_breakdown": trace["solver_score_breakdown"],
             "solver_candidate_scores": trace["solver_candidate_scores"],
+            "solver_seed_candidate": trace["solver_seed_candidate"],
+            "solver_seed_score": trace["solver_seed_score"],
+            "solver_local_search_iterations": trace["solver_local_search_iterations"],
+            "solver_local_search_improvement": trace["solver_local_search_improvement"],
+            "solver_local_search_trace": trace["solver_local_search_trace"],
             "solver_adjustment_notes": trace["solver_adjustment_notes"],
             "matched_hint_keywords": trace["matched_hint_keywords"],
             "selected_evidence": [
@@ -1158,6 +1230,7 @@ class RAGController:
             "long_transfer_numeric_clearance_floor": trace["long_transfer_numeric_clearance_floor"],
             "long_transfer_clearance_target": trace["long_transfer_clearance_target"],
             "motion_path_force_compensation": trace["motion_path_force_compensation"],
+            "pre_solve_plan": trace["pre_solve_plan"],
             "calibration_notes": trace["calibration_notes"],
         }
 
@@ -1228,6 +1301,7 @@ class RAGController:
                     "evidence_conflict_count": trace["conflict_count"],
                     "force_rule_mode": trace["force_rule_mode"],
                     "motion_rule_mode": trace["motion_rule_mode"],
+                    "evidence_state_summary": trace["evidence_state_summary"],
                     "belief_state": trace["belief_state"],
                     "task_constraints": trace["task_constraints"],
                     "uncertainty_profile": trace["uncertainty_profile"],
@@ -1240,6 +1314,11 @@ class RAGController:
                     "solver_selected_score": trace["solver_selected_score"],
                     "solver_score_breakdown": trace["solver_score_breakdown"],
                     "solver_candidate_scores": trace["solver_candidate_scores"],
+                    "solver_seed_candidate": trace["solver_seed_candidate"],
+                    "solver_seed_score": trace["solver_seed_score"],
+                    "solver_local_search_iterations": trace["solver_local_search_iterations"],
+                    "solver_local_search_improvement": trace["solver_local_search_improvement"],
+                    "solver_local_search_trace": trace["solver_local_search_trace"],
                     "solver_adjustment_notes": trace["solver_adjustment_notes"],
                     "matched_hint_keywords": trace["matched_hint_keywords"],
                     "selected_evidence": [
@@ -1286,6 +1365,7 @@ class RAGController:
                     "long_transfer_numeric_clearance_floor": trace["long_transfer_numeric_clearance_floor"],
                     "long_transfer_clearance_target": trace["long_transfer_clearance_target"],
                     "motion_path_force_compensation": trace["motion_path_force_compensation"],
+                    "pre_solve_plan": trace["pre_solve_plan"],
                     "calibration_notes": trace["calibration_notes"],
                 }
         except Exception:
@@ -1300,7 +1380,12 @@ class RAGController:
         info: dict[str, Any],
         adjustment_step: float = 4.0,
     ) -> dict[str, Any]:
-        from .feedback import build_feedback_signal, suggest_force_adjustment, adjust_params_by_feedback
+        from .feedback import (
+            adjust_params_by_feedback,
+            build_feedback_replan_request,
+            build_feedback_signal,
+            suggest_force_adjustment,
+        )
 
         if success:
             return dict(previous_params)
@@ -1310,6 +1395,18 @@ class RAGController:
             info=info,
         )
         suggestion = suggest_force_adjustment(signal)
+        replan_ready = all(
+            key in previous_params
+            for key in ("belief_state", "task_constraints", "uncertainty_profile", "stage_plan")
+        )
+        if replan_ready:
+            replan_request = build_feedback_replan_request(
+                previous_params,
+                signal,
+                suggestion,
+                step=adjustment_step,
+            )
+            return replan_control_plan(previous_params, replan_request)
         return adjust_params_by_feedback(
             previous_params,
             suggestion,
