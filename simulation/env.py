@@ -5,12 +5,15 @@ MuJoCo 机械臂仿真环境。
 
 from __future__ import annotations
 
+from dataclasses import asdict
 import random
 import time
 from pathlib import Path
 from typing import Any, Callable, Tuple
 
 import numpy as np
+
+from .control_core import PhaseObservation, apply_phase_observation, build_execution_prior
 
 try:
     import mujoco
@@ -697,6 +700,296 @@ def _build_observer_trace(
     return trace
 
 
+PHASE_SEQUENCE = ("approach", "grasp", "lift", "transfer", "place")
+_PHASE_PROGRESS = {
+    "approach": 0.15,
+    "grasp": 0.35,
+    "lift": 0.55,
+    "transfer": 0.78,
+    "place": 1.0,
+}
+
+
+def _estimated_failure_stage(info: dict[str, Any]) -> str:
+    failure_bucket = str(info.get("failure_bucket", "success"))
+    if failure_bucket == "success":
+        return "none"
+    return failure_bucket.replace("_fail", "")
+
+
+def _distance_to_target_for_phase(
+    phase: str,
+    *,
+    horizontal_distance: float,
+    final_distance: float,
+    params: dict[str, float],
+) -> float:
+    if phase == "approach":
+        return horizontal_distance + params["approach_height"] + params["lift_clearance"]
+    if phase == "grasp":
+        return horizontal_distance + params["lift_clearance"]
+    if phase == "lift":
+        return horizontal_distance * 0.7
+    if phase == "transfer":
+        return horizontal_distance * 0.35
+    return final_distance
+
+
+def _build_phase_snapshot(
+    *,
+    phase: str,
+    observation: PhaseObservation,
+    phase_success: bool,
+    evaluation: dict[str, Any],
+    observation_index: int,
+) -> dict[str, Any]:
+    params = evaluation["params"]
+    info = evaluation["info"]
+    horizontal_distance = float(evaluation["horizontal_distance"])
+    final_distance = float(info["distance"])
+    recommended_velocity = float(info["recommended_velocity"])
+    placement_velocity_cap = float(info["dynamic_placement_velocity_cap"])
+    clearance_target = max(
+        float(info["dynamic_clearance_target"]),
+        float(info["min_lift_clearance"]),
+    )
+
+    if phase == "approach":
+        slip_indicator = max(float(observation.micro_slip_obs), 0.35 * float(info["slip_risk"]))
+        compression_indicator = 0.35 * float(info["compression_risk"])
+        velocity_margin = recommended_velocity - float(params["transport_velocity"])
+        clearance_margin = float(params["lift_clearance"]) - float(info["dynamic_clearance_target"])
+        risk_score = max(0.0, float(info["approach_height_error"]))
+    elif phase == "grasp":
+        slip_indicator = max(float(observation.micro_slip_obs), float(info["slip_risk"]))
+        compression_indicator = max(float(info["compression_risk"]), max(0.0, float(observation.payload_ratio_obs) - 1.0))
+        velocity_margin = recommended_velocity - float(params["transport_velocity"])
+        clearance_margin = float(params["lift_clearance"]) - float(info["min_lift_clearance"])
+        risk_score = max(slip_indicator, compression_indicator)
+    elif phase == "lift":
+        slip_indicator = max(
+            float(info["slip_risk"]),
+            float(info["lift_hold_risk"]),
+            max(0.0, float(observation.payload_ratio_obs) - 0.9),
+        )
+        compression_indicator = max(float(info["compression_risk"]), max(0.0, -float(observation.lift_reserve_obs)))
+        velocity_margin = recommended_velocity - float(params["transport_velocity"])
+        clearance_margin = float(params["lift_clearance"]) - clearance_target
+        risk_score = max(
+            float(info["lift_hold_risk"]),
+            max(0.0, -float(observation.lift_reserve_obs)),
+            abs(float(observation.tilt_obs)),
+        )
+    elif phase == "transfer":
+        slip_indicator = max(float(info["slip_risk"]), float(observation.sway_obs))
+        compression_indicator = float(info["compression_risk"])
+        velocity_margin = placement_velocity_cap - float(params["transport_velocity"])
+        clearance_margin = float(params["lift_clearance"]) - float(info["dynamic_clearance_target"])
+        risk_score = max(
+            float(info["transfer_sway_risk"]),
+            float(info["velocity_risk"]),
+            float(observation.sway_obs),
+            float(observation.velocity_stress_obs),
+        )
+    else:
+        slip_indicator = 0.5 * float(info["slip_risk"])
+        compression_indicator = 0.5 * float(info["compression_risk"])
+        velocity_margin = placement_velocity_cap - float(params["placement_velocity"])
+        clearance_margin = float(params["lift_clearance"]) - float(info["dynamic_clearance_target"])
+        risk_score = max(
+            float(info["placement_settle_risk"]),
+            float(observation.settle_obs),
+            float(observation.placement_error_obs),
+        )
+
+    trigger_reason = observation.trigger_reason
+    if not trigger_reason and not phase_success:
+        trigger_reason = f"{phase}_phase_failure"
+
+    stability_score = max(0.0, min(1.0, float(info["stability_score"]) - 0.18 * risk_score))
+    return {
+        "observation_index": observation_index,
+        "phase": phase,
+        "stage": phase,
+        "stage_progress": _PHASE_PROGRESS[phase],
+        "distance_to_target": round(
+            _distance_to_target_for_phase(
+                phase,
+                horizontal_distance=horizontal_distance,
+                final_distance=final_distance,
+                params=params,
+            ),
+            4,
+        ),
+        "stability_score": round(stability_score, 4),
+        "slip_indicator": round(max(0.0, slip_indicator), 4),
+        "compression_indicator": round(max(0.0, compression_indicator), 4),
+        "velocity_margin": round(velocity_margin, 4),
+        "clearance_margin": round(clearance_margin, 4),
+        "risk_score": round(max(0.0, risk_score), 4),
+        "estimated_failure_stage": _estimated_failure_stage(info),
+        "trigger_reason": trigger_reason,
+        "phase_success": phase_success,
+        **asdict(observation),
+    }
+
+
+def _evaluate_phase_execution(
+    *,
+    phase: str,
+    params: dict[str, Any],
+    object_profile: dict[str, Any] | None,
+    rng: random.Random | None = None,
+) -> tuple[PhaseObservation, bool, dict[str, Any]]:
+    del rng
+    profile = _default_object_profile()
+    if object_profile:
+        profile.update(object_profile)
+    normalized = _normalize_execution_params(params)
+    mass_kg = float(profile["mass_kg"])
+    surface_friction = float(profile["surface_friction"])
+    fragility = float(profile["fragility"])
+    size_xyz = tuple(profile["size_xyz"])
+    recommended_velocity, min_lift_clearance = _estimate_motion_targets(
+        mass_kg=mass_kg,
+        surface_friction=surface_friction,
+        fragility=fragility,
+        size_xyz=size_xyz,
+    )
+
+    if phase == "approach":
+        preferred_height = float(profile["preferred_approach_height"])
+        tolerance = float(profile["approach_height_tolerance"])
+        height_error = abs(normalized["approach_height"] - preferred_height)
+        phase_success = height_error <= tolerance * 1.4
+        observation = PhaseObservation(
+            phase="approach",
+            contact_stability_obs=round(max(0.0, 1.0 - height_error / max(tolerance * 2.0, 1e-4)), 4),
+            observation_confidence=0.68,
+            trigger_reason="approach_height_error" if not phase_success else "",
+        )
+        return observation, phase_success, {"phase_success": phase_success, "height_error": round(height_error, 4)}
+
+    if phase == "grasp":
+        grip_requirement = 5.0 + 42.0 * mass_kg + 10.0 * max(0.0, 0.25 - surface_friction)
+        grip_margin = normalized["gripper_force"] - grip_requirement
+        micro_slip = max(0.0, -grip_margin / 12.0) + max(0.0, 0.24 - surface_friction) * 0.35
+        phase_success = grip_margin >= -1.0
+        observation = PhaseObservation(
+            phase="grasp",
+            contact_stability_obs=round(max(0.0, 1.0 - micro_slip), 4),
+            micro_slip_obs=round(micro_slip, 4),
+            payload_ratio_obs=round(min(1.3, grip_requirement / max(normalized["gripper_force"], 1.0)), 4),
+            observation_confidence=0.72,
+            trigger_reason="micro_slip_obs" if not phase_success else "",
+        )
+        return observation, phase_success, {"phase_success": phase_success, "grip_margin": round(grip_margin, 4)}
+
+    if phase == "lift":
+        lift_requirement = 6.0 + 55.0 * mass_kg + 8.0 * max(0.0, min_lift_clearance - normalized["lift_clearance"])
+        lift_margin = normalized["lift_force"] - lift_requirement
+        clearance_bonus = 1.5 * (normalized["lift_clearance"] - min_lift_clearance)
+        lift_reserve = lift_margin / 20.0 + clearance_bonus
+        payload_ratio = min(1.4, lift_requirement / max(normalized["lift_force"], 1.0))
+        tilt = max(0.0, payload_ratio - 0.9) * 0.45
+        phase_success = lift_reserve >= 0.0
+        observation = PhaseObservation(
+            phase="lift",
+            payload_ratio_obs=round(payload_ratio, 4),
+            lift_progress_obs=round(max(0.0, min(1.0, 0.5 + lift_reserve)), 4),
+            lift_reserve_obs=round(lift_reserve, 4),
+            tilt_obs=round(tilt, 4),
+            observation_confidence=0.84,
+            trigger_reason="lift_reserve_obs" if not phase_success else "",
+        )
+        return observation, phase_success, {"phase_success": phase_success, "lift_reserve": round(lift_reserve, 4)}
+
+    dynamic_transport_mode, dynamic_clearance_target, dynamic_force_target, placement_velocity_cap = (
+        _estimate_dynamic_transport_targets(
+            mass_kg=mass_kg,
+            surface_friction=surface_friction,
+            horizontal_distance=0.35,
+            min_lift_clearance=min_lift_clearance,
+            nominal_force=normalized["gripper_force"],
+            fragility=fragility,
+            recommended_velocity=recommended_velocity,
+            transport_velocity=normalized["transport_velocity"],
+        )
+    )
+
+    if phase == "transfer":
+        velocity_stress = max(0.0, normalized["transport_velocity"] - placement_velocity_cap)
+        clearance_shortfall = max(0.0, dynamic_clearance_target - normalized["lift_clearance"])
+        force_shortfall = max(0.0, dynamic_force_target - normalized["transfer_force"])
+        alignment_penalty = max(0.0, 0.45 - normalized["transfer_alignment"]) * 0.12
+        sway = velocity_stress + 1.8 * clearance_shortfall + 0.012 * force_shortfall + alignment_penalty
+        phase_success = sway <= 0.24
+        observation = PhaseObservation(
+            phase="transfer",
+            sway_obs=round(sway, 4),
+            velocity_stress_obs=round(velocity_stress, 4),
+            observation_confidence=0.76,
+            trigger_reason="velocity_stress_obs" if not phase_success else "",
+        )
+        return observation, phase_success, {
+            "phase_success": phase_success,
+            "dynamic_transport_mode": dynamic_transport_mode,
+            "transfer_sway": round(sway, 4),
+        }
+
+    placement_velocity_stress = max(0.0, normalized["placement_velocity"] - placement_velocity_cap)
+    settle = (
+        placement_velocity_stress
+        + 1.2 * max(0.0, dynamic_clearance_target - normalized["lift_clearance"])
+        + 0.10 * max(0.0, 0.78 - fragility)
+    )
+    phase_success = settle <= 0.18
+    observation = PhaseObservation(
+        phase="place",
+        settle_obs=round(settle, 4),
+        placement_error_obs=round(max(0.0, normalized["placement_velocity"] - placement_velocity_cap), 4),
+        observation_confidence=0.74,
+        trigger_reason="settle_obs" if not phase_success else "",
+    )
+    return observation, phase_success, {"phase_success": phase_success, "settle": round(settle, 4)}
+
+
+def _build_stepwise_result(
+    *,
+    success: bool,
+    last_evaluation: dict[str, Any],
+    observer_trace: list[dict[str, Any]],
+    phase_execution_trace: list[dict[str, Any]],
+    observation_trace: list[dict[str, Any]],
+    belief_update_trace: list[dict[str, Any]],
+    counterfactual_replan_trace: list[dict[str, Any]],
+    frozen_prefix_plan: dict[str, dict[str, float]],
+    current_feedback_state: dict[str, Any],
+    current_params: dict[str, float],
+) -> tuple[bool, float, dict[str, Any]]:
+    info = dict(last_evaluation["info"])
+    applied_params = dict(current_feedback_state)
+    applied_params.update(current_params)
+    info["observer_trace"] = observer_trace
+    info["phase_execution_trace"] = phase_execution_trace
+    info["observation_trace"] = observation_trace
+    info["belief_update_trace"] = belief_update_trace
+    info["counterfactual_replan_trace"] = counterfactual_replan_trace
+    info["frozen_prefix_plan"] = frozen_prefix_plan
+    info["terminal_suffix_plan"] = dict(current_params)
+    info["step_replan_trace"] = counterfactual_replan_trace
+    info["step_replan_count"] = len(counterfactual_replan_trace)
+    info["execution_feedback_mode"] = (
+        "suffix_counterfactual_replan" if counterfactual_replan_trace else "observer_only"
+    )
+    info["applied_params"] = applied_params
+    if success:
+        info["distance"] = 0.0
+        info["grip_success"] = True
+        info["failure_bucket"] = "success"
+    return success, last_evaluation["elapsed"], info
+
+
 def simulate_stepwise_execution(
     *,
     object_pos: Tuple[float, float, float],
@@ -710,12 +1003,16 @@ def simulate_stepwise_execution(
     current_feedback_state = dict(params)
     current_params = _normalize_execution_params(current_feedback_state)
     observer_trace: list[dict[str, Any]] = []
-    step_replan_trace: list[dict[str, Any]] = []
+    phase_execution_trace: list[dict[str, Any]] = []
+    observation_trace: list[dict[str, Any]] = []
+    belief_update_trace: list[dict[str, Any]] = []
+    counterfactual_replan_trace: list[dict[str, Any]] = []
+    frozen_prefix_plan: dict[str, dict[str, float]] = {}
     observation_index = 0
-    step_replan_count = 0
+    phase_index = 0
     last_evaluation: dict[str, Any] | None = None
 
-    while True:
+    while phase_index < len(PHASE_SEQUENCE):
         evaluation = _evaluate_execution_plan(
             object_pos=object_pos,
             target_pos=target_pos,
@@ -724,53 +1021,139 @@ def simulate_stepwise_execution(
             rng=rng,
         )
         last_evaluation = evaluation
-        iteration_trace = _build_observer_trace(
-            evaluation,
-            observation_start_index=observation_index,
-        )
-        observer_trace.extend(iteration_trace)
-        observation_index += len(iteration_trace)
-        if step_replan_callback is None or step_replan_count >= max_step_replans:
-            break
+        replan_applied = False
+        while phase_index < len(PHASE_SEQUENCE):
+            phase = PHASE_SEQUENCE[phase_index]
+            frozen_prefix_plan.setdefault(phase, dict(current_params))
+            observation, phase_success, phase_info = _evaluate_phase_execution(
+                phase=phase,
+                params=current_params,
+                object_profile=evaluation["profile"],
+                rng=rng,
+            )
+            observation_record = {
+                "observation_index": observation_index,
+                "phase_success": phase_success,
+                **asdict(observation),
+            }
+            observation_trace.append(observation_record)
+            phase_snapshot = _build_phase_snapshot(
+                phase=phase,
+                observation=observation,
+                phase_success=phase_success,
+                evaluation=evaluation,
+                observation_index=observation_index,
+            )
+            observer_trace.append(phase_snapshot)
+            phase_execution_trace.append(
+                {
+                    "phase": phase,
+                    "observation_index": observation_index,
+                    "phase_success": phase_success,
+                    **phase_info,
+                }
+            )
+            phase_prior = build_execution_prior(current_feedback_state, phase=phase)
+            posterior, belief_trace = apply_phase_observation(phase_prior, observation)
+            belief_update_trace.append(
+                {
+                    "observation_index": observation_index,
+                    "phase_success": phase_success,
+                    "prior": phase_prior.to_trace_dict(),
+                    "posterior": posterior.to_trace_dict(),
+                    "trigger_reason": belief_trace["trigger_reason"],
+                    "updated_latents": belief_trace["updated_latents"],
+                }
+            )
+            observation_index += 1
 
-        updated_params = None
-        trigger_snapshot = None
-        for snapshot in iteration_trace:
-            if not snapshot["trigger_reason"]:
+            if phase_success:
+                phase_index += 1
                 continue
-            candidate = step_replan_callback(dict(snapshot), dict(current_feedback_state))
+
+            if step_replan_callback is None or len(counterfactual_replan_trace) >= max_step_replans:
+                return _build_stepwise_result(
+                    success=False,
+                    last_evaluation=last_evaluation,
+                    observer_trace=observer_trace,
+                    phase_execution_trace=phase_execution_trace,
+                    observation_trace=observation_trace,
+                    belief_update_trace=belief_update_trace,
+                    counterfactual_replan_trace=counterfactual_replan_trace,
+                    frozen_prefix_plan=frozen_prefix_plan,
+                    current_feedback_state=current_feedback_state,
+                    current_params=current_params,
+                )
+
+            candidate = step_replan_callback(dict(phase_snapshot), dict(current_feedback_state))
             if candidate is None:
-                continue
+                return _build_stepwise_result(
+                    success=False,
+                    last_evaluation=last_evaluation,
+                    observer_trace=observer_trace,
+                    phase_execution_trace=phase_execution_trace,
+                    observation_trace=observation_trace,
+                    belief_update_trace=belief_update_trace,
+                    counterfactual_replan_trace=counterfactual_replan_trace,
+                    frozen_prefix_plan=frozen_prefix_plan,
+                    current_feedback_state=current_feedback_state,
+                    current_params=current_params,
+                )
+
             normalized_candidate = _normalize_execution_params(candidate)
             if normalized_candidate == current_params:
-                continue
-            updated_params = normalized_candidate
-            trigger_snapshot = snapshot
+                return _build_stepwise_result(
+                    success=False,
+                    last_evaluation=last_evaluation,
+                    observer_trace=observer_trace,
+                    phase_execution_trace=phase_execution_trace,
+                    observation_trace=observation_trace,
+                    belief_update_trace=belief_update_trace,
+                    counterfactual_replan_trace=counterfactual_replan_trace,
+                    frozen_prefix_plan=frozen_prefix_plan,
+                    current_feedback_state=current_feedback_state,
+                    current_params=current_params,
+                )
+
+            current_feedback_state = dict(candidate)
+            current_feedback_state.update(normalized_candidate)
+            current_params = normalized_candidate
+            trace_row = {}
+            candidate_trace = candidate.get("counterfactual_replan_trace")
+            if isinstance(candidate_trace, list) and candidate_trace:
+                trace_row.update(candidate_trace[-1])
+            trace_row.update(
+                {
+                    "observation_index": phase_snapshot["observation_index"],
+                    "phase": phase,
+                    "stage": phase,
+                    "start_phase": phase,
+                    "trigger_reason": phase_snapshot["trigger_reason"],
+                    "frozen_prefix": list(PHASE_SEQUENCE[:phase_index]),
+                    "seed_plan": dict(evaluation["params"]),
+                    "final_plan": dict(current_params),
+                }
+            )
+            counterfactual_replan_trace.append(trace_row)
+            replan_applied = True
             break
-        if updated_params is None or trigger_snapshot is None:
+
+        if not replan_applied:
             break
-        step_replan_trace.append(
-            {
-                "observation_index": trigger_snapshot["observation_index"],
-                "stage": trigger_snapshot["stage"],
-                "trigger_reason": trigger_snapshot["trigger_reason"],
-                "seed_plan": dict(current_params),
-                "final_plan": dict(updated_params),
-            }
-        )
-        current_feedback_state = dict(candidate)
-        current_params = updated_params
-        step_replan_count += 1
 
     assert last_evaluation is not None
-    info = dict(last_evaluation["info"])
-    info["observer_trace"] = observer_trace
-    info["step_replan_trace"] = step_replan_trace
-    info["step_replan_count"] = step_replan_count
-    info["execution_feedback_mode"] = "step_observer_replan" if step_replan_count > 0 else "observer_only"
-    current_feedback_state.update(last_evaluation["params"])
-    info["applied_params"] = dict(current_feedback_state)
-    return last_evaluation["success"], last_evaluation["elapsed"], info
+    return _build_stepwise_result(
+        success=phase_index == len(PHASE_SEQUENCE),
+        last_evaluation=last_evaluation,
+        observer_trace=observer_trace,
+        phase_execution_trace=phase_execution_trace,
+        observation_trace=observation_trace,
+        belief_update_trace=belief_update_trace,
+        counterfactual_replan_trace=counterfactual_replan_trace,
+        frozen_prefix_plan=frozen_prefix_plan,
+        current_feedback_state=current_feedback_state,
+        current_params=current_params,
+    )
 
 
 class ArmSimEnv:

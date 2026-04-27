@@ -209,11 +209,11 @@ class AdaptiveExecutionTest(unittest.TestCase):
             step_replan_callback=_step_replan,
             max_step_replans=2,
         )
-        self.assertEqual(info["execution_feedback_mode"], "step_observer_replan")
+        self.assertEqual(info["execution_feedback_mode"], "suffix_counterfactual_replan")
         self.assertGreaterEqual(info["step_replan_count"], 1)
-        self.assertIn("step_replan_trace", info)
-        self.assertGreater(len(info["step_replan_trace"]), 0)
-        self.assertEqual(info["step_replan_trace"][0]["stage"], "transfer")
+        self.assertIn("counterfactual_replan_trace", info)
+        self.assertGreater(len(info["counterfactual_replan_trace"]), 0)
+        self.assertEqual(info["counterfactual_replan_trace"][0]["start_phase"], "transfer")
 
     def test_stepwise_execution_reuses_last_evaluation_without_extra_sampling(self):
         evaluation_log: list[dict] = []
