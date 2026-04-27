@@ -70,6 +70,19 @@ def _summarize_params(params: dict) -> dict:
         "lift_clearance",
         "uncertainty_std",
         "confidence",
+        "belief_state",
+        "task_constraints",
+        "uncertainty_profile",
+        "stage_plan",
+        "belief_state_coverage",
+        "uncertainty_conservative_mode",
+        "uncertainty_reasons",
+        "solver_mode",
+        "solver_selected_candidate",
+        "solver_selected_score",
+        "solver_score_breakdown",
+        "solver_candidate_scores",
+        "solver_adjustment_notes",
         "evidence_rule_count",
         "evidence_support_score",
         "evidence_conflict_count",
@@ -118,6 +131,9 @@ def _summarize_params(params: dict) -> dict:
         "long_transfer_clearance_target",
         "motion_path_force_compensation",
         "calibration_notes",
+        "feedback_adjusted",
+        "feedback_adjustment_type",
+        "feedback_stage_adjustments",
         "selected_evidence",
         "selected_rule_types",
     ):
@@ -338,6 +354,9 @@ def _serialize_results(results: list[BenchmarkResult]) -> list[dict]:
                 "transfer_sway_fail_rate": round(result.transfer_sway_fail_rate, 4),
                 "placement_settle_fail_rate": round(result.placement_settle_fail_rate, 4),
                 "dominant_failure_mode": result.dominant_failure_mode,
+                "belief_state_coverage": result.params_used.get("belief_state_coverage"),
+                "uncertainty_conservative_mode": result.params_used.get("uncertainty_conservative_mode"),
+                "solver_selected_candidate": result.params_used.get("solver_selected_candidate"),
                 "evidence_rule_count": result.params_used.get("evidence_rule_count"),
                 "evidence_support_score": result.params_used.get("evidence_support_score"),
                 "evidence_conflict_count": result.params_used.get("evidence_conflict_count"),
@@ -649,6 +668,15 @@ def run_benchmark_multi_seed_report(
                 "lift_clearance_mean": _mean(lift_clearances),
                 "lift_clearance_std": _std(lift_clearances),
                 "dynamic_transport_mode": Counter(dynamic_transport_modes).most_common(1)[0][0],
+                "belief_state_coverage_mean": _mean(
+                    [float(run.params_used.get("belief_state_coverage", 0.0)) for run in task_runs]
+                ),
+                "uncertainty_conservative_mode_mean": _mean(
+                    [1.0 if run.params_used.get("uncertainty_conservative_mode") else 0.0 for run in task_runs]
+                ),
+                "solver_selected_candidate": Counter(
+                    [str(run.params_used.get("solver_selected_candidate", "rule_aggregate")) for run in task_runs]
+                ).most_common(1)[0][0],
                 "evidence_rule_count_mean": _mean(
                     [float(run.params_used.get("evidence_rule_count", 0.0)) for run in task_runs]
                 ),
@@ -685,11 +713,11 @@ def run_benchmark_multi_seed_report(
         table_path = Path(output_path).with_suffix(".txt")
         lines = [
             f"{method} benchmark 多 seed 汇总结果",
-            "=" * 76,
+            "=" * 108,
             f"seeds={seeds}, n_trials_per_seed={n_trials_per_task}, total_trials={n_trials_per_task * len(seeds)}",
             "",
             f"{'任务':<32} {'成功率(mean±std)':<18} {'稳定度(mean±std)':<18} {'时间(mean±std)':<18}",
-            "-" * 76,
+            "-" * 108,
         ]
         for row in summary_rows:
             lines.append(
@@ -698,6 +726,13 @@ def run_benchmark_multi_seed_report(
                 f"{row['avg_stability_score_mean']:.3f}±{row['avg_stability_score_std']:.3f} "
                 f"{row['avg_time_sec_mean']:.3f}s±{row['avg_time_sec_std']:.3f}"
             )
+            if row.get("belief_state_coverage_mean") is not None and row.get("solver_selected_candidate") is not None:
+                lines.append(
+                    " " * 4
+                    + f"belief={row['belief_state_coverage_mean']:.3f}, "
+                    + f"conservative_rate={row['uncertainty_conservative_mode_mean']:.2%}, "
+                    + f"solver={row['solver_selected_candidate']}"
+                )
         lines.append("")
         lines.append(f"JSON: {output_path}")
         write_table(table_path, lines)
@@ -994,11 +1029,33 @@ def run_benchmark_comparison_multi_seed(
                 str(run.params_used.get("dynamic_transport_mode", "static"))
                 for run in task_runs
             ]
+            belief_coverages = [
+                float(run.params_used.get("belief_state_coverage", 0.0))
+                for run in task_runs
+                if run.params_used.get("belief_state_coverage") is not None
+            ]
+            conservative_modes = [
+                1.0 if run.params_used.get("uncertainty_conservative_mode") else 0.0
+                for run in task_runs
+            ]
+            solver_candidates = [
+                str(run.params_used.get("solver_selected_candidate", "rule_aggregate"))
+                for run in task_runs
+            ]
             row[f"{method}_available_motion_rules_mean"] = (
                 round(statistics.mean(available_motion), 4) if available_motion else None
             )
             row[f"{method}_suppressed_motion_rules_mean"] = (
                 round(statistics.mean(suppressed_motion), 4) if suppressed_motion else None
+            )
+            row[f"{method}_belief_state_coverage_mean"] = (
+                round(statistics.mean(belief_coverages), 4) if belief_coverages else None
+            )
+            row[f"{method}_uncertainty_conservative_mode_mean"] = (
+                round(statistics.mean(conservative_modes), 4) if conservative_modes else None
+            )
+            row[f"{method}_solver_selected_candidate"] = (
+                Counter(solver_candidates).most_common(1)[0][0] if solver_candidates else None
             )
             available_lift_stage = [
                 1.0 if run.params_used.get("available_lift_stage_rules") else 0.0
@@ -1066,11 +1123,12 @@ def run_benchmark_comparison_multi_seed(
     write_json(out_json, comparison)
     lines = [
         "RAG vs 基线 对比结果（多 seed mean±std）",
-        "=" * 74,
+        "=" * 108,
         f"n_trials_per_task={n_trials_per_task}, seeds={seeds}",
         "",
-        f"{'任务':<32} {'参考力范围(N)':<12} " + " ".join(f"{method}_成功率(mean±std)" for method in methods),
-        "-" * 74,
+        f"{'任务':<32} {'参考力范围(N)':<12} "
+        + " ".join(f"{method}_成功率(mean±std)" for method in methods),
+        "-" * 108,
     ]
     for task in BENCHMARK_TASKS:
         reference = f"{task.reference_force_range[0]}-{task.reference_force_range[1]}"
@@ -1084,6 +1142,16 @@ def run_benchmark_comparison_multi_seed(
             else:
                 parts.append("N/A")
         lines.append(f"{task_label(task):<32} {reference:<12} " + " ".join(parts))
+        if "rag" in methods:
+            rag_row = next(item for item in comparison if item["task_id"] == task.task_id)
+            coverage = rag_row.get("rag_belief_state_coverage_mean")
+            conservative = rag_row.get("rag_uncertainty_conservative_mode_mean")
+            solver = rag_row.get("rag_solver_selected_candidate")
+            if coverage is not None and conservative is not None and solver is not None:
+                lines.append(
+                    " " * 4
+                    + f"rag belief={coverage:.3f}, conservative_rate={conservative:.2%}, solver={solver}"
+                )
     lines.append("")
     lines.append(f"对比 JSON: {out_json}")
     write_table(output_dir / "simulation_comparison_multi_seed.txt", lines)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import json
 from pathlib import Path
 
@@ -140,6 +141,36 @@ def build_summary(
     ]
     if rag_evidence_support:
         lines.append(f"- 多 seed 平均上，RAG 控制计划的证据支持分为 {sum(rag_evidence_support)/len(rag_evidence_support):.2f}。")
+    rag_belief_coverages = [
+        row.get("rag_belief_state_coverage_mean")
+        for row in sim_multi_seed
+        if row.get("rag_belief_state_coverage_mean") is not None
+    ]
+    if rag_belief_coverages:
+        lines.append(
+            f"- 多 seed 平均上，RAG belief state coverage 为 {sum(rag_belief_coverages)/len(rag_belief_coverages):.2f}。"
+        )
+    rag_conservative_rates = [
+        row.get("rag_uncertainty_conservative_mode_mean")
+        for row in sim_multi_seed
+        if row.get("rag_uncertainty_conservative_mode_mean") is not None
+    ]
+    if rag_conservative_rates:
+        lines.append(
+            f"- 多 seed 平均上，RAG uncertainty conservative mode 的触发率为 "
+            f"{_format_pct(sum(rag_conservative_rates)/len(rag_conservative_rates))}。"
+        )
+    rag_solver_choices = [
+        row.get("rag_solver_selected_candidate")
+        for row in sim_multi_seed
+        if row.get("rag_solver_selected_candidate") is not None
+    ]
+    if rag_solver_choices:
+        top_solver, top_count = Counter(rag_solver_choices).most_common(1)[0]
+        lines.append(
+            f"- 当前多 seed 结果中，RAG 最常选中的 solver 候选是 `{top_solver}`，"
+            f"覆盖 {top_count}/{len(rag_solver_choices)} 个任务。"
+        )
 
     evidence_ablation_path = Path(sim_multi_seed_path).with_name("simulation_evidence_ablation.json")
     if evidence_ablation_path.exists():
@@ -398,6 +429,14 @@ def build_summary(
             lines.append(
                 f"- `pick_large_part_far` 当前已不再只靠 large-part force band；lift-stage 证据可见性为 "
                 f"{available_lift_stage_rules:.2f}，实际使用率为 {used_lift_stage_rules:.2f}。"
+            )
+        belief_coverage = large_far_row.get("rag_belief_state_coverage_mean")
+        conservative_rate = large_far_row.get("rag_uncertainty_conservative_mode_mean")
+        solver_choice = large_far_row.get("rag_solver_selected_candidate")
+        if belief_coverage is not None and conservative_rate is not None and solver_choice is not None:
+            lines.append(
+                f"- `pick_large_part_far` 当前 belief coverage={belief_coverage:.4f}，"
+                f"conservative mode 触发率为 {_format_pct(conservative_rate)}，主导 solver 为 `{solver_choice}`。"
             )
         if sway_risk is not None and sway_risk > 0:
             lines.append(

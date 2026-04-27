@@ -14,6 +14,7 @@ from langchain_community.vectorstores import Chroma
 
 from chroma_compat import get_chroma_client_settings
 from model_provider import resolve_model_path
+from .control_core import build_control_belief, solve_control_plan
 
 
 TASK_DESCRIPTION_HINTS = (
@@ -753,6 +754,44 @@ def _aggregate_plan(
 
     selected_rules = rules[:3]
     support_score = round(sum(rule["score"] for rule in selected_rules) / len(selected_rules), 4) if selected_rules else 0.0
+    belief = build_control_belief(
+        features=features,
+        dynamic_transport_mode=dynamic_transport_mode,
+        support_score=support_score,
+        conflict_count=force_conflict,
+        force_rule_mode=force_rule_mode,
+        motion_rule_mode=motion_rule_mode,
+        available_specific_force_rules=available_specific_force_rules,
+        available_motion_rules=available_motion_rules,
+        available_numeric_motion_rules=available_numeric_motion_rules,
+        available_alignment_rules=available_alignment_rules,
+        available_lift_stage_rules=available_lift_stage_rules,
+        available_support_contact_rules=available_support_contact_rules,
+    )
+    solved_plan, solver_trace = solve_control_plan(
+        {
+            "gripper_force": force,
+            "approach_height": height,
+            "transport_velocity": velocity,
+            "lift_clearance": clearance,
+            "lift_force": lift_force,
+            "transfer_force": transfer_force,
+            "placement_velocity": placement_velocity,
+            "transfer_alignment": transfer_alignment,
+        },
+        belief,
+    )
+    force = solved_plan["gripper_force"]
+    height = solved_plan["approach_height"]
+    velocity = solved_plan["transport_velocity"]
+    clearance = solved_plan["lift_clearance"]
+    lift_force = solved_plan["lift_force"]
+    transfer_force = solved_plan["transfer_force"]
+    placement_velocity = solved_plan["placement_velocity"]
+    transfer_alignment = solved_plan["transfer_alignment"]
+    for note in solver_trace["solver_adjustment_notes"]:
+        if note not in calibration_notes:
+            calibration_notes.append(note)
     trace = {
         "selected_rules": [
             {
@@ -771,6 +810,7 @@ def _aggregate_plan(
         "conflict_count": force_conflict,
         "force_rule_mode": force_rule_mode,
         "motion_rule_mode": motion_rule_mode,
+        **belief.to_trace_dict(),
         "matched_hint_keywords": list(matched_hint["keywords"]) if matched_hint is not None else [],
         "available_specific_force_rules": available_specific_force_rules,
         "suppressed_specific_force_rules": suppressed_specific_force_rules,
@@ -821,6 +861,12 @@ def _aggregate_plan(
         "long_transfer_numeric_clearance_floor": long_transfer_numeric_clearance_floor,
         "long_transfer_clearance_target": long_transfer_clearance_target,
         "motion_path_force_compensation": round(motion_path_force_compensation, 4),
+        "solver_mode": solver_trace["solver_mode"],
+        "solver_selected_candidate": solver_trace["solver_selected_candidate"],
+        "solver_selected_score": solver_trace["solver_selected_score"],
+        "solver_score_breakdown": solver_trace["solver_score_breakdown"],
+        "solver_candidate_scores": solver_trace["solver_candidate_scores"],
+        "solver_adjustment_notes": solver_trace["solver_adjustment_notes"],
         "calibration_notes": calibration_notes,
     }
     return (
@@ -1019,6 +1065,22 @@ class RAGController:
             + (0.12 if trace["used_specific_force_rules"] else 0.0)
             - 0.08 * trace["conflict_count"],
         )
+        confidence = max(
+            0.05,
+            min(
+                1.0,
+                confidence
+                + 0.10 * float(trace["belief_state_coverage"])
+                - (0.08 if trace["uncertainty_conservative_mode"] else 0.0),
+            ),
+        )
+        uncertainty_std = min(
+            0.35,
+            0.04
+            + 0.12 * max(0.0, 1.0 - float(trace["belief_state_coverage"]))
+            + 0.03 * float(trace["conflict_count"])
+            + (0.04 if trace["uncertainty_conservative_mode"] else 0.0),
+        )
         return {
             "gripper_force": round(float(force), 2),
             "approach_height": round(float(height), 3),
@@ -1030,11 +1092,25 @@ class RAGController:
             "lift_clearance": round(float(clearance), 3),
             "rag_source": context[:300] if docs else "",
             "confidence": round(confidence, 3),
+            "uncertainty_std": round(uncertainty_std, 4),
             "evidence_rule_count": trace["rule_count"],
             "evidence_support_score": trace["support_score"],
             "evidence_conflict_count": trace["conflict_count"],
             "force_rule_mode": trace["force_rule_mode"],
             "motion_rule_mode": trace["motion_rule_mode"],
+            "belief_state": trace["belief_state"],
+            "task_constraints": trace["task_constraints"],
+            "uncertainty_profile": trace["uncertainty_profile"],
+            "stage_plan": trace["stage_plan"],
+            "belief_state_coverage": trace["belief_state_coverage"],
+            "uncertainty_conservative_mode": trace["uncertainty_conservative_mode"],
+            "uncertainty_reasons": trace["uncertainty_reasons"],
+            "solver_mode": trace["solver_mode"],
+            "solver_selected_candidate": trace["solver_selected_candidate"],
+            "solver_selected_score": trace["solver_selected_score"],
+            "solver_score_breakdown": trace["solver_score_breakdown"],
+            "solver_candidate_scores": trace["solver_candidate_scores"],
+            "solver_adjustment_notes": trace["solver_adjustment_notes"],
             "matched_hint_keywords": trace["matched_hint_keywords"],
             "selected_evidence": [
                 f"{rule['category']}#{rule['entry_id']}:{rule['clause']}"
@@ -1119,6 +1195,22 @@ class RAGController:
                     or velocity
                 )
                 transfer_alignment = float(trace["transfer_alignment"] or 0.0)
+                uncertainty_std = min(
+                    0.35,
+                    0.04
+                    + 0.12 * max(0.0, 1.0 - float(trace["belief_state_coverage"]))
+                    + 0.03 * float(trace["conflict_count"])
+                    + (0.04 if trace["uncertainty_conservative_mode"] else 0.0),
+                )
+                confidence = max(
+                    0.05,
+                    min(
+                        1.0,
+                        0.55
+                        + 0.08 * float(trace["belief_state_coverage"])
+                        - (0.06 if trace["uncertainty_conservative_mode"] else 0.0),
+                    ),
+                )
                 return {
                     "gripper_force": round(force, 2),
                     "approach_height": round(height, 3),
@@ -1129,12 +1221,26 @@ class RAGController:
                     "transfer_alignment": round(transfer_alignment, 3),
                     "lift_clearance": round(clearance, 3),
                     "rag_source": context[:300],
-                    "confidence": 0.55,
+                    "confidence": round(confidence, 3),
+                    "uncertainty_std": round(uncertainty_std, 4),
                     "evidence_rule_count": trace["rule_count"],
                     "evidence_support_score": trace["support_score"],
                     "evidence_conflict_count": trace["conflict_count"],
                     "force_rule_mode": trace["force_rule_mode"],
                     "motion_rule_mode": trace["motion_rule_mode"],
+                    "belief_state": trace["belief_state"],
+                    "task_constraints": trace["task_constraints"],
+                    "uncertainty_profile": trace["uncertainty_profile"],
+                    "stage_plan": trace["stage_plan"],
+                    "belief_state_coverage": trace["belief_state_coverage"],
+                    "uncertainty_conservative_mode": trace["uncertainty_conservative_mode"],
+                    "uncertainty_reasons": trace["uncertainty_reasons"],
+                    "solver_mode": trace["solver_mode"],
+                    "solver_selected_candidate": trace["solver_selected_candidate"],
+                    "solver_selected_score": trace["solver_selected_score"],
+                    "solver_score_breakdown": trace["solver_score_breakdown"],
+                    "solver_candidate_scores": trace["solver_candidate_scores"],
+                    "solver_adjustment_notes": trace["solver_adjustment_notes"],
                     "matched_hint_keywords": trace["matched_hint_keywords"],
                     "selected_evidence": [
                         f"{rule['category']}#{rule['entry_id']}:{rule['clause']}"
@@ -1204,4 +1310,9 @@ class RAGController:
             info=info,
         )
         suggestion = suggest_force_adjustment(signal)
-        return adjust_params_by_feedback(previous_params, suggestion, step=adjustment_step)
+        return adjust_params_by_feedback(
+            previous_params,
+            suggestion,
+            signal=signal,
+            step=adjustment_step,
+        )

@@ -389,6 +389,39 @@ def plot_multi_seed_success(sim_rows: list[dict], output_dir: Path) -> None:
     _save(fig, output_dir / "simulation_multi_seed_success.png")
 
 
+def plot_sim_belief_diagnostics(sim_rows: list[dict], output_dir: Path) -> None:
+    tasks = _task_names(sim_rows)
+    x = np.arange(len(tasks))
+    belief_coverages = [row.get("rag_belief_state_coverage_mean", np.nan) for row in sim_rows]
+    conservative_rates = [row.get("rag_uncertainty_conservative_mode_mean", np.nan) for row in sim_rows]
+    solver_labels = [str(row.get("rag_solver_selected_candidate", "n/a")) for row in sim_rows]
+
+    fig, axes = plt.subplots(2, 1, figsize=(12, 7), sharex=True)
+    axes[0].bar(x, belief_coverages, color="#4c956c")
+    axes[0].set_ylim(0, 1.05)
+    axes[0].set_ylabel("Belief Coverage")
+    axes[0].set_title("RAG Belief Coverage by Task")
+    for idx, (value, solver) in enumerate(zip(belief_coverages, solver_labels)):
+        if np.isnan(value):
+            continue
+        axes[0].text(
+            idx,
+            min(1.02, value + 0.03),
+            solver.replace("_", "\n"),
+            ha="center",
+            va="bottom",
+            fontsize=8,
+        )
+
+    axes[1].bar(x, conservative_rates, color="#bc4b51")
+    axes[1].set_ylim(0, 1.05)
+    axes[1].set_ylabel("Conservative Rate")
+    axes[1].set_title("RAG Uncertainty Conservative Mode Rate")
+    axes[1].set_xticks(x)
+    axes[1].set_xticklabels(tasks, rotation=18)
+    _save(fig, output_dir / "simulation_belief_diagnostics.png")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--qa_json", default="outputs/current/qa_evaluation_detail.json")
@@ -421,6 +454,8 @@ def main() -> None:
     if multi_seed_path.exists():
         multi_seed_rows = json.loads(multi_seed_path.read_text(encoding="utf-8"))
         plot_multi_seed_success(multi_seed_rows, output_dir)
+        if any("rag_belief_state_coverage_mean" in row for row in multi_seed_rows):
+            plot_sim_belief_diagnostics(multi_seed_rows, output_dir)
 
     print(f"图表已生成到: {output_dir}")
 

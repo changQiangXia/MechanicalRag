@@ -1,0 +1,3327 @@
+[
+  {
+    "task_id": "pick_smooth_metal",
+    "task_label": "pick_smooth_metal/抓取光滑金属零件",
+    "task_description": "抓取光滑金属零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "low_friction",
+      "fragile"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      30,
+      50
+    ],
+    "reference_force_center": 40.0,
+    "reference_approach_height": 0.05,
+    "success_count": 16,
+    "success_rate": 0.8,
+    "avg_time_sec": 3.8099,
+    "avg_steps": 9.1,
+    "avg_distance_error": 0.0406,
+    "success_rate_ci95": [
+      0.584,
+      0.9193
+    ],
+    "reference_force_deviation": 4.9,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0,
+    "avg_stability_score": 0.9128,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.1,
+    "transfer_sway_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.1,
+    "dominant_failure_mode": "lift_hold_fail",
+    "belief_state_coverage": 0.8333,
+    "uncertainty_conservative_mode": false,
+    "solver_selected_candidate": "stability_bias",
+    "evidence_rule_count": 3,
+    "evidence_support_score": 3.0,
+    "evidence_conflict_count": 1,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": true,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": false,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 35.1,
+      "lift_force": 35.1,
+      "transfer_force": 35.1,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.22,
+      "placement_velocity": 0.22,
+      "lift_clearance": 0.074,
+      "uncertainty_std": 0.09,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "light",
+        "friction_band": "low",
+        "fragility_band": "medium",
+        "size_band": "medium",
+        "dynamic_load_band": "low",
+        "center_of_mass_risk": 0.3,
+        "support_contact_expected": false,
+        "specific_force_supported": true,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.55,
+        "stability_priority": 0.9,
+        "precision_priority": 0.45,
+        "safety_priority": 0.68,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 3.0,
+        "state_coverage": 0.8333,
+        "conflict_count": 1,
+        "missing_specific_force": false,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": false,
+        "reasons": [
+          "evidence_conflict"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "slip"
+          ],
+          "control_bias": "force_margin",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 0.8333,
+      "uncertainty_conservative_mode": false,
+      "uncertainty_reasons": [
+        "evidence_conflict"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "stability_bias",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 1.56,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 1.56,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "stability_bias",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [
+        "solver_selected:stability_bias"
+      ],
+      "evidence_rule_count": 3,
+      "evidence_support_score": 3.0,
+      "evidence_conflict_count": 1,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "光滑金属"
+      ],
+      "available_specific_force_rules": true,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": false,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": true,
+      "used_generic_force_rules": true,
+      "used_motion_rules": false,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": null,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": 34.5,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.2,
+      "calibration_notes": [
+        "motion_path_force_compensation",
+        "static_smooth_metal_force_cap",
+        "solver_selected:stability_bias"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#22:物理先验知识：摩擦相关——抓取光滑金属零件时，需增大夹爪力（30-50N），避免因摩擦力不足导致工件滑落",
+        "一、设备参数#10:设备参数：磁力吸盘——吸持力最大200N，断电保护，适用于薄板金属搬运",
+        "三、物理先验知识#22:抓取橡胶零件时，夹爪力控制在5-15N，防止零件变形"
+      ],
+      "selected_rule_types": [
+        "force",
+        "support",
+        "force"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_rubber",
+    "task_label": "pick_rubber/抓取橡胶零件",
+    "task_description": "抓取橡胶零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "high_friction",
+      "compliant"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      5,
+      15
+    ],
+    "reference_force_center": 10.0,
+    "reference_approach_height": 0.03,
+    "success_count": 20,
+    "success_rate": 1.0,
+    "avg_time_sec": 2.1754,
+    "avg_steps": 5.05,
+    "avg_distance_error": 0.0346,
+    "success_rate_ci95": [
+      0.8389,
+      1.0
+    ],
+    "reference_force_deviation": 3.5,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0066,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0043,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0,
+    "avg_stability_score": 0.9707,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.0,
+    "transfer_sway_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "none",
+    "belief_state_coverage": 0.8333,
+    "uncertainty_conservative_mode": false,
+    "solver_selected_candidate": "rule_aggregate",
+    "evidence_rule_count": 4,
+    "evidence_support_score": 2.5,
+    "evidence_conflict_count": 1,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": true,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": false,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 13.5,
+      "lift_force": 13.5,
+      "transfer_force": 13.5,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.03,
+      "transport_velocity": 0.3,
+      "placement_velocity": 0.3,
+      "lift_clearance": 0.06,
+      "uncertainty_std": 0.09,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "light",
+        "friction_band": "high",
+        "fragility_band": "low",
+        "size_band": "medium",
+        "dynamic_load_band": "low",
+        "center_of_mass_risk": 0.3,
+        "support_contact_expected": false,
+        "specific_force_supported": true,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.55,
+        "stability_priority": 0.6,
+        "precision_priority": 0.45,
+        "safety_priority": 0.68,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 2.5,
+        "state_coverage": 0.8333,
+        "conflict_count": 1,
+        "missing_specific_force": false,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": false,
+        "reasons": [
+          "evidence_conflict"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "compression"
+          ],
+          "control_bias": "balanced",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 0.8333,
+      "uncertainty_conservative_mode": false,
+      "uncertainty_reasons": [
+        "evidence_conflict"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "rule_aggregate",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [],
+      "evidence_rule_count": 4,
+      "evidence_support_score": 2.5,
+      "evidence_conflict_count": 1,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "橡胶"
+      ],
+      "available_specific_force_rules": true,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": false,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": true,
+      "used_generic_force_rules": true,
+      "used_motion_rules": false,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": null,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": 13.5,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": 0.06,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.0,
+      "calibration_notes": [
+        "rubber_material_force_floor",
+        "rubber_material_clearance_floor"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#22:抓取橡胶零件时，夹爪力控制在5-15N，防止零件变形",
+        "三、物理先验知识#24:物理先验知识：薄壁件抓取——避免径向夹持导致变形，优先采用多点分散支撑或真空吸附",
+        "一、设备参数#8:设备参数：伺服夹爪——闭环力控，力分辨率0.5N，适用于易碎件抓取"
+      ],
+      "selected_rule_types": [
+        "force",
+        "support",
+        "support"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_small_part",
+    "task_label": "pick_small_part/抓取小型机械零件",
+    "task_description": "抓取小型机械零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "small",
+      "precision"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      5,
+      15
+    ],
+    "reference_force_center": 10.0,
+    "reference_approach_height": 0.04,
+    "success_count": 18,
+    "success_rate": 0.9,
+    "avg_time_sec": 2.1279,
+    "avg_steps": 6.0,
+    "avg_distance_error": 0.01,
+    "success_rate_ci95": [
+      0.699,
+      0.9721
+    ],
+    "reference_force_deviation": 6.8,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0,
+    "avg_stability_score": 0.8355,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.05,
+    "transfer_sway_fail_rate": 0.05,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "lift_hold_fail",
+    "belief_state_coverage": 0.6667,
+    "uncertainty_conservative_mode": true,
+    "solver_selected_candidate": "uncertainty_guard",
+    "evidence_rule_count": 1,
+    "evidence_support_score": 1.5,
+    "evidence_conflict_count": 0,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": false,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": false,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 16.8,
+      "lift_force": 16.8,
+      "transfer_force": 17.4,
+      "transfer_alignment": 0.08,
+      "approach_height": 0.04,
+      "transport_velocity": 0.3,
+      "placement_velocity": 0.3,
+      "lift_clearance": 0.061,
+      "uncertainty_std": 0.12,
+      "confidence": 0.767,
+      "belief_state": {
+        "mass_band": "light",
+        "friction_band": "medium",
+        "fragility_band": "low",
+        "size_band": "small",
+        "dynamic_load_band": "low",
+        "center_of_mass_risk": 0.3,
+        "support_contact_expected": false,
+        "specific_force_supported": false,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.55,
+        "stability_priority": 0.6,
+        "precision_priority": 0.45,
+        "safety_priority": 0.68,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 1.5,
+        "state_coverage": 0.6667,
+        "conflict_count": 0,
+        "missing_specific_force": true,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": true,
+        "reasons": [
+          "low_support_score",
+          "state_coverage_gap",
+          "missing_specific_force"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "compression"
+          ],
+          "control_bias": "balanced",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 0.6667,
+      "uncertainty_conservative_mode": true,
+      "uncertainty_reasons": [
+        "low_support_score",
+        "state_coverage_gap",
+        "missing_specific_force"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "uncertainty_guard",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 5.14,
+          "breakdown": {
+            "force_shortfall": 1.2,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 1.68,
+            "transfer_shortfall": 1.3,
+            "transport_overspeed": 0.36,
+            "placement_overspeed": 0.44,
+            "clearance_shortfall": 0.16,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "uncertainty_guard",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "evidence_rule_count": 1,
+      "evidence_support_score": 1.5,
+      "evidence_conflict_count": 0,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "小型"
+      ],
+      "available_specific_force_rules": false,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": false,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": false,
+      "used_generic_force_rules": false,
+      "used_motion_rules": false,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": null,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.0,
+      "calibration_notes": [
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "feedback_adjusted": true,
+      "feedback_adjustment_type": "increase",
+      "feedback_stage_adjustments": [
+        "transfer_stage_guard"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#24:物理先验知识：薄壁件抓取——避免径向夹持导致变形，优先采用多点分散支撑或真空吸附"
+      ],
+      "selected_rule_types": [
+        "support"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_large_part",
+    "task_label": "pick_large_part/抓取大型零件",
+    "task_description": "抓取大型零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "large",
+      "heavy"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      30,
+      50
+    ],
+    "reference_force_center": 40.0,
+    "reference_approach_height": 0.06,
+    "success_count": 16,
+    "success_rate": 0.8,
+    "avg_time_sec": 6.6118,
+    "avg_steps": 6.65,
+    "avg_distance_error": 0.0367,
+    "success_rate_ci95": [
+      0.584,
+      0.9193
+    ],
+    "reference_force_deviation": 5.8,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0,
+    "avg_stability_score": 0.9039,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.0,
+    "transfer_sway_fail_rate": 0.05,
+    "placement_settle_fail_rate": 0.15,
+    "dominant_failure_mode": "placement_settle_fail",
+    "belief_state_coverage": 1.0,
+    "uncertainty_conservative_mode": false,
+    "solver_selected_candidate": "rule_aggregate",
+    "evidence_rule_count": 2,
+    "evidence_support_score": 2.75,
+    "evidence_conflict_count": 0,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": true,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": true,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 34.2,
+      "lift_force": 34.2,
+      "transfer_force": 34.2,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.06,
+      "transport_velocity": 0.22,
+      "placement_velocity": 0.22,
+      "lift_clearance": 0.085,
+      "uncertainty_std": 0.04,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "large",
+        "friction_band": "medium",
+        "fragility_band": "low",
+        "size_band": "large",
+        "dynamic_load_band": "low",
+        "center_of_mass_risk": 0.3,
+        "support_contact_expected": false,
+        "specific_force_supported": true,
+        "numeric_motion_supported": true
+      },
+      "task_constraints": {
+        "speed_priority": 0.55,
+        "stability_priority": 0.6,
+        "precision_priority": 0.45,
+        "safety_priority": 0.68,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 2.75,
+        "state_coverage": 1.0,
+        "conflict_count": 0,
+        "missing_specific_force": false,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": false,
+        "reasons": []
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "compression"
+          ],
+          "control_bias": "balanced",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 1.0,
+      "uncertainty_conservative_mode": false,
+      "uncertainty_reasons": [],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "rule_aggregate",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [],
+      "evidence_rule_count": 2,
+      "evidence_support_score": 2.75,
+      "evidence_conflict_count": 0,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "大型"
+      ],
+      "available_specific_force_rules": true,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": true,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": true,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": true,
+      "used_generic_force_rules": false,
+      "used_motion_rules": true,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": null,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.7,
+      "calibration_notes": [
+        "motion_path_force_compensation"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#55:物理先验知识：大型零件夹持力——抓取大型零件时，夹爪力建议控制在31-36N，抬升净空宜保持0.08m左右，避免因自重摆动导致姿态偏移",
+        "三、物理先验知识#26:物理先验知识：惯性影响——高速运动时增大夹持力余量，急停时注意工件惯性前冲"
+      ],
+      "selected_rule_types": [
+        "force",
+        "motion"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_smooth_metal_fast",
+    "task_label": "pick_smooth_metal_fast/高速搬运光滑金属零件",
+    "task_description": "高速搬运光滑金属零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "low_friction",
+      "fragile",
+      "high_speed"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      35,
+      50
+    ],
+    "reference_force_center": 42.5,
+    "reference_approach_height": 0.05,
+    "success_count": 19,
+    "success_rate": 0.95,
+    "avg_time_sec": 3.0589,
+    "avg_steps": 6.0,
+    "avg_distance_error": 0.0367,
+    "success_rate_ci95": [
+      0.7639,
+      0.9911
+    ],
+    "reference_force_deviation": 8.5,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.015,
+    "avg_transfer_sway_risk": 0.0415,
+    "avg_placement_settle_risk": 0.042,
+    "avg_stability_score": 0.8913,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.05,
+    "transfer_sway_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "lift_hold_fail",
+    "belief_state_coverage": 1.0,
+    "uncertainty_conservative_mode": false,
+    "solver_selected_candidate": "rule_aggregate",
+    "evidence_rule_count": 3,
+    "evidence_support_score": 3.5,
+    "evidence_conflict_count": 1,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": true,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": true,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 34.0,
+      "lift_force": 34.0,
+      "transfer_force": 36.0,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.34,
+      "placement_velocity": 0.3,
+      "lift_clearance": 0.065,
+      "uncertainty_std": 0.07,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "light",
+        "friction_band": "low",
+        "fragility_band": "medium",
+        "size_band": "medium",
+        "dynamic_load_band": "high",
+        "center_of_mass_risk": 0.3,
+        "support_contact_expected": false,
+        "specific_force_supported": true,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.9,
+        "stability_priority": 0.9,
+        "precision_priority": 0.45,
+        "safety_priority": 0.68,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "high_speed_low_friction",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 3.5,
+        "state_coverage": 1.0,
+        "conflict_count": 1,
+        "missing_specific_force": false,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": false,
+        "reasons": [
+          "evidence_conflict"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "slip"
+          ],
+          "control_bias": "force_margin",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 1.0,
+      "uncertainty_conservative_mode": false,
+      "uncertainty_reasons": [
+        "evidence_conflict"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "rule_aggregate",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "stability_bias",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "speed_bias",
+          "score": 0.6,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.27,
+            "placement_overspeed": 0.33,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [],
+      "evidence_rule_count": 3,
+      "evidence_support_score": 3.5,
+      "evidence_conflict_count": 1,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "高速",
+        "光滑金属"
+      ],
+      "available_specific_force_rules": true,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": true,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": true,
+      "used_generic_force_rules": true,
+      "used_motion_rules": true,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": null,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "high_speed_low_friction",
+      "high_speed_transfer_force_margin": 2.0,
+      "high_speed_placement_velocity_target": 0.3,
+      "motion_aware_force_cap": 34.0,
+      "dynamic_smooth_metal_force_cap": 34.0,
+      "dynamic_smooth_metal_clearance_floor": 0.065,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.02,
+      "calibration_notes": [
+        "motion_path_force_compensation",
+        "dynamic_smooth_metal_force_cap",
+        "dynamic_smooth_metal_clearance_floor",
+        "high_speed_placement_velocity_target",
+        "high_speed_transfer_force_margin"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#22:物理先验知识：摩擦相关——抓取光滑金属零件时，需增大夹爪力（30-50N），避免因摩擦力不足导致工件滑落",
+        "三、物理先验知识#26:物理先验知识：惯性影响——高速运动时增大夹持力余量，急停时注意工件惯性前冲",
+        "三、物理先验知识#22:抓取橡胶零件时，夹爪力控制在5-15N，防止零件变形"
+      ],
+      "selected_rule_types": [
+        "force",
+        "motion",
+        "force"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_small_part_fast",
+    "task_label": "pick_small_part_fast/高速搬运小型机械零件",
+    "task_description": "高速搬运小型机械零件",
+    "task_split": "train",
+    "challenge_tags": [
+      "small",
+      "precision",
+      "high_speed"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      8,
+      18
+    ],
+    "reference_force_center": 13.0,
+    "reference_approach_height": 0.04,
+    "success_count": 17,
+    "success_rate": 0.85,
+    "avg_time_sec": 2.2786,
+    "avg_steps": 14.7,
+    "avg_distance_error": 0.0243,
+    "success_rate_ci95": [
+      0.6396,
+      0.9476
+    ],
+    "reference_force_deviation": 6.3,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0,
+    "avg_stability_score": 0.8914,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.1,
+    "transfer_sway_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.05,
+    "dominant_failure_mode": "lift_hold_fail",
+    "belief_state_coverage": 0.8333,
+    "uncertainty_conservative_mode": true,
+    "solver_selected_candidate": "uncertainty_guard",
+    "evidence_rule_count": 3,
+    "evidence_support_score": 3.0,
+    "evidence_conflict_count": 0,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": false,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": true,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 19.3,
+      "lift_force": 19.3,
+      "transfer_force": 19.3,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.04,
+      "transport_velocity": 0.31,
+      "placement_velocity": 0.31,
+      "lift_clearance": 0.061,
+      "uncertainty_std": 0.1,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "light",
+        "friction_band": "medium",
+        "fragility_band": "low",
+        "size_band": "small",
+        "dynamic_load_band": "high",
+        "center_of_mass_risk": 0.3,
+        "support_contact_expected": false,
+        "specific_force_supported": false,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.9,
+        "stability_priority": 0.6,
+        "precision_priority": 0.45,
+        "safety_priority": 0.68,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 3.0,
+        "state_coverage": 0.8333,
+        "conflict_count": 0,
+        "missing_specific_force": true,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": true,
+        "reasons": [
+          "missing_specific_force"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "compression"
+          ],
+          "control_bias": "balanced",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 0.8333,
+      "uncertainty_conservative_mode": true,
+      "uncertainty_reasons": [
+        "missing_specific_force"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "uncertainty_guard",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 5.14,
+          "breakdown": {
+            "force_shortfall": 1.2,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 1.68,
+            "transfer_shortfall": 1.3,
+            "transport_overspeed": 0.36,
+            "placement_overspeed": 0.44,
+            "clearance_shortfall": 0.16,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "uncertainty_guard",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "evidence_rule_count": 3,
+      "evidence_support_score": 3.0,
+      "evidence_conflict_count": 0,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "高速",
+        "小型"
+      ],
+      "available_specific_force_rules": false,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": true,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": false,
+      "used_generic_force_rules": false,
+      "used_motion_rules": true,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": null,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.0,
+      "calibration_notes": [
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#26:物理先验知识：惯性影响——高速运动时增大夹持力余量，急停时注意工件惯性前冲",
+        "一、设备参数#6:设备参数：并联机械臂——加速度可达10g，节拍时间<0.3s，适用于高速分拣",
+        "一、设备参数#8:设备参数：伺服夹爪——闭环力控，力分辨率0.5N，适用于易碎件抓取"
+      ],
+      "selected_rule_types": [
+        "motion",
+        "motion",
+        "support"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_thin_wall",
+    "task_label": "pick_thin_wall/抓取薄壁件",
+    "task_description": "抓取薄壁件",
+    "task_split": "val",
+    "challenge_tags": [
+      "thin_wall",
+      "fragile"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      5,
+      12
+    ],
+    "reference_force_center": 8.5,
+    "reference_approach_height": 0.02,
+    "success_count": 18,
+    "success_rate": 0.9,
+    "avg_time_sec": 3.4812,
+    "avg_steps": 8.15,
+    "avg_distance_error": 0.0253,
+    "success_rate_ci95": [
+      0.699,
+      0.9721
+    ],
+    "reference_force_deviation": 5.3,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0233,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0152,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0,
+    "avg_stability_score": 0.8819,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.1,
+    "transfer_sway_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "lift_hold_fail",
+    "belief_state_coverage": 0.8333,
+    "uncertainty_conservative_mode": true,
+    "solver_selected_candidate": "uncertainty_guard",
+    "evidence_rule_count": 2,
+    "evidence_support_score": 4.0,
+    "evidence_conflict_count": 0,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": false,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": true,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 13.8,
+      "lift_force": 13.8,
+      "transfer_force": 13.8,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.02,
+      "transport_velocity": 0.15,
+      "placement_velocity": 0.15,
+      "lift_clearance": 0.056,
+      "uncertainty_std": 0.1,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "light",
+        "friction_band": "medium",
+        "fragility_band": "high",
+        "size_band": "medium",
+        "dynamic_load_band": "low",
+        "center_of_mass_risk": 0.3,
+        "support_contact_expected": true,
+        "specific_force_supported": false,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.55,
+        "stability_priority": 0.6,
+        "precision_priority": 0.78,
+        "safety_priority": 0.92,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 4.0,
+        "state_coverage": 0.8333,
+        "conflict_count": 0,
+        "missing_specific_force": true,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": true,
+        "reasons": [
+          "missing_specific_force"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "fragility",
+            "misalignment"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "compression"
+          ],
+          "control_bias": "balanced",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 0.8333,
+      "uncertainty_conservative_mode": true,
+      "uncertainty_reasons": [
+        "missing_specific_force"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "uncertainty_guard",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 5.14,
+          "breakdown": {
+            "force_shortfall": 1.2,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 1.68,
+            "transfer_shortfall": 1.3,
+            "transport_overspeed": 0.36,
+            "placement_overspeed": 0.44,
+            "clearance_shortfall": 0.16,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "precision_bias",
+          "score": 4.7,
+          "breakdown": {
+            "force_shortfall": 1.2,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 1.68,
+            "transfer_shortfall": 1.3,
+            "transport_overspeed": 0.36,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.16,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "uncertainty_guard",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "evidence_rule_count": 2,
+      "evidence_support_score": 4.0,
+      "evidence_conflict_count": 0,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "薄壁"
+      ],
+      "available_specific_force_rules": false,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": true,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": true,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": false,
+      "used_generic_force_rules": false,
+      "used_motion_rules": true,
+      "used_support_contact_rules": true,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": null,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": 13.0,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": 0.05,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.0,
+      "calibration_notes": [
+        "thin_wall_support_force_floor",
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#24:物理先验知识：薄壁件抓取——避免径向夹持导致变形，优先采用多点分散支撑或真空吸附",
+        "一、设备参数#8:设备参数：伺服夹爪——闭环力控，力分辨率0.5N，适用于易碎件抓取"
+      ],
+      "selected_rule_types": [
+        "motion",
+        "motion"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_rubber_fast",
+    "task_label": "pick_rubber_fast/高速搬运橡胶零件",
+    "task_description": "高速搬运橡胶零件",
+    "task_split": "val",
+    "challenge_tags": [
+      "high_friction",
+      "compliant",
+      "high_speed"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      8,
+      18
+    ],
+    "reference_force_center": 13.0,
+    "reference_approach_height": 0.03,
+    "success_count": 18,
+    "success_rate": 0.9,
+    "avg_time_sec": 2.5477,
+    "avg_steps": 6.0,
+    "avg_distance_error": 0.0349,
+    "success_rate_ci95": [
+      0.699,
+      0.9721
+    ],
+    "reference_force_deviation": 3.3,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0564,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0394,
+    "avg_lift_hold_risk": 0.0367,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0059,
+    "avg_stability_score": 0.6798,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.1,
+    "transfer_sway_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "lift_hold_fail",
+    "belief_state_coverage": 0.8333,
+    "uncertainty_conservative_mode": true,
+    "solver_selected_candidate": "uncertainty_guard",
+    "evidence_rule_count": 3,
+    "evidence_support_score": 3.0,
+    "evidence_conflict_count": 0,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": false,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": true,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 16.3,
+      "lift_force": 16.3,
+      "transfer_force": 16.3,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.03,
+      "transport_velocity": 0.31,
+      "placement_velocity": 0.31,
+      "lift_clearance": 0.056,
+      "uncertainty_std": 0.1,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "light",
+        "friction_band": "high",
+        "fragility_band": "low",
+        "size_band": "medium",
+        "dynamic_load_band": "high",
+        "center_of_mass_risk": 0.3,
+        "support_contact_expected": false,
+        "specific_force_supported": false,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.9,
+        "stability_priority": 0.6,
+        "precision_priority": 0.45,
+        "safety_priority": 0.68,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 3.0,
+        "state_coverage": 0.8333,
+        "conflict_count": 0,
+        "missing_specific_force": true,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": true,
+        "reasons": [
+          "missing_specific_force"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "compression"
+          ],
+          "control_bias": "balanced",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 0.8333,
+      "uncertainty_conservative_mode": true,
+      "uncertainty_reasons": [
+        "missing_specific_force"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "uncertainty_guard",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 5.14,
+          "breakdown": {
+            "force_shortfall": 1.2,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 1.68,
+            "transfer_shortfall": 1.3,
+            "transport_overspeed": 0.36,
+            "placement_overspeed": 0.44,
+            "clearance_shortfall": 0.16,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "uncertainty_guard",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "evidence_rule_count": 3,
+      "evidence_support_score": 3.0,
+      "evidence_conflict_count": 0,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "高速",
+        "橡胶"
+      ],
+      "available_specific_force_rules": false,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": true,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": false,
+      "used_generic_force_rules": false,
+      "used_motion_rules": true,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": null,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.0,
+      "calibration_notes": [
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#26:物理先验知识：惯性影响——高速运动时增大夹持力余量，急停时注意工件惯性前冲",
+        "一、设备参数#6:设备参数：并联机械臂——加速度可达10g，节拍时间<0.3s，适用于高速分拣",
+        "一、设备参数#8:设备参数：伺服夹爪——闭环力控，力分辨率0.5N，适用于易碎件抓取"
+      ],
+      "selected_rule_types": [
+        "motion",
+        "motion",
+        "support"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_large_part_far",
+    "task_label": "pick_large_part_far/长距离搬运大型零件",
+    "task_description": "长距离搬运大型零件",
+    "task_split": "val",
+    "challenge_tags": [
+      "large",
+      "heavy",
+      "long_transfer"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      32,
+      48
+    ],
+    "reference_force_center": 40.0,
+    "reference_approach_height": 0.06,
+    "success_count": 20,
+    "success_rate": 1.0,
+    "avg_time_sec": 6.917,
+    "avg_steps": 6.65,
+    "avg_distance_error": 0.038,
+    "success_rate_ci95": [
+      0.8389,
+      1.0
+    ],
+    "reference_force_deviation": 2.95,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0102,
+    "avg_transfer_sway_risk": 0.0152,
+    "avg_placement_settle_risk": 0.024,
+    "avg_stability_score": 0.963,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.0,
+    "transfer_sway_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "none",
+    "belief_state_coverage": 1.0,
+    "uncertainty_conservative_mode": false,
+    "solver_selected_candidate": "rule_aggregate",
+    "evidence_rule_count": 5,
+    "evidence_support_score": 4.5,
+    "evidence_conflict_count": 0,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": true,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": true,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 37.05,
+      "lift_force": 37.65,
+      "transfer_force": 37.5,
+      "transfer_alignment": 0.9,
+      "approach_height": 0.06,
+      "transport_velocity": 0.2,
+      "placement_velocity": 0.15,
+      "lift_clearance": 0.08,
+      "uncertainty_std": 0.04,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "large",
+        "friction_band": "medium",
+        "fragility_band": "low",
+        "size_band": "large",
+        "dynamic_load_band": "high",
+        "center_of_mass_risk": 0.85,
+        "support_contact_expected": false,
+        "specific_force_supported": true,
+        "numeric_motion_supported": true
+      },
+      "task_constraints": {
+        "speed_priority": 0.55,
+        "stability_priority": 0.9,
+        "precision_priority": 0.88,
+        "safety_priority": 0.68,
+        "required_alignment": true,
+        "required_lift_margin": true,
+        "preferred_transport_mode": "long_transfer",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 4.5,
+        "state_coverage": 1.0,
+        "conflict_count": 0,
+        "missing_specific_force": false,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": false,
+        "reasons": []
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "compression"
+          ],
+          "control_bias": "balanced",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold",
+            "center_of_mass_shift"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "transfer_sway",
+            "slip"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 1.0,
+      "uncertainty_conservative_mode": false,
+      "uncertainty_reasons": [],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "rule_aggregate",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "stability_bias",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "precision_bias",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [],
+      "evidence_rule_count": 5,
+      "evidence_support_score": 4.5,
+      "evidence_conflict_count": 0,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "长距离",
+        "大型"
+      ],
+      "available_specific_force_rules": true,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": true,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": true,
+      "available_alignment_rules": true,
+      "available_lift_stage_rules": true,
+      "used_specific_force_rules": true,
+      "used_generic_force_rules": false,
+      "used_motion_rules": true,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": true,
+      "used_lift_stage_rules": true,
+      "composite_force_floor": 33.0,
+      "motion_aware_force_floor": 34.5,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": 36.0,
+      "long_transfer_stage_force_floor": 37.0,
+      "long_transfer_dynamic_force_margin": 0.05,
+      "long_transfer_velocity_band": [
+        0.18,
+        0.22
+      ],
+      "long_transfer_placement_velocity_cap": 0.15,
+      "long_transfer_lift_force_target": 37.65,
+      "long_transfer_lift_force_margin": 0.6,
+      "long_transfer_alignment_target": 0.9000000000000001,
+      "long_transfer_alignment_force_margin": 0.45,
+      "dynamic_transport_mode": "long_transfer",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": 0.07,
+      "long_transfer_clearance_target": 0.08,
+      "motion_path_force_compensation": 0.6,
+      "calibration_notes": [
+        "long_transfer_placement_velocity_cap",
+        "long_transfer_clearance_target",
+        "motion_path_force_compensation",
+        "long_transfer_stage_force_floor",
+        "long_transfer_dynamic_force_margin",
+        "long_transfer_lift_force_margin",
+        "long_transfer_alignment_target",
+        "long_transfer_alignment_force_margin"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#56:物理先验知识：长距离搬运大型零件——长距离搬运大型零件时，夹爪力建议控制在35-39N，搬运速度建议控制在0.18-0.22m/s，抬升净空不低于0.07m，抓取点尽量靠近重心，避免长路径搬运时产生力矩滑脱",
+        "三、物理先验知识#55:物理先验知识：大型零件夹持力——抓取大型零件时，夹爪力建议控制在31-36N，抬升净空宜保持0.08m左右，避免因自重摆动导致姿态偏移",
+        "三、物理先验知识#25:物理先验知识：重心偏移——抓取点应尽量靠近重心，避免搬运时产生力矩导致滑脱"
+      ],
+      "selected_rule_types": [
+        "force",
+        "force",
+        "motion"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_metal_heavy",
+    "task_label": "pick_metal_heavy/抓取重型光滑金属零件",
+    "task_description": "抓取重型光滑金属零件",
+    "task_split": "test",
+    "challenge_tags": [
+      "low_friction",
+      "heavy",
+      "fragile"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      30,
+      50
+    ],
+    "reference_force_center": 40.0,
+    "reference_approach_height": 0.05,
+    "success_count": 13,
+    "success_rate": 0.65,
+    "avg_time_sec": 7.9151,
+    "avg_steps": 289.75,
+    "avg_distance_error": 0.061,
+    "success_rate_ci95": [
+      0.4329,
+      0.8188
+    ],
+    "reference_force_deviation": 2.6,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0,
+    "avg_stability_score": 0.8954,
+    "physics_fail_rate": 0.35,
+    "lift_hold_fail_rate": 0.0,
+    "transfer_sway_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "physics_fail",
+    "belief_state_coverage": 0.8333,
+    "uncertainty_conservative_mode": false,
+    "solver_selected_candidate": "stability_bias",
+    "evidence_rule_count": 2,
+    "evidence_support_score": 3.0,
+    "evidence_conflict_count": 1,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": true,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": false,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 42.6,
+      "lift_force": 47.4,
+      "transfer_force": 46.6,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.14,
+      "placement_velocity": 0.14,
+      "lift_clearance": 0.079,
+      "uncertainty_std": 0.09,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "heavy",
+        "friction_band": "low",
+        "fragility_band": "medium",
+        "size_band": "medium",
+        "dynamic_load_band": "medium",
+        "center_of_mass_risk": 0.65,
+        "support_contact_expected": false,
+        "specific_force_supported": true,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.55,
+        "stability_priority": 0.9,
+        "precision_priority": 0.45,
+        "safety_priority": 0.92,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 3.0,
+        "state_coverage": 0.8333,
+        "conflict_count": 1,
+        "missing_specific_force": false,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": false,
+        "reasons": [
+          "evidence_conflict"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "slip"
+          ],
+          "control_bias": "force_margin",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 0.8333,
+      "uncertainty_conservative_mode": false,
+      "uncertainty_reasons": [
+        "evidence_conflict"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "stability_bias",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 1.56,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 1.56,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "stability_bias",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [
+        "solver_selected:stability_bias"
+      ],
+      "evidence_rule_count": 2,
+      "evidence_support_score": 3.0,
+      "evidence_conflict_count": 1,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "重型",
+        "金属"
+      ],
+      "available_specific_force_rules": true,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": false,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": true,
+      "used_generic_force_rules": true,
+      "used_motion_rules": false,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": 42.0,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": 46.0,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.2,
+      "calibration_notes": [
+        "composite_force_floor",
+        "motion_path_force_compensation",
+        "heavy_metal_force_center_floor",
+        "solver_selected:stability_bias"
+      ],
+      "feedback_adjusted": true,
+      "feedback_adjustment_type": "decrease",
+      "feedback_stage_adjustments": [
+        "lift_stage_guard"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#22:物理先验知识：摩擦相关——抓取光滑金属零件时，需增大夹爪力（30-50N），避免因摩擦力不足导致工件滑落",
+        "三、物理先验知识#22:抓取橡胶零件时，夹爪力控制在5-15N，防止零件变形"
+      ],
+      "selected_rule_types": [
+        "force",
+        "force"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_thin_wall_fast",
+    "task_label": "pick_thin_wall_fast/高速搬运薄壁件",
+    "task_description": "高速搬运薄壁件",
+    "task_split": "test",
+    "challenge_tags": [
+      "thin_wall",
+      "fragile",
+      "high_speed"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      8,
+      16
+    ],
+    "reference_force_center": 12.0,
+    "reference_approach_height": 0.02,
+    "success_count": 16,
+    "success_rate": 0.8,
+    "avg_time_sec": 3.3561,
+    "avg_steps": 8.1,
+    "avg_distance_error": 0.0224,
+    "success_rate_ci95": [
+      0.584,
+      0.9193
+    ],
+    "reference_force_deviation": 6.3,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0279,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0181,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0,
+    "avg_stability_score": 0.8717,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.2,
+    "transfer_sway_fail_rate": 0.0,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "lift_hold_fail",
+    "belief_state_coverage": 0.8333,
+    "uncertainty_conservative_mode": true,
+    "solver_selected_candidate": "uncertainty_guard",
+    "evidence_rule_count": 3,
+    "evidence_support_score": 4.6667,
+    "evidence_conflict_count": 0,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": false,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": true,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 18.3,
+      "lift_force": 18.3,
+      "transfer_force": 18.3,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.02,
+      "transport_velocity": 0.16,
+      "placement_velocity": 0.12,
+      "lift_clearance": 0.074,
+      "uncertainty_std": 0.1,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "light",
+        "friction_band": "medium",
+        "fragility_band": "high",
+        "size_band": "medium",
+        "dynamic_load_band": "high",
+        "center_of_mass_risk": 0.3,
+        "support_contact_expected": true,
+        "specific_force_supported": false,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.9,
+        "stability_priority": 0.6,
+        "precision_priority": 0.78,
+        "safety_priority": 0.92,
+        "required_alignment": false,
+        "required_lift_margin": false,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 4.6667,
+        "state_coverage": 0.8333,
+        "conflict_count": 0,
+        "missing_specific_force": true,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": false,
+        "conservative_mode": true,
+        "reasons": [
+          "missing_specific_force"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "fragility",
+            "misalignment"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "compression"
+          ],
+          "control_bias": "balanced",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 0.8333,
+      "uncertainty_conservative_mode": true,
+      "uncertainty_reasons": [
+        "missing_specific_force"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "uncertainty_guard",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 5.14,
+          "breakdown": {
+            "force_shortfall": 1.2,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 1.68,
+            "transfer_shortfall": 1.3,
+            "transport_overspeed": 0.36,
+            "placement_overspeed": 0.44,
+            "clearance_shortfall": 0.16,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "precision_bias",
+          "score": 4.7,
+          "breakdown": {
+            "force_shortfall": 1.2,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 1.68,
+            "transfer_shortfall": 1.3,
+            "transport_overspeed": 0.36,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.16,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "uncertainty_guard",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "evidence_rule_count": 3,
+      "evidence_support_score": 4.6667,
+      "evidence_conflict_count": 0,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "高速",
+        "薄壁"
+      ],
+      "available_specific_force_rules": false,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": true,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": true,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": false,
+      "used_generic_force_rules": false,
+      "used_motion_rules": true,
+      "used_support_contact_rules": true,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": null,
+      "motion_aware_force_floor": null,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": null,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.0,
+      "calibration_notes": [
+        "solver_selected:uncertainty_guard",
+        "solver_uncertainty_guard"
+      ],
+      "feedback_adjusted": true,
+      "feedback_adjustment_type": "increase",
+      "feedback_stage_adjustments": [
+        "placement_stage_guard"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#24:物理先验知识：薄壁件抓取——避免径向夹持导致变形，优先采用多点分散支撑或真空吸附",
+        "三、物理先验知识#26:物理先验知识：惯性影响——高速运动时增大夹持力余量，急停时注意工件惯性前冲",
+        "一、设备参数#6:设备参数：并联机械臂——加速度可达10g，节拍时间<0.3s，适用于高速分拣"
+      ],
+      "selected_rule_types": [
+        "motion",
+        "motion",
+        "motion"
+      ]
+    }
+  },
+  {
+    "task_id": "pick_metal_heavy_fast",
+    "task_label": "pick_metal_heavy_fast/高速搬运重型光滑金属零件",
+    "task_description": "高速搬运重型光滑金属零件",
+    "task_split": "test",
+    "challenge_tags": [
+      "low_friction",
+      "heavy",
+      "fragile",
+      "high_speed"
+    ],
+    "method": "rag_feedback",
+    "n_trials": 20,
+    "reference_force_range": [
+      38,
+      50
+    ],
+    "reference_force_center": 44.0,
+    "reference_approach_height": 0.05,
+    "success_count": 19,
+    "success_rate": 0.95,
+    "avg_time_sec": 5.6013,
+    "avg_steps": 6.35,
+    "avg_distance_error": 0.0497,
+    "success_rate_ci95": [
+      0.7639,
+      0.9911
+    ],
+    "reference_force_deviation": 4.6,
+    "avg_slip_risk": 0.0,
+    "avg_compression_risk": 0.0,
+    "avg_velocity_risk": 0.0,
+    "avg_clearance_risk": 0.0,
+    "avg_lift_hold_risk": 0.0,
+    "avg_transfer_sway_risk": 0.0,
+    "avg_placement_settle_risk": 0.0,
+    "avg_stability_score": 0.9085,
+    "physics_fail_rate": 0.0,
+    "lift_hold_fail_rate": 0.0,
+    "transfer_sway_fail_rate": 0.05,
+    "placement_settle_fail_rate": 0.0,
+    "dominant_failure_mode": "transfer_sway_fail",
+    "belief_state_coverage": 0.8333,
+    "uncertainty_conservative_mode": true,
+    "solver_selected_candidate": "stability_bias",
+    "evidence_rule_count": 3,
+    "evidence_support_score": 3.5,
+    "evidence_conflict_count": 1,
+    "force_rule_mode": "all",
+    "motion_rule_mode": "all",
+    "available_specific_force_rules": true,
+    "suppressed_specific_force_rules": false,
+    "available_motion_rules": true,
+    "suppressed_motion_rules": false,
+    "params": {
+      "gripper_force": 48.6,
+      "lift_force": 48.6,
+      "transfer_force": 48.6,
+      "transfer_alignment": 0.0,
+      "approach_height": 0.05,
+      "transport_velocity": 0.28,
+      "placement_velocity": 0.28,
+      "lift_clearance": 0.076,
+      "uncertainty_std": 0.13,
+      "confidence": 1.0,
+      "belief_state": {
+        "mass_band": "heavy",
+        "friction_band": "low",
+        "fragility_band": "medium",
+        "size_band": "medium",
+        "dynamic_load_band": "high",
+        "center_of_mass_risk": 0.65,
+        "support_contact_expected": false,
+        "specific_force_supported": true,
+        "numeric_motion_supported": false
+      },
+      "task_constraints": {
+        "speed_priority": 0.9,
+        "stability_priority": 0.9,
+        "precision_priority": 0.45,
+        "safety_priority": 0.92,
+        "required_alignment": false,
+        "required_lift_margin": true,
+        "preferred_transport_mode": "static",
+        "stage_order": [
+          "approach",
+          "grasp",
+          "lift",
+          "transfer",
+          "place"
+        ]
+      },
+      "uncertainty_profile": {
+        "support_score": 3.5,
+        "state_coverage": 0.8333,
+        "conflict_count": 1,
+        "missing_specific_force": false,
+        "missing_numeric_motion": false,
+        "missing_alignment": false,
+        "missing_lift_stage": true,
+        "conservative_mode": true,
+        "reasons": [
+          "evidence_conflict",
+          "missing_lift_stage"
+        ]
+      },
+      "stage_plan": [
+        {
+          "name": "approach",
+          "primary_goal": "establish_safe_contact",
+          "risk_focus": [
+            "contact_setup"
+          ],
+          "control_bias": "safety",
+          "exit_condition": "stable_pregrasp_pose"
+        },
+        {
+          "name": "grasp",
+          "primary_goal": "secure_initial_hold",
+          "risk_focus": [
+            "slip"
+          ],
+          "control_bias": "force_margin",
+          "exit_condition": "contact_force_stable"
+        },
+        {
+          "name": "lift",
+          "primary_goal": "survive_vertical_detach",
+          "risk_focus": [
+            "lift_hold",
+            "center_of_mass_shift"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "object_cleared"
+        },
+        {
+          "name": "transfer",
+          "primary_goal": "suppress_sway_and_slip",
+          "risk_focus": [
+            "velocity"
+          ],
+          "control_bias": "stability",
+          "exit_condition": "target_zone_reached"
+        },
+        {
+          "name": "place",
+          "primary_goal": "settle_without_rebound",
+          "risk_focus": [
+            "placement_settle",
+            "precision"
+          ],
+          "control_bias": "precision",
+          "exit_condition": "object_stable_at_target"
+        }
+      ],
+      "belief_state_coverage": 0.8333,
+      "uncertainty_conservative_mode": true,
+      "uncertainty_reasons": [
+        "evidence_conflict",
+        "missing_lift_stage"
+      ],
+      "solver_mode": "belief_scored_candidates",
+      "solver_selected_candidate": "stability_bias",
+      "solver_selected_score": 0.0,
+      "solver_score_breakdown": {
+        "force_shortfall": 0.0,
+        "force_overdrive": 0.0,
+        "lift_shortfall": 0.0,
+        "transfer_shortfall": 0.0,
+        "transport_overspeed": 0.0,
+        "placement_overspeed": 0.0,
+        "clearance_shortfall": 0.0,
+        "alignment_shortfall": 0.0,
+        "stage_inconsistency": 0.0
+      },
+      "solver_candidate_scores": [
+        {
+          "label": "rule_aggregate",
+          "score": 5.4,
+          "breakdown": {
+            "force_shortfall": 1.2,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 1.68,
+            "transfer_shortfall": 1.56,
+            "transport_overspeed": 0.36,
+            "placement_overspeed": 0.44,
+            "clearance_shortfall": 0.16,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "stability_bias",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        },
+        {
+          "label": "uncertainty_guard",
+          "score": 0.0,
+          "breakdown": {
+            "force_shortfall": 0.0,
+            "force_overdrive": 0.0,
+            "lift_shortfall": 0.0,
+            "transfer_shortfall": 0.0,
+            "transport_overspeed": 0.0,
+            "placement_overspeed": 0.0,
+            "clearance_shortfall": 0.0,
+            "alignment_shortfall": 0.0,
+            "stage_inconsistency": 0.0
+          }
+        }
+      ],
+      "solver_adjustment_notes": [
+        "solver_selected:stability_bias"
+      ],
+      "evidence_rule_count": 3,
+      "evidence_support_score": 3.5,
+      "evidence_conflict_count": 1,
+      "force_rule_mode": "all",
+      "motion_rule_mode": "all",
+      "matched_hint_keywords": [
+        "高速",
+        "重型",
+        "金属"
+      ],
+      "available_specific_force_rules": true,
+      "suppressed_specific_force_rules": false,
+      "available_motion_rules": true,
+      "suppressed_motion_rules": false,
+      "available_support_contact_rules": false,
+      "available_numeric_motion_rules": false,
+      "available_alignment_rules": false,
+      "available_lift_stage_rules": false,
+      "used_specific_force_rules": true,
+      "used_generic_force_rules": true,
+      "used_motion_rules": true,
+      "used_support_contact_rules": false,
+      "used_alignment_rules": false,
+      "used_lift_stage_rules": false,
+      "composite_force_floor": 45.0,
+      "motion_aware_force_floor": 46.0,
+      "thin_wall_support_force_floor": null,
+      "rubber_material_force_floor": null,
+      "heavy_metal_force_center_floor": null,
+      "dynamic_heavy_metal_force_center_floor": 48.0,
+      "long_transfer_force_center_floor": null,
+      "long_transfer_stage_force_floor": null,
+      "long_transfer_dynamic_force_margin": null,
+      "long_transfer_velocity_band": null,
+      "long_transfer_placement_velocity_cap": null,
+      "long_transfer_lift_force_target": null,
+      "long_transfer_lift_force_margin": null,
+      "long_transfer_alignment_target": null,
+      "long_transfer_alignment_force_margin": null,
+      "dynamic_transport_mode": "static",
+      "high_speed_transfer_force_margin": null,
+      "high_speed_placement_velocity_target": null,
+      "motion_aware_force_cap": null,
+      "dynamic_smooth_metal_force_cap": null,
+      "dynamic_smooth_metal_clearance_floor": null,
+      "static_smooth_metal_force_cap": null,
+      "thin_wall_support_clearance_cap": null,
+      "rubber_material_clearance_floor": null,
+      "long_transfer_numeric_clearance_floor": null,
+      "long_transfer_clearance_target": null,
+      "motion_path_force_compensation": 0.24,
+      "calibration_notes": [
+        "composite_force_floor",
+        "motion_aware_force_floor",
+        "composite_velocity_cap",
+        "motion_path_force_compensation",
+        "dynamic_heavy_metal_force_center_floor",
+        "solver_selected:stability_bias"
+      ],
+      "selected_evidence": [
+        "三、物理先验知识#22:物理先验知识：摩擦相关——抓取光滑金属零件时，需增大夹爪力（30-50N），避免因摩擦力不足导致工件滑落",
+        "三、物理先验知识#26:物理先验知识：惯性影响——高速运动时增大夹持力余量，急停时注意工件惯性前冲",
+        "三、物理先验知识#22:抓取橡胶零件时，夹爪力控制在5-15N，防止零件变形"
+      ],
+      "selected_rule_types": [
+        "force",
+        "motion",
+        "force"
+      ]
+    }
+  }
+]

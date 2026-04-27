@@ -1,0 +1,32 @@
+rag benchmark 多 seed 汇总结果
+============================================================================================================
+seeds=[42, 43, 44], n_trials_per_seed=20, total_trials=60
+
+任务                               成功率(mean±std)      稳定度(mean±std)      时间(mean±std)      
+------------------------------------------------------------------------------------------------------------
+pick_smooth_metal/抓取光滑金属零件       73.33%±10.41% 0.962±0.000 2.861s±0.000
+    belief=0.833, conservative_rate=0.00%, solver=stability_bias
+pick_rubber/抓取橡胶零件               78.33%±14.43% 0.998±0.000 2.060s±0.000
+    belief=0.833, conservative_rate=0.00%, solver=rule_aggregate
+pick_small_part/抓取小型机械零件         75.00%±18.03% 0.787±0.000 1.597s±0.000
+    belief=0.667, conservative_rate=100.00%, solver=uncertainty_guard
+pick_large_part/抓取大型零件           71.67%±12.58% 0.997±0.000 4.637s±0.000
+    belief=1.000, conservative_rate=0.00%, solver=rule_aggregate
+pick_smooth_metal_fast/高速搬运光滑金属零件 81.67%±2.89% 0.938±0.000 2.311s±0.000
+    belief=1.000, conservative_rate=0.00%, solver=rule_aggregate
+pick_small_part_fast/高速搬运小型机械零件  75.00%±10.00% 0.947±0.000 1.712s±0.000
+    belief=0.833, conservative_rate=100.00%, solver=uncertainty_guard
+pick_thin_wall/抓取薄壁件             81.67%±5.77% 0.969±0.000 2.959s±0.000
+    belief=0.833, conservative_rate=100.00%, solver=uncertainty_guard
+pick_rubber_fast/高速搬运橡胶零件        80.00%±13.23% 0.799±0.000 1.972s±0.000
+    belief=0.833, conservative_rate=100.00%, solver=uncertainty_guard
+pick_large_part_far/长距离搬运大型零件    65.00%±13.23% 0.966±0.000 5.650s±0.000
+    belief=1.000, conservative_rate=0.00%, solver=rule_aggregate
+pick_metal_heavy/抓取重型光滑金属零件      71.67%±7.64% 0.973±0.000 5.348s±0.000
+    belief=0.833, conservative_rate=0.00%, solver=stability_bias
+pick_thin_wall_fast/高速搬运薄壁件      75.00%±8.66% 0.985±0.000 2.700s±0.000
+    belief=0.833, conservative_rate=100.00%, solver=uncertainty_guard
+pick_metal_heavy_fast/高速搬运重型光滑金属零件 75.00%±8.66% 0.965±0.000 4.433s±0.000
+    belief=0.833, conservative_rate=100.00%, solver=stability_bias
+
+JSON: outputs/current_core_thickening/simulation_benchmark_result.json
