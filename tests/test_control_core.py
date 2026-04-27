@@ -2,6 +2,9 @@ import unittest
 
 from simulation.control_core import (
     build_control_belief,
+    build_execution_prior,
+    PhaseObservation,
+    apply_phase_observation,
     replan_control_plan,
     solve_control_plan,
     summarize_control_evidence,
@@ -187,6 +190,108 @@ class ControlCoreTest(unittest.TestCase):
         self.assertEqual(updated["solver_mode"], "belief_seeded_local_search")
         self.assertTrue(updated["uncertainty_conservative_mode"])
         self.assertIn("solver_local_search_trace", updated)
+
+    def test_build_execution_prior_marks_heavy_static_case(self):
+        prior = build_execution_prior(
+            {
+                "gripper_force": 42.0,
+                "lift_force": 42.0,
+                "transfer_force": 42.0,
+                "transport_velocity": 0.22,
+                "placement_velocity": 0.18,
+                "lift_clearance": 0.06,
+                "belief_state": {
+                    "mass_band": "heavy",
+                    "dynamic_load_band": "high",
+                    "center_of_mass_risk": 0.72,
+                    "motion_confidence": 0.32,
+                    "alignment_confidence": 0.34,
+                    "lift_stage_confidence": 0.41,
+                },
+                "task_constraints": {
+                    "preferred_transport_mode": "static",
+                },
+                "uncertainty_profile": {
+                    "support_score": 3.8,
+                    "state_coverage": 0.74,
+                    "conflict_count": 0,
+                    "force_std": 5.0,
+                    "attribute_confidence": 0.66,
+                    "motion_confidence": 0.32,
+                    "alignment_confidence": 0.34,
+                    "lift_stage_confidence": 0.41,
+                    "missing_specific_force": False,
+                    "missing_numeric_motion": False,
+                    "missing_alignment": False,
+                    "missing_lift_stage": False,
+                    "conservative_mode": False,
+                    "reasons": [],
+                },
+            },
+            phase="lift",
+        )
+        self.assertEqual(prior.phase, "lift")
+        self.assertLess(prior.load_support_margin, 0.0)
+        self.assertLess(prior.lift_reserve, 0.0)
+        self.assertLess(prior.transfer_disturbance, 0.4)
+
+    def test_phase_observation_updates_heavy_load_latents(self):
+        prior = build_execution_prior(
+            {
+                "gripper_force": 42.0,
+                "lift_force": 42.0,
+                "transfer_force": 42.0,
+                "transport_velocity": 0.22,
+                "placement_velocity": 0.18,
+                "lift_clearance": 0.06,
+                "belief_state": {
+                    "mass_band": "heavy",
+                    "dynamic_load_band": "high",
+                    "center_of_mass_risk": 0.72,
+                    "motion_confidence": 0.32,
+                    "alignment_confidence": 0.34,
+                    "lift_stage_confidence": 0.41,
+                },
+                "task_constraints": {
+                    "preferred_transport_mode": "static",
+                },
+                "uncertainty_profile": {
+                    "support_score": 3.8,
+                    "state_coverage": 0.74,
+                    "conflict_count": 0,
+                    "force_std": 5.0,
+                    "attribute_confidence": 0.66,
+                    "motion_confidence": 0.32,
+                    "alignment_confidence": 0.34,
+                    "lift_stage_confidence": 0.41,
+                    "missing_specific_force": False,
+                    "missing_numeric_motion": False,
+                    "missing_alignment": False,
+                    "missing_lift_stage": False,
+                    "conservative_mode": False,
+                    "reasons": [],
+                },
+            },
+            phase="lift",
+        )
+        observation = PhaseObservation(
+            phase="lift",
+            payload_ratio_obs=0.98,
+            lift_progress_obs=0.46,
+            lift_reserve_obs=-0.24,
+            tilt_obs=0.28,
+            observation_confidence=0.84,
+            trigger_reason="lift_reserve_obs",
+        )
+
+        posterior, trace = apply_phase_observation(prior, observation)
+
+        self.assertEqual(posterior.phase, "lift")
+        self.assertLess(posterior.load_support_margin, prior.load_support_margin)
+        self.assertLess(posterior.lift_reserve, prior.lift_reserve)
+        self.assertGreater(posterior.pose_alignment_error, prior.pose_alignment_error)
+        self.assertEqual(trace["phase"], "lift")
+        self.assertEqual(trace["updated_latents"][0]["name"], "load_support_margin")
 
 
 if __name__ == "__main__":

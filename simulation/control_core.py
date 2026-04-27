@@ -209,6 +209,122 @@ class ControlBeliefBundle:
 
 
 @dataclass
+class PhaseObservation:
+    phase: str
+    contact_stability_obs: float = 0.0
+    micro_slip_obs: float = 0.0
+    payload_ratio_obs: float = 0.0
+    lift_progress_obs: float = 0.0
+    lift_reserve_obs: float = 0.0
+    tilt_obs: float = 0.0
+    sway_obs: float = 0.0
+    velocity_stress_obs: float = 0.0
+    settle_obs: float = 0.0
+    placement_error_obs: float = 0.0
+    observation_confidence: float = 0.6
+    trigger_reason: str = ""
+
+
+@dataclass
+class ExecutionBelief:
+    phase: str
+    load_support_margin: float
+    load_support_uncertainty: float
+    grip_hold_margin: float
+    grip_hold_uncertainty: float
+    pose_alignment_error: float
+    pose_alignment_uncertainty: float
+    lift_reserve: float
+    lift_reserve_uncertainty: float
+    transfer_disturbance: float
+    transfer_disturbance_uncertainty: float
+    preferred_transport_mode: str
+    conservative_mode: bool
+
+    def to_trace_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def build_execution_prior(params: dict[str, Any], *, phase: str) -> ExecutionBelief:
+    belief_state = dict(params.get("belief_state", {}))
+    uncertainty = dict(params.get("uncertainty_profile", {}))
+    task_constraints = dict(params.get("task_constraints", {}))
+    mass_band = str(belief_state.get("mass_band", "light"))
+    dynamic_load_band = str(belief_state.get("dynamic_load_band", "low"))
+    load_support_margin = -0.18 if mass_band == "heavy" else -0.05 if dynamic_load_band == "high" else 0.12
+    lift_reserve = -0.12 if mass_band == "heavy" else 0.08
+    return ExecutionBelief(
+        phase=phase,
+        load_support_margin=round(load_support_margin, 4),
+        load_support_uncertainty=0.22,
+        grip_hold_margin=round(0.14 - 0.04 * float(belief_state.get("center_of_mass_risk", 0.4)), 4),
+        grip_hold_uncertainty=0.18,
+        pose_alignment_error=round(0.16 + 0.12 * (1.0 - float(belief_state.get("alignment_confidence", 0.3))), 4),
+        pose_alignment_uncertainty=0.20,
+        lift_reserve=round(lift_reserve, 4),
+        lift_reserve_uncertainty=0.24,
+        transfer_disturbance=0.22
+        if str(params.get("dynamic_transport_mode", task_constraints.get("preferred_transport_mode", "static"))) == "static"
+        else 0.48,
+        transfer_disturbance_uncertainty=0.18,
+        preferred_transport_mode=str(
+            params.get("dynamic_transport_mode", task_constraints.get("preferred_transport_mode", "static"))
+        ),
+        conservative_mode=bool(uncertainty.get("conservative_mode", False)),
+    )
+
+
+def apply_phase_observation(
+    belief: ExecutionBelief,
+    observation: PhaseObservation,
+) -> tuple[ExecutionBelief, dict[str, Any]]:
+    updated = ExecutionBelief(**asdict(belief))
+    updated.phase = observation.phase
+    updates: list[dict[str, Any]] = []
+    weight = _clamp(observation.observation_confidence, 0.15, 1.0)
+
+    if observation.phase == "lift":
+        updated.load_support_margin = round(
+            updated.load_support_margin - weight * max(0.0, observation.payload_ratio_obs - 0.75) * 0.30,
+            4,
+        )
+        updated.lift_reserve = round(updated.lift_reserve + weight * observation.lift_reserve_obs, 4)
+        updated.pose_alignment_error = round(
+            updated.pose_alignment_error + weight * abs(observation.tilt_obs) * 0.35,
+            4,
+        )
+        updates.extend(
+            [
+                {"name": "load_support_margin", "value": updated.load_support_margin},
+                {"name": "lift_reserve", "value": updated.lift_reserve},
+                {"name": "pose_alignment_error", "value": updated.pose_alignment_error},
+            ]
+        )
+    elif observation.phase == "grasp":
+        updated.grip_hold_margin = round(
+            updated.grip_hold_margin
+            + weight * observation.contact_stability_obs
+            - weight * observation.micro_slip_obs,
+            4,
+        )
+        updates.append({"name": "grip_hold_margin", "value": updated.grip_hold_margin})
+    elif observation.phase == "transfer":
+        updated.transfer_disturbance = round(
+            updated.transfer_disturbance
+            + weight * (observation.sway_obs + observation.velocity_stress_obs) * 0.25,
+            4,
+        )
+        updates.append({"name": "transfer_disturbance", "value": updated.transfer_disturbance})
+
+    return updated, {
+        "phase": observation.phase,
+        "trigger_reason": observation.trigger_reason,
+        "updated_latents": updates,
+        "posterior": updated.to_trace_dict(),
+    }
+
+
+@dataclass
 class CandidateControlPlan:
     label: str
     gripper_force: float
