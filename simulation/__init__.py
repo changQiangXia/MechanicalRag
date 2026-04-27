@@ -1,6 +1,5 @@
-"""仿真机械臂模块：RAG 驱动的 MuJoCo 仿真与论文 benchmark。"""
+"""Simulation package exports with minimal import-time dependencies."""
 
 from .env import ArmSimEnv, HAS_MUJOCO
-from .rag_controller import RAGController
 
-__all__ = ["ArmSimEnv", "HAS_MUJOCO", "RAGController"]
+__all__ = ["ArmSimEnv", "HAS_MUJOCO"]
