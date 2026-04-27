@@ -659,13 +659,18 @@ def build_summary(
     Path(output_path).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def main() -> None:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("--qa_json", default="outputs/current/qa_evaluation_detail.json")
-    parser.add_argument("--sim_json", default="outputs/current/simulation_comparison_rag_vs_baseline.json")
-    parser.add_argument("--sim_multi_seed_json", default="outputs/current/simulation_comparison_multi_seed.json")
-    parser.add_argument("--sim_benchmark_json", default="outputs/current/simulation_benchmark_result.json")
-    parser.add_argument("--output", default="outputs/current/showcase_summary.txt")
+    parser.add_argument("--sim_json", default="outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json")
+    parser.add_argument("--sim_multi_seed_json", default="outputs/current_observer_step_replan/simulation_comparison_multi_seed.json")
+    parser.add_argument("--sim_benchmark_json", default="outputs/current_observer_step_replan/simulation_benchmark_result.json")
+    parser.add_argument("--output", default="outputs/current_observer_step_replan/showcase_summary.txt")
+    return parser
+
+
+def main() -> None:
+    parser = build_parser()
     args = parser.parse_args()
 
     build_summary(

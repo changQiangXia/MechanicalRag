@@ -17,10 +17,10 @@ from .runner import (
 )
 
 
-DEFAULT_OUTPUT_DIR = Path("outputs/current")
+DEFAULT_OUTPUT_DIR = Path("outputs/current_observer_step_replan")
 
 
-def main() -> None:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="RAG 驱动机械臂仿真 Benchmark CLI")
     parser.add_argument("--data_path", default="mechanical_data.txt")
     parser.add_argument("--n_trials", type=int, default=10)
@@ -29,14 +29,14 @@ def main() -> None:
     parser.add_argument(
         "--method",
         choices=("rag", "rag_generic_only", "rag_no_motion_rules", "rag_multi", "rag_random", "rag_llm", "direct_llm", "rag_learned", "rag_feedback", "fixed", "task_heuristic", "random"),
-        default="rag",
+        default="rag_feedback",
     )
     parser.add_argument("--max_feedback_retries", type=int, default=1)
     parser.add_argument("--compare", action="store_true")
     parser.add_argument("--compare_multi_seed", action="store_true")
     parser.add_argument("--report_multi_seed", action="store_true")
     parser.add_argument("--seeds", type=int, nargs="+", default=[42, 43, 44])
-    parser.add_argument("--multi_seed_methods", nargs="+", default=["rag", "rag_learned", "task_heuristic", "direct_llm", "fixed"])
+    parser.add_argument("--multi_seed_methods", nargs="+", default=["rag", "rag_feedback", "task_heuristic", "fixed"])
     parser.add_argument("--ablation_retrieval", action="store_true")
     parser.add_argument("--compare_learned", action="store_true")
     parser.add_argument("--compare_llm", action="store_true")
@@ -46,6 +46,11 @@ def main() -> None:
     parser.add_argument("--compare_motion_ablation", action="store_true")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--output_dir", default=str(DEFAULT_OUTPUT_DIR))
+    return parser
+
+
+def main() -> None:
+    parser = build_parser()
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)

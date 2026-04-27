@@ -30,6 +30,8 @@ METHOD_LABELS = {
     "fixed": "Fixed",
 }
 
+DEFAULT_SIM_OUTPUT_DIR = Path("outputs/current_observer_step_replan")
+
 
 def _method_aliases(method: str) -> list[str]:
     aliases = [method]
@@ -506,12 +508,17 @@ def plot_sim_belief_diagnostics(sim_rows: list[dict], output_dir: Path) -> None:
     _save(fig, output_dir / "simulation_belief_diagnostics.png")
 
 
-def main() -> None:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("--qa_json", default="outputs/current/qa_evaluation_detail.json")
-    parser.add_argument("--sim_json", default="outputs/current/simulation_comparison_rag_vs_baseline.json")
-    parser.add_argument("--sim_multi_seed_json", default="outputs/current/simulation_comparison_multi_seed.json")
-    parser.add_argument("--output_dir", default="outputs/visualizations")
+    parser.add_argument("--sim_json", default=str(DEFAULT_SIM_OUTPUT_DIR / "simulation_comparison_rag_vs_baseline.json"))
+    parser.add_argument("--sim_multi_seed_json", default=str(DEFAULT_SIM_OUTPUT_DIR / "simulation_comparison_multi_seed.json"))
+    parser.add_argument("--output_dir", default=str(DEFAULT_SIM_OUTPUT_DIR / "visualizations"))
+    return parser
+
+
+def main() -> None:
+    parser = build_parser()
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
