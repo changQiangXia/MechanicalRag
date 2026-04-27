@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from simulation.control_core import (
     EvidenceConstraintHints,
@@ -213,6 +214,60 @@ class AdaptiveExecutionTest(unittest.TestCase):
         self.assertIn("step_replan_trace", info)
         self.assertGreater(len(info["step_replan_trace"]), 0)
         self.assertEqual(info["step_replan_trace"][0]["stage"], "transfer")
+
+    def test_stepwise_execution_reuses_last_evaluation_without_extra_sampling(self):
+        evaluation_log: list[dict] = []
+        original = simulate_stepwise_execution.__globals__["_evaluate_execution_plan"]
+
+        def _tracked_evaluate(*, object_pos, target_pos, params, object_profile=None, rng=None):
+            evaluation = original(
+                object_pos=object_pos,
+                target_pos=target_pos,
+                params=params,
+                object_profile=object_profile,
+                rng=rng,
+            )
+            evaluation_log.append(
+                {
+                    "success": evaluation["success"],
+                    "failure_bucket": evaluation["info"]["failure_bucket"],
+                    "params": dict(evaluation["params"]),
+                }
+            )
+            return evaluation
+
+        with patch("simulation.env._evaluate_execution_plan", side_effect=_tracked_evaluate):
+            success, _, info = simulate_stepwise_execution(
+                object_pos=(0.0, 0.0, 0.0),
+                target_pos=(0.35, 0.0, 0.0),
+                params={
+                    "gripper_force": 7.5,
+                    "approach_height": 0.03,
+                    "transport_velocity": 0.34,
+                    "lift_force": 7.5,
+                    "transfer_force": 7.5,
+                    "placement_velocity": 0.30,
+                    "transfer_alignment": 0.0,
+                    "lift_clearance": 0.045,
+                },
+                object_profile={
+                    "mass_kg": 0.06,
+                    "surface_friction": 0.18,
+                    "fragility": 0.78,
+                    "velocity_scale": 0.8,
+                    "target_tolerance": 0.04,
+                    "size_xyz": (0.04, 0.04, 0.02),
+                    "preferred_approach_height": 0.05,
+                    "approach_height_tolerance": 0.02,
+                },
+                rng=__import__("random").Random(0),
+            )
+
+        self.assertEqual(len(evaluation_log), info["step_replan_count"] + 1)
+        self.assertEqual(success, evaluation_log[-1]["success"])
+        self.assertEqual(info["failure_bucket"], evaluation_log[-1]["failure_bucket"])
+        expected_stage = "none" if info["failure_bucket"] == "success" else info["failure_bucket"].replace("_fail", "")
+        self.assertEqual(info["observer_trace"][-1]["estimated_failure_stage"], expected_stage)
 
 
 if __name__ == "__main__":

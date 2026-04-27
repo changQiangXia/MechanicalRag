@@ -713,6 +713,7 @@ def simulate_stepwise_execution(
     step_replan_trace: list[dict[str, Any]] = []
     observation_index = 0
     step_replan_count = 0
+    last_evaluation: dict[str, Any] | None = None
 
     while True:
         evaluation = _evaluate_execution_plan(
@@ -722,6 +723,7 @@ def simulate_stepwise_execution(
             object_profile=object_profile,
             rng=rng,
         )
+        last_evaluation = evaluation
         iteration_trace = _build_observer_trace(
             evaluation,
             observation_start_index=observation_index,
@@ -760,21 +762,15 @@ def simulate_stepwise_execution(
         current_params = updated_params
         step_replan_count += 1
 
-    final_evaluation = _evaluate_execution_plan(
-        object_pos=object_pos,
-        target_pos=target_pos,
-        params=current_params,
-        object_profile=object_profile,
-        rng=rng,
-    )
-    info = dict(final_evaluation["info"])
+    assert last_evaluation is not None
+    info = dict(last_evaluation["info"])
     info["observer_trace"] = observer_trace
     info["step_replan_trace"] = step_replan_trace
     info["step_replan_count"] = step_replan_count
     info["execution_feedback_mode"] = "step_observer_replan" if step_replan_count > 0 else "observer_only"
-    current_feedback_state.update(current_params)
+    current_feedback_state.update(last_evaluation["params"])
     info["applied_params"] = dict(current_feedback_state)
-    return final_evaluation["success"], final_evaluation["elapsed"], info
+    return last_evaluation["success"], last_evaluation["elapsed"], info
 
 
 class ArmSimEnv:
