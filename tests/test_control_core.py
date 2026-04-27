@@ -6,6 +6,7 @@ from simulation.control_core import (
     CounterfactualDiagnosis,
     CounterfactualIntervention,
     diagnose_failure_cause,
+    EvidenceConstraintHints,
     ExecutionBelief,
     PhaseObservation,
     apply_phase_observation,
@@ -13,6 +14,7 @@ from simulation.control_core import (
     replan_control_plan,
     solve_control_plan,
     summarize_control_evidence,
+    synthesize_control_seed,
 )
 from simulation.feedback import FeedbackSignal, build_feedback_replan_request
 
@@ -283,6 +285,69 @@ class ControlCoreTest(unittest.TestCase):
         self.assertEqual(updated["execution_feedback_mode"], "suffix_counterfactual_replan")
         self.assertEqual(updated["counterfactual_replan_trace"][0]["start_phase"], "lift")
         self.assertEqual(updated["feedback_replan_trace"]["requested_suffix_start"], "lift")
+
+    def test_static_heavy_solver_preserves_transport_velocity_floor(self):
+        features = {
+            "metal": True,
+            "smooth_metal": False,
+            "rubber": False,
+            "small": False,
+            "large": False,
+            "heavy": True,
+            "thin_wall": False,
+            "high_speed": False,
+            "long_transfer": False,
+        }
+        force_rule = _rule(
+            score=4.2,
+            specificity=3,
+            matched_terms=["metal", "heavy"],
+            force_candidates=[42.0],
+        )
+        summary = summarize_control_evidence(
+            features=features,
+            rules=[force_rule],
+            selected_force_rules=[force_rule],
+            specific_force_rules=[force_rule],
+            motion_rules=[],
+            numeric_motion_rules=[],
+            alignment_rules=[],
+            lift_stage_rules=[],
+            support_contact_rules=[],
+            default_force=42.0,
+        )
+        belief = build_control_belief(
+            features=features,
+            evidence_summary=summary,
+            dynamic_transport_mode=summary.preferred_transport_mode,
+            support_score=3.0,
+            conflict_count=1,
+            force_rule_mode="all",
+            motion_rule_mode="all",
+            available_specific_force_rules=True,
+            available_motion_rules=False,
+            available_numeric_motion_rules=False,
+            available_alignment_rules=False,
+            available_lift_stage_rules=False,
+            available_support_contact_rules=False,
+        )
+        seed_plan, _ = synthesize_control_seed(
+            {
+                "gripper_force": 42.0,
+                "approach_height": 0.05,
+                "transport_velocity": 0.18,
+                "lift_force": 42.0,
+                "transfer_force": 42.0,
+                "placement_velocity": 0.18,
+                "transfer_alignment": 0.0,
+                "lift_clearance": 0.07,
+            },
+            belief,
+            EvidenceConstraintHints(force_floor=46.0),
+        )
+        solved_plan, _ = solve_control_plan(seed_plan, belief)
+        self.assertGreaterEqual(seed_plan["transport_velocity"], 0.18)
+        self.assertGreaterEqual(solved_plan["transport_velocity"], 0.18)
 
     def test_build_execution_prior_marks_heavy_static_case(self):
         prior = build_execution_prior(

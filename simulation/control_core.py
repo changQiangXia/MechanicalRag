@@ -1003,6 +1003,13 @@ def synthesize_control_seed(
     elif belief.task_constraints.preferred_transport_mode == "high_speed_low_friction":
         transport_velocity = min(transport_velocity, 0.30)
         notes.append("seed_high_speed_low_friction_cap")
+    if (
+        belief.task_constraints.preferred_transport_mode == "static"
+        and belief.object_state.mass_band == "heavy"
+        and belief.object_state.friction_band in {"low", "medium_low"}
+    ):
+        transport_velocity = max(transport_velocity, 0.18)
+        notes.append("seed_heavy_static_transport_floor")
     if hints.transport_velocity_floor is not None:
         transport_velocity = max(transport_velocity, float(hints.transport_velocity_floor))
     if hints.transport_velocity_cap is not None:
@@ -1167,6 +1174,7 @@ def solve_control_plan(
     notes: list[str] = []
 
     preferred_transport_cap = base.transport_velocity
+    preferred_transport_floor = 0.12
     preferred_placement_cap = base.placement_velocity
     preferred_clearance_floor = base.lift_clearance
     preferred_force_floor = max(base.gripper_force, belief.evidence_state.force_center - 0.5 * belief.evidence_state.force_std)
@@ -1186,6 +1194,12 @@ def solve_control_plan(
             preferred_alignment_floor = max(preferred_alignment_floor, 0.82)
     if belief.object_state.friction_band == "low":
         preferred_transfer_force_floor = max(preferred_transfer_force_floor, base.gripper_force + 0.6)
+    if (
+        belief.task_constraints.preferred_transport_mode == "static"
+        and belief.object_state.mass_band == "heavy"
+        and belief.object_state.friction_band in {"low", "medium_low"}
+    ):
+        preferred_transport_floor = max(preferred_transport_floor, 0.18)
     if belief.task_constraints.precision_priority >= 0.8:
         preferred_placement_cap = min(preferred_placement_cap, max(0.12, base.placement_velocity))
     if belief.object_state.fragility_band == "high":
@@ -1214,6 +1228,7 @@ def solve_control_plan(
             "force_overdrive": max(0.0, normalized.gripper_force - preferred_force_cap) * 1.5,
             "lift_shortfall": max(0.0, preferred_lift_force_floor - normalized.lift_force) * 2.8,
             "transfer_shortfall": max(0.0, preferred_transfer_force_floor - normalized.transfer_force) * 2.6,
+            "transport_underspeed": max(0.0, preferred_transport_floor - normalized.transport_velocity) * 24.0,
             "transport_overspeed": max(0.0, normalized.transport_velocity - preferred_transport_cap) * 18.0,
             "placement_overspeed": max(0.0, normalized.placement_velocity - preferred_placement_cap) * 22.0,
             "clearance_shortfall": max(0.0, preferred_clearance_floor - normalized.lift_clearance) * 40.0,

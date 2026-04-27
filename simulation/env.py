@@ -1426,6 +1426,10 @@ class ArmSimEnv:
         }
         if adaptive_trace_info is not None:
             info["observer_trace"] = adaptive_trace_info.get("observer_trace", [])
+            info["phase_execution_trace"] = adaptive_trace_info.get("phase_execution_trace", [])
+            info["observation_trace"] = adaptive_trace_info.get("observation_trace", [])
+            info["belief_update_trace"] = adaptive_trace_info.get("belief_update_trace", [])
+            info["counterfactual_replan_trace"] = adaptive_trace_info.get("counterfactual_replan_trace", [])
             info["step_replan_trace"] = adaptive_trace_info.get("step_replan_trace", [])
             info["step_replan_count"] = adaptive_trace_info.get("step_replan_count", 0)
             info["execution_feedback_mode"] = adaptive_trace_info.get("execution_feedback_mode", "observer_only")
