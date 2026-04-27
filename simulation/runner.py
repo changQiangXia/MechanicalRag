@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Callable
 
 from . import baseline_controller as baseline
-from .env import HAS_MUJOCO, ArmSimEnv, _estimate_force_window, _estimate_motion_targets, _success_model
+from .env import HAS_MUJOCO, ArmSimEnv, _estimate_force_window, _estimate_motion_targets, _success_model, simulate_stepwise_execution
 from .rag_controller import RAGController
 from .reporting import (
     approach_height_error,
@@ -78,6 +78,10 @@ def _summarize_params(params: dict) -> dict:
         "belief_state_coverage",
         "uncertainty_conservative_mode",
         "uncertainty_reasons",
+        "seed_mode",
+        "seed_notes",
+        "seed_hints",
+        "seed_plan",
         "solver_mode",
         "solver_selected_candidate",
         "solver_selected_score",
@@ -143,6 +147,10 @@ def _summarize_params(params: dict) -> dict:
         "feedback_adjustment_type",
         "feedback_stage_adjustments",
         "feedback_replan_trace",
+        "observer_trace",
+        "step_replan_trace",
+        "step_replan_count",
+        "execution_feedback_mode",
         "selected_evidence",
         "selected_rule_types",
     ):
@@ -223,108 +231,22 @@ def _wilson_interval(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return max(0.0, center - margin), min(1.0, center + margin)
 
 
-def _run_surrogate_trial(task: TaskConfig, params: dict, rng: random.Random | None = None) -> tuple[bool, float, dict]:
-    profile = task.profile.__dict__ if task.profile is not None else {}
-    mass_kg = float(profile.get("mass_kg", 0.05))
-    surface_friction = float(profile.get("surface_friction", 0.5))
-    fragility = float(profile.get("fragility", 0.7))
-    velocity_scale = float(profile.get("velocity_scale", 0.8))
-    preferred_height = float(profile.get("preferred_approach_height", 0.05))
-    tolerance = float(profile.get("approach_height_tolerance", 0.02))
-    size_xyz = tuple(profile.get("size_xyz", (0.025, 0.025, 0.025)))
-    transport_velocity = float(params.get("transport_velocity", 0.3))
-    lift_force = float(params.get("lift_force", params["gripper_force"]))
-    transfer_force = float(params.get("transfer_force", params["gripper_force"]))
-    transfer_alignment = float(params.get("transfer_alignment", 0.0))
-    placement_velocity = float(params.get("placement_velocity", transport_velocity))
-    lift_clearance = float(params.get("lift_clearance", 0.06))
-    horizontal_distance = ((task.target_pos[0] - task.object_pos[0]) ** 2 + (task.target_pos[1] - task.object_pos[1]) ** 2) ** 0.5
-    travel_distance = horizontal_distance + 2.0 * float(params.get("approach_height", 0.05)) + 2.0 * lift_clearance
-    min_force_needed, max_safe_force, nominal_force = _estimate_force_window(
-        mass_kg=mass_kg,
-        surface_friction=surface_friction,
-        fragility=fragility,
-        travel_distance=travel_distance,
-        size_xyz=size_xyz,
-    )
-    recommended_velocity, min_lift_clearance = _estimate_motion_targets(
-        mass_kg=mass_kg,
-        surface_friction=surface_friction,
-        fragility=fragility,
-        size_xyz=size_xyz,
-    )
-    success, diag = _success_model(
-        float(params["gripper_force"]),
-        min_force_needed=min_force_needed,
-        max_safe_force=max_safe_force,
-        nominal_force=nominal_force,
-        surface_friction=surface_friction,
-        mass_kg=mass_kg,
-        fragility=fragility,
-        travel_distance=travel_distance,
-        horizontal_distance=horizontal_distance,
-        approach_height=float(params.get("approach_height", 0.05)),
-        transport_velocity=transport_velocity,
-        lift_force=lift_force,
-        transfer_force=transfer_force,
-        transfer_alignment=transfer_alignment,
-        placement_velocity=placement_velocity,
-        lift_clearance=lift_clearance,
-        recommended_velocity=recommended_velocity,
-        min_lift_clearance=min_lift_clearance,
-        preferred_approach_height=preferred_height,
-        approach_height_tolerance=tolerance,
+def _run_surrogate_trial(
+    task: TaskConfig,
+    params: dict,
+    rng: random.Random | None = None,
+    step_replan_callback=None,
+    max_step_replans: int = 0,
+) -> tuple[bool, float, dict]:
+    return simulate_stepwise_execution(
+        object_pos=task.object_pos,
+        target_pos=task.target_pos,
+        params=params,
+        object_profile=task.profile.__dict__ if task.profile is not None else None,
+        step_replan_callback=step_replan_callback,
+        max_step_replans=max_step_replans,
         rng=rng,
     )
-    distance = 0.0 if success else 0.03 + 0.04 * max(diag["slip_risk"], diag["compression_risk"])
-    sim_elapsed = round(0.35 + travel_distance / max(0.12, transport_velocity), 4)
-    info = {
-        "distance": round(distance, 4),
-        "steps": 12,
-        "sim_time": sim_elapsed,
-        "wall_time": sim_elapsed,
-        "travel_distance": round(travel_distance, 4),
-        "horizontal_distance": round(horizontal_distance, 4),
-        "transport_velocity": round(transport_velocity, 4),
-        "lift_force": round(lift_force, 4),
-        "transfer_force": round(transfer_force, 4),
-        "transfer_alignment": round(transfer_alignment, 4),
-        "placement_velocity": round(placement_velocity, 4),
-        "lift_clearance": round(lift_clearance, 4),
-        "force_gain": 0.0,
-        "force_clip": 0.0,
-        "static_push_estimate": 0.0,
-        "approach_height_error": round(abs(float(params.get("approach_height", 0.05)) - preferred_height), 4),
-        "slip_risk": diag["slip_risk"],
-        "compression_risk": diag["compression_risk"],
-        "velocity_risk": diag["velocity_risk"],
-        "clearance_risk": diag["clearance_risk"],
-        "lift_hold_risk": diag["lift_hold_risk"],
-        "transfer_sway_risk": diag["transfer_sway_risk"],
-        "placement_settle_risk": diag["placement_settle_risk"],
-        "physics_ok": True,
-        "grip_success": success,
-        "failure_bucket": diag["failure_bucket"],
-        "dominant_failure_mode": diag["dominant_failure_mode"],
-        "stability_score": diag["stability_score"],
-        "nominal_force": diag["nominal_force"],
-        "min_force_needed": diag["min_force_needed"],
-        "max_safe_force": diag["max_safe_force"],
-        "recommended_velocity": diag["recommended_velocity"],
-        "dynamic_transport_mode": diag["dynamic_transport_mode"],
-        "dynamic_placement_velocity_cap": diag["dynamic_placement_velocity_cap"],
-        "min_lift_clearance": diag["min_lift_clearance"],
-        "dynamic_clearance_target": diag["dynamic_clearance_target"],
-        "dynamic_force_target": diag["dynamic_force_target"],
-        "dynamic_lift_force_shortfall": diag["dynamic_lift_force_shortfall"],
-        "lift_center_offset": diag["lift_center_offset"],
-        "lift_stage_control_active": diag["lift_stage_control_active"],
-        "placement_stage_control_active": diag["placement_stage_control_active"],
-        "placement_transfer_carryover": diag["placement_transfer_carryover"],
-        "placement_clearance_excess": diag["placement_clearance_excess"],
-        "profile": profile,
-    }
-    return success, sim_elapsed, info
 
 
 def _serialize_results(results: list[BenchmarkResult]) -> list[dict]:
@@ -415,6 +337,20 @@ def run_benchmark(
 
         for _ in range(n_trials_per_task):
             current_params = dict(params)
+            step_replan_callback = None
+            if feedback_controller is not None:
+                step_replan_state = {"value": dict(current_params)}
+
+                def _step_replan_callback(observation: dict, params_snapshot: dict, *, _task=task, _controller=feedback_controller):
+                    updated = _controller.get_params_after_observation(
+                        _task.description,
+                        step_replan_state["value"],
+                        observation,
+                    )
+                    step_replan_state["value"] = dict(updated)
+                    return updated
+
+                step_replan_callback = _step_replan_callback
             if HAS_MUJOCO and env is not None:
                 success, elapsed, info = env.execute_pick_place(
                     object_pos=task.object_pos,
@@ -428,9 +364,18 @@ def run_benchmark(
                     placement_velocity=float(current_params.get("placement_velocity", current_params.get("transport_velocity", 0.3))),
                     lift_clearance=float(current_params.get("lift_clearance", 0.06)),
                     object_profile=task.profile.__dict__ if task.profile is not None else None,
+                    step_replan_callback=step_replan_callback,
+                    max_step_replans=max_feedback_retries if feedback_controller is not None else 0,
                 )
             else:
-                success, elapsed, info = _run_surrogate_trial(task, current_params, rng=surrogate_rng)
+                success, elapsed, info = _run_surrogate_trial(
+                    task,
+                    current_params,
+                    rng=surrogate_rng,
+                    step_replan_callback=step_replan_callback,
+                    max_step_replans=max_feedback_retries if feedback_controller is not None else 0,
+                )
+            current_params = dict(info.get("applied_params", current_params))
 
             retries = 0
             while not success and feedback_controller is not None and retries < max_feedback_retries:
@@ -453,12 +398,24 @@ def run_benchmark(
                         placement_velocity=float(current_params.get("placement_velocity", current_params.get("transport_velocity", 0.3))),
                         lift_clearance=float(current_params.get("lift_clearance", 0.06)),
                         object_profile=task.profile.__dict__ if task.profile is not None else None,
+                        step_replan_callback=step_replan_callback,
+                        max_step_replans=max_feedback_retries,
                     )
                 else:
-                    success, elapsed_retry, info = _run_surrogate_trial(task, current_params, rng=surrogate_rng)
+                    success, elapsed_retry, info = _run_surrogate_trial(
+                        task,
+                        current_params,
+                        rng=surrogate_rng,
+                        step_replan_callback=step_replan_callback,
+                        max_step_replans=max_feedback_retries,
+                    )
+                current_params = dict(info.get("applied_params", current_params))
                 elapsed += elapsed_retry
                 retries += 1
 
+            for key in ("observer_trace", "step_replan_trace", "step_replan_count", "execution_feedback_mode"):
+                if key in info:
+                    current_params[key] = info[key]
             last_params_used = _summarize_params(current_params)
             successes += 1 if success else 0
             times.append(elapsed)

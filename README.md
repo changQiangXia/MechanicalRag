@@ -9,29 +9,33 @@
 
 ## 当前状态
 
-截至 `2026-04-27 UTC`，当前仓库代码语义对应 `outputs/current_core_thickening/` 这次 control-core thickening 验证；`outputs/current/` 继续保留为 `round19` 历史基线，`outputs/current_round20_sim/` 保留 `round20` 的 placement-stage 实验。
+截至 `2026-04-27 UTC`，当前仓库代码语义对应 `outputs/current_observer_step_replan/` 这次 observer / step-replan 闭环验证；`outputs/current/` 继续保留为 `round19` 历史基线，`outputs/current_round20_sim/` 保留 `round20` 的 placement-stage 实验。
 
-- 最新控制核验证目录：`outputs/current_core_thickening/`
+- 最新闭环结果目录：`outputs/current_observer_step_replan/`
 - `round19` 历史基线：`outputs/current/`
 - `round20` placement-stage 实验：`outputs/current_round20_sim/`
 - QA 当前有效输出仍在 `outputs/current/qa_evaluation_detail.json`
-- 新控制核新增显式 `belief_state -> uncertainty_profile -> solver` 链路，并把 `lift_hold_risk / transfer_sway_risk / placement_settle_risk` 接回 feedback、runner 与 reporting
-- 但这层当前仍是基于任务特征和规则覆盖情况的符号化后处理，不是观测后验状态估计，也不是优化求解器
+- 当前仿真主链已经改成 `evidence -> belief -> seed synthesize -> local solve -> observer / step replan`
+- `env.py` 现在会输出执行期 `observer_trace`；`rag_feedback` 在命中风险触发条件时会在单次 execution 内生成 `step_replan_trace`
+- `control_core.py` 现在负责 belief 直驱的 `belief_constraint_synthesis` seed，不再把旧 `_aggregate_plan` 当成最终控制计划
 - 当前关键结果：
-  - `pick_large_part_far = 65.00% ± 13.23%`，主导失败模式仍是 `placement_settle_fail`
-  - `pick_smooth_metal_fast = 81.67% ± 2.89%`
-  - `pick_metal_heavy_fast = 75.00% ± 8.66%`
-  - 相对 `round19` 历史基线，12 任务多 seed 平均成功率提升 `+0.0014`
-- 当前已知代价：
-  - `pick_smooth_metal` 从 `78.33%` 回落到 `73.33%`
-  - `pick_metal_heavy` 从 `76.67%` 回落到 `71.67%`
+  - `rag_feedback` 12 任务多 seed平均成功率 `0.8361`
+  - 相对当前 `rag` seed-only 路径，`rag_feedback` 多 seed平均成功率提升 `+0.1653`
+  - `pick_large_part_far = 91.67% ± 10.41%`
+  - `pick_thin_wall_fast = 88.33% ± 5.77%`
+  - `pick_smooth_metal_fast = 83.33% ± 7.64%`
+- 当前主要问题：
+  - `pick_metal_heavy = 0.00% ± 0.00%`，主导失败模式是 `physics_fail`
+  - step 级重规划已经进主链，但当前触发仍偏稀疏，只在风险阈值命中时才会进入 `step_replan_trace`
 
 如果只想看最新有效状态，优先看：
 
 - [docs/overview.md](docs/overview.md)
 - [simulation/README.md](simulation/README.md)
-- [simulation_benchmark_result.json](outputs/current_core_thickening/simulation_benchmark_result.json)
-- [showcase_summary.txt](outputs/current_core_thickening/showcase_summary.txt)
+- [simulation_benchmark_result.json](outputs/current_observer_step_replan/simulation_benchmark_result.json)
+- [simulation_comparison_rag_vs_baseline.json](outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json)
+- [simulation_comparison_multi_seed.json](outputs/current_observer_step_replan/simulation_comparison_multi_seed.json)
+- [showcase_summary.txt](outputs/current_observer_step_replan/showcase_summary.txt)
 
 ## 迭代说明
 
@@ -60,13 +64,13 @@
 - `round19`：补显式 `lift_force`，`pick_large_part_far` 提升到 `65.00% ± 13.23%`，形成 `outputs/current/` 这条历史主线。
 - `round20`：继续处理 `pick_large_part_far` 的 `placement_settle`，新增 placement-stage `placement_precision` 实验链。`placement_settle_risk` 有下降，但总体成功率回落到 `0.5833 ± 0.0577`。
 
-### 控制核厚实化
+### Observer / Step-Replan 闭环
 
-- `2026-04-27 control-core thickening`：在 `round19 / round20` 之后，为控制器补上显式 belief-state、task-constraint、uncertainty-profile 与 lightweight solver 层，形成 `rule aggregation -> belief bundle -> candidate solve -> final plan` 的新链路。
-- 新增 `simulation/control_core.py`，并让 `RAGController` 输出 `belief_state`、`task_constraints`、`uncertainty_profile`、`stage_plan`、`solver_candidate_scores`、`solver_selected_candidate` 等结构化诊断字段。
-- `feedback.py` 不再只看泛化 `stability_score`，而是显式使用 `lift_hold_risk`、`transfer_sway_risk`、`placement_settle_risk` 做阶段化调参。
-- 这层当前更准确的定位是“规则派生的符号化中间层 + 覆盖度守卫 + 候选重打分适配层”；它进入主链的位置仍偏后，还是叠加在旧规则聚合之后，而不是替代旧 `_aggregate_plan`。
-- 结果目录固定为 `outputs/current_core_thickening/`。这次实验保住了 `pick_large_part_far` 和 `pick_smooth_metal_fast` 两个核心动态任务，但 `pick_smooth_metal` 与 `pick_metal_heavy` 仍有回落，后续补强重点会落在 observer / local replan。
+- `2026-04-27 observer-step-replan`：在 `round19 / round20` 和前一版 thickening 之后，把控制链继续前推成 `evidence -> belief -> seed synthesize -> local solve -> observer / step replan`。
+- `simulation/control_core.py` 新增 belief 直驱的 `belief_constraint_synthesis` seed；`solver` 的 base candidate 不再表达成旧 `rule_aggregate` 主导。
+- `simulation/env.py` 新增执行期 observer snapshot，输出 `stage / stage_progress / stability_score / slip_indicator / compression_indicator / velocity_margin / clearance_margin / estimated_failure_stage`。
+- `simulation/runner.py` 与 `rag_feedback` 主链接入 step 级 observe-update-replan；trial 级 retry 仍保留为兜底，但已经不再是主要反馈路径。
+- 这轮闭环结果落在 `outputs/current_observer_step_replan/`：`pick_large_part_far` 明显拉升到 `91.67% ± 10.41%`，`pick_thin_wall_fast` 拉升到 `88.33% ± 5.77%`，但 `pick_metal_heavy` 仍然完全失败，后续重点已经从“有没有 observer”转成“observer 如何更稳定地驱动 static heavy-metal 修复”。
 
 ### 轮次索引
 
@@ -156,13 +160,12 @@ bash scripts/run_all.sh
 ```bash
 source venv/bin/activate
 python -m qa.evaluation --data_path mechanical_data.txt --case_set full --output_dir outputs/current
-python -m simulation.benchmark --report_multi_seed --method rag --n_trials 20 --seeds 42 43 44 --output outputs/current_core_thickening/simulation_benchmark_result.json
-python -m simulation.benchmark --compare_direct_llm --n_trials 20 --seed 42 --output_dir outputs/current_core_thickening
+python -m simulation.benchmark --report_multi_seed --method rag_feedback --n_trials 20 --seeds 42 43 44 --output outputs/current_observer_step_replan/simulation_benchmark_result.json
+python -m simulation.benchmark --compare_feedback --n_trials 20 --seed 42 --output_dir outputs/current_observer_step_replan
 python -m simulation.benchmark --compare_evidence_ablation --n_trials 20 --seeds 42 43 44 --output_dir outputs/current
 python -m simulation.benchmark --compare_motion_ablation --n_trials 20 --seeds 42 43 44 --output_dir outputs/current
-python -m simulation.benchmark --compare_multi_seed --n_trials 20 --seeds 42 43 44 --multi_seed_methods rag rag_feedback task_heuristic direct_llm fixed --output_dir outputs/current_core_thickening
-python reporting/visualize_results.py --qa_json outputs/current/qa_evaluation_detail.json --sim_json outputs/current_core_thickening/simulation_comparison_rag_vs_baseline.json --sim_multi_seed_json outputs/current_core_thickening/simulation_comparison_multi_seed.json --output_dir outputs/current_core_thickening/visualizations
-python reporting/generate_showcase.py --qa_json outputs/current/qa_evaluation_detail.json --sim_json outputs/current_core_thickening/simulation_comparison_rag_vs_baseline.json --sim_multi_seed_json outputs/current_core_thickening/simulation_comparison_multi_seed.json --sim_benchmark_json outputs/current_core_thickening/simulation_benchmark_result.json --output outputs/current_core_thickening/showcase_summary.txt
+python -m simulation.benchmark --compare_multi_seed --n_trials 20 --seeds 42 43 44 --multi_seed_methods rag rag_feedback task_heuristic fixed --output_dir outputs/current_observer_step_replan
+python reporting/visualize_results.py --qa_json outputs/current/qa_evaluation_detail.json --sim_json outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json --sim_multi_seed_json outputs/current_observer_step_replan/simulation_comparison_multi_seed.json --output_dir outputs/current_observer_step_replan/visualizations
 ```
 
 ## 关键输出
@@ -171,12 +174,13 @@ python reporting/generate_showcase.py --qa_json outputs/current/qa_evaluation_de
   - `outputs/current/qa_evaluation_detail.json`
   - `outputs/current/rag_evaluation_report.txt`
   - `outputs/current/problem_solving_result.txt`
-- 最新控制核结果：
-  - `outputs/current_core_thickening/simulation_benchmark_result.json`
-  - `outputs/current_core_thickening/simulation_comparison_rag_vs_baseline.json`
-  - `outputs/current_core_thickening/simulation_comparison_multi_seed.json`
-  - `outputs/current_core_thickening/showcase_summary.txt`
-  - `outputs/current_core_thickening/visualizations/`
+- 最新 observer / step-replan 结果：
+  - `outputs/current_observer_step_replan/simulation_benchmark_result.json`
+  - `outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json`
+  - `outputs/current_observer_step_replan/simulation_comparison_multi_seed.json`
+  - `outputs/current_observer_step_replan/simulation_benchmark_rag_feedback.json`
+  - `outputs/current_observer_step_replan/showcase_summary.txt`
+  - `outputs/current_observer_step_replan/visualizations/`
 - `round19` 历史基线：
   - `outputs/current/simulation_benchmark_result.json`
   - `outputs/current/showcase_summary.txt`
@@ -191,50 +195,50 @@ python reporting/generate_showcase.py --qa_json outputs/current/qa_evaluation_de
 
 ## 结果图示
 
-下面的图直接引用 `outputs/current_core_thickening/visualizations/` 中已经生成的结果图。
+下面的图直接引用 `outputs/current_observer_step_replan/visualizations/` 中已经生成的结果图。
 
 QA 方法汇总：
 
 这张图汇总了各个 QA 方法在当前评测集上的整体表现，适合先看方法之间的总体差距。
 
-![QA 方法汇总](outputs/current_core_thickening/visualizations/qa_method_summary.png)
+![QA 方法汇总](outputs/current_observer_step_replan/visualizations/qa_method_summary.png)
 
 QA 相对 Direct LLM 的增益：
 
 这张图把各个 QA 方法相对 `Direct LLM` 的提升单独拉出来展示，便于看增益是否稳定。
 
-![QA 相对 Direct LLM 的增益](outputs/current_core_thickening/visualizations/qa_gain_over_direct_llm.png)
+![QA 相对 Direct LLM 的增益](outputs/current_observer_step_replan/visualizations/qa_gain_over_direct_llm.png)
 
 Simulation 多 seed 成功率：
 
-这张图展示仿真 benchmark 在多 seed 设置下的成功率分布，是最新控制核结果最直接的图形摘要。
+这张图展示仿真 benchmark 在多 seed 设置下的成功率分布，是当前 observer / step-replan 闭环最直接的图形摘要。
 
-![Simulation 多 seed 成功率](outputs/current_core_thickening/visualizations/simulation_multi_seed_success.png)
+![Simulation 多 seed 成功率](outputs/current_observer_step_replan/visualizations/simulation_multi_seed_success.png)
 
 Simulation 控制计划对比：
 
 这张图对比不同任务上的控制计划参数，包括夹持力、运输速度、末段落位速度和抬升净空。
 
-![Simulation 控制计划对比](outputs/current_core_thickening/visualizations/simulation_control_plan.png)
+![Simulation 控制计划对比](outputs/current_observer_step_replan/visualizations/simulation_control_plan.png)
 
 Simulation belief / solver 诊断：
 
-这张图聚焦新控制核补出来的 belief coverage、conservative mode 和 solver 选择，适合判断“控制核是否真的比简单规则聚合更厚”。
+这张图聚焦 belief coverage、conservative mode 和 solver 选择，适合判断当前 seed synthesize / local solve 链是否真的脱离了旧规则后处理。
 
-![Simulation belief / solver 诊断](outputs/current_core_thickening/visualizations/simulation_belief_diagnostics.png)
+![Simulation belief / solver 诊断](outputs/current_observer_step_replan/visualizations/simulation_belief_diagnostics.png)
 
 Simulation 成功率增益：
 
 这张图展示 RAG 控制器相对基线方法的成功率提升，适合配合 benchmark JSON 一起看。
 
-![Simulation 成功率增益](outputs/current_core_thickening/visualizations/simulation_rag_gain.png)
+![Simulation 成功率增益](outputs/current_observer_step_replan/visualizations/simulation_rag_gain.png)
 
 ## 对比口径
 
 - QA 评测统一运行在同一知识库、同一 split 和同一评分规则上，并输出词面命中、语义相似、数值一致性、流程顺序、拒答行为与证据命中分离统计。
 - simulation 对比统一使用同一任务集、同一 trial / seed 预算和同一环境判定逻辑；`reference_force_range` 只用于结果分析，不会作为控制器输入。
 - simulation 当前比较的是八参数控制计划：`gripper_force`、`lift_force`、`transfer_force`、`transfer_alignment`、`approach_height`、`transport_velocity`、`placement_velocity`、`lift_clearance`。
-- simulation 当前还会输出 belief / uncertainty / solver 诊断，包括 `belief_state_coverage`、`uncertainty_conservative_mode`、`solver_selected_candidate` 与 `solver_candidate_scores`；但这些字段当前更接近规则覆盖度与候选重打分诊断，不应被解读成严格的后验状态估计或不确定性传播。
+- simulation 当前还会输出 belief / uncertainty / solver 诊断，以及 `observer_trace / step_replan_trace`；其中 observer 已来自执行期环境状态，但它仍是轻量状态估计，不应被解读成完整后验滤波或优化规划日志。
 - simulation 结果除成功率外还输出 95% CI、多 seed `mean±std`、按 `train/val/test` 聚合的 split 汇总、按 `challenge_tags` 聚合的 challenge 汇总、证据支持度/冲突统计、距离误差与稳定度/速度/净空风险指标。
 - simulation 额外提供 `rag` 对 `rag_generic_only` 的 evidence ablation，以及 `rag` 对 `rag_no_motion_rules` 的 motion ablation，用于验证增益来源。
 
@@ -245,9 +249,10 @@ Simulation 成功率增益：
 - 仿真 benchmark 的成功判定已基于物体属性和执行观测独立建模；`reference_force_range` 只保留为分析指标，不再参与环境判定。
 - `rag_learned` 现在使用环境 teacher 标签而不是 RAG 银标，但仍然只是轻量学习基线，不代表完整学习控制器。
 - simulation evidence ablation 目前只覆盖对象特定 force rule，对更细粒度的运动学 / 接触规则删减实验仍未展开。
-- 当前仓库代码语义以 `outputs/current_core_thickening/` 为准；`outputs/current/round19` 继续保留为历史基线，`outputs/current_round20_sim/` 保留 placement-stage `placement_precision` 实验。
-- control-core thickening 只带来了 `+0.0014` 的平均成功率提升，并没有统一优于 `round19`；`pick_smooth_metal` 与 `pick_metal_heavy` 仍各回落约 5 个百分点，observer / local replan 仍未补上。
-- `belief_state` 当前主要由任务关键词和规则命中情况派生，`uncertainty_profile` 主要是覆盖率 / 缺口统计，`solver` 主要是少量候选模板重打分；因此它还不是完整意义上的状态估计、置信传播和规划求解。
+- 当前仓库代码语义以 `outputs/current_observer_step_replan/` 为准；`outputs/current/round19` 继续保留为历史基线，`outputs/current_round20_sim/` 保留 placement-stage `placement_precision` 实验。
+- `rag_feedback` 当前确实已经补上 observer 和 step 级 replan，但 observer 仍是轻量执行期估计器，不是完整 posterior filter。
+- `belief_state` 仍然首先从知识证据长出来，执行期观测主要进入 feedback replan，而不是从头替代 retrieval-belief 这条前置链。
+- `pick_metal_heavy` 目前依然是 `0.00% ± 0.00%`，说明 static heavy-metal 物理失败还没有被这轮 observer / step-replan 闭环吃掉。
 - 新增的多阶段控制计划仍是简化控制抽象，不等价于完整机器人轨迹优化与接触控制栈。
 
 ## 备注

@@ -13,26 +13,27 @@ MechanicalRag 关注的是机械知识如何同时服务两个场景：
 
 ## 2. 当前状态
 
-截至 `2026-04-27 UTC`，当前仓库代码语义对应 `outputs/current_core_thickening/` 这次 control-core thickening 验证；`outputs/current/` 继续保留为 `round19` 历史基线，`outputs/current_round20_sim/` 保留 `round20` placement-stage 实验。
+截至 `2026-04-27 UTC`，当前仓库代码语义对应 `outputs/current_observer_step_replan/` 这次 observer / step-replan 闭环验证；`outputs/current/` 继续保留为 `round19` 历史基线，`outputs/current_round20_sim/` 保留 `round20` placement-stage 实验。
 
-- 最新控制核目录：`outputs/current_core_thickening/`
+- 最新闭环目录：`outputs/current_observer_step_replan/`
 - `round19` 历史基线：`outputs/current/`
 - `round20` 实验目录：`outputs/current_round20_sim/`
-- 新控制核新增显式 `belief_state`、`task_constraints`、`uncertainty_profile` 与 solver candidate 选择
-- 但这层当前仍是规则派生的符号化中间层，不应被表述成观测后验估计或优化求解
+- 当前仿真主链已经改成 `evidence -> belief -> seed synthesize -> local solve -> observer / step replan`
+- `env.py` 现在稳定输出 `observer_trace`；`rag_feedback` 命中风险阈值时会在单次 execution 内留下 `step_replan_trace`
 - 当前关键结果：
-  - `pick_large_part_far = 0.6500 ± 0.1323`
-  - `pick_smooth_metal_fast = 0.8167 ± 0.0289`
-  - `pick_metal_heavy_fast = 0.7500 ± 0.0866`
-  - 相对 `round19` 历史基线，12 任务多 seed 平均成功率提升 `+0.0014`
-- 当前已知回落任务：`pick_smooth_metal = 0.7333`、`pick_metal_heavy = 0.7167`
+  - `rag_feedback` 12 任务多 seed平均成功率 `0.8361`
+  - 相对 `rag` seed-only 路径，平均提升 `+0.1653`
+  - `pick_large_part_far = 0.9167 ± 0.1041`
+  - `pick_thin_wall_fast = 0.8833 ± 0.0577`
+  - `pick_smooth_metal_fast = 0.8333 ± 0.0764`
+- 当前主要问题：`pick_metal_heavy = 0.0000 ± 0.0000`
 
 如果只想快速把握当前状态，应优先查看：
 
 - `README.md`
 - `simulation/README.md`
-- `outputs/current_core_thickening/simulation_benchmark_result.json`
-- `outputs/current_core_thickening/showcase_summary.txt`
+- `outputs/current_observer_step_replan/simulation_benchmark_result.json`
+- `outputs/current_observer_step_replan/showcase_summary.txt`
 
 ## 3. 系统结构
 
@@ -53,15 +54,14 @@ MechanicalRag 关注的是机械知识如何同时服务两个场景：
 
 - `simulation/rag_controller.py`
   - 基于知识库证据和任务描述生成八参数控制计划
-  - 当前流程是 `rule aggregation -> belief bundle -> candidate solve -> final plan`
-  - 其中 `belief bundle` 与 `candidate solve` 仍是叠加在旧规则聚合之后的后处理层
+  - 当前流程是 `evidence -> belief -> seed synthesize -> local solve -> final plan`
   - 支持 `rag_generic_only` evidence ablation
   - 支持 `rag_no_motion_rules` motion ablation
 
 - `simulation/control_core.py`
   - 显式建模 `ObjectBeliefState`、`TaskConstraintSet`、`UncertaintyProfile` 与 `StageIntent`
-  - 负责 candidate control plan 打分、solver 选择与结构化诊断输出
-  - 当前更接近规则派生中间态和候选重打分适配层，而不是严格的状态估计器或规划求解器
+  - 负责 belief 直驱的 `belief_constraint_synthesis` seed 和 local solver 选择
+  - 当前仍不是完整后验滤波器或优化规划器
 
 - `simulation/env.py`
   - 基于物体属性推导独立力学窗口
@@ -79,7 +79,7 @@ MechanicalRag 关注的是机械知识如何同时服务两个场景：
 
 - `reporting/visualize_results.py`
 - `reporting/generate_showcase.py`
-- `outputs/current_core_thickening/`
+- `outputs/current_observer_step_replan/`
 - `outputs/current/`
 - `outputs/current_round20_sim/`
 
@@ -104,18 +104,17 @@ python -m qa.evaluation --data_path mechanical_data.txt --case_set full --output
 ### 4.3 仿真 benchmark
 
 ```bash
-python -m simulation.benchmark --report_multi_seed --method rag --n_trials 20 --seeds 42 43 44 --output outputs/current_core_thickening/simulation_benchmark_result.json
-python -m simulation.benchmark --compare_direct_llm --n_trials 20 --seed 42 --output_dir outputs/current_core_thickening
+python -m simulation.benchmark --report_multi_seed --method rag_feedback --n_trials 20 --seeds 42 43 44 --output outputs/current_observer_step_replan/simulation_benchmark_result.json
+python -m simulation.benchmark --compare_feedback --n_trials 20 --seed 42 --output_dir outputs/current_observer_step_replan
 python -m simulation.benchmark --compare_evidence_ablation --n_trials 20 --seeds 42 43 44 --output_dir outputs/current
 python -m simulation.benchmark --compare_motion_ablation --n_trials 20 --seeds 42 43 44 --output_dir outputs/current
-python -m simulation.benchmark --compare_multi_seed --n_trials 20 --seeds 42 43 44 --multi_seed_methods rag rag_feedback task_heuristic direct_llm fixed --output_dir outputs/current_core_thickening
+python -m simulation.benchmark --compare_multi_seed --n_trials 20 --seeds 42 43 44 --multi_seed_methods rag rag_feedback task_heuristic fixed --output_dir outputs/current_observer_step_replan
 ```
 
 ### 4.4 图表与摘要
 
 ```bash
-python reporting/visualize_results.py --qa_json outputs/current/qa_evaluation_detail.json --sim_json outputs/current_core_thickening/simulation_comparison_rag_vs_baseline.json --sim_multi_seed_json outputs/current_core_thickening/simulation_comparison_multi_seed.json --output_dir outputs/current_core_thickening/visualizations
-python reporting/generate_showcase.py --qa_json outputs/current/qa_evaluation_detail.json --sim_json outputs/current_core_thickening/simulation_comparison_rag_vs_baseline.json --sim_multi_seed_json outputs/current_core_thickening/simulation_comparison_multi_seed.json --sim_benchmark_json outputs/current_core_thickening/simulation_benchmark_result.json --output outputs/current_core_thickening/showcase_summary.txt
+python reporting/visualize_results.py --qa_json outputs/current/qa_evaluation_detail.json --sim_json outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json --sim_multi_seed_json outputs/current_observer_step_replan/simulation_comparison_multi_seed.json --output_dir outputs/current_observer_step_replan/visualizations
 ```
 
 ## 5. 关键输出
@@ -128,11 +127,12 @@ python reporting/generate_showcase.py --qa_json outputs/current/qa_evaluation_de
 
 ### 5.2 Simulation
 
-- `outputs/current_core_thickening/simulation_benchmark_result.json`
-- `outputs/current_core_thickening/simulation_comparison_rag_vs_baseline.json`
-- `outputs/current_core_thickening/simulation_comparison_multi_seed.json`
-- `outputs/current_core_thickening/showcase_summary.txt`
-- `outputs/current_core_thickening/visualizations/simulation_belief_diagnostics.png`
+- `outputs/current_observer_step_replan/simulation_benchmark_result.json`
+- `outputs/current_observer_step_replan/simulation_comparison_rag_vs_baseline.json`
+- `outputs/current_observer_step_replan/simulation_comparison_multi_seed.json`
+- `outputs/current_observer_step_replan/simulation_benchmark_rag_feedback.json`
+- `outputs/current_observer_step_replan/showcase_summary.txt`
+- `outputs/current_observer_step_replan/visualizations/simulation_belief_diagnostics.png`
 - `outputs/current/simulation_benchmark_result.json`
 - `outputs/current_round20_sim/simulation_benchmark_result.json`
 - `outputs/current/simulation_evidence_ablation.json`
@@ -143,9 +143,10 @@ python reporting/generate_showcase.py --qa_json outputs/current/qa_evaluation_de
 - QA 结果是当前知识库和当前 case split 上的结果，不应直接表述为开放域强泛化。
 - 仿真仍然是简化抓取问题，不等价于完整机械臂控制栈；但控制器和环境已不再共享同一套真值范围。
 - `reference_force_range` 和 `reference_approach_height` 只用于分析输出，不参与成功判定。
-- 仿真当前代码语义以 `outputs/current_core_thickening/` 为准；`round19/current` 继续保留为历史基线，`round20` 只保留为 placement-stage precision 实验归档。
-- control-core thickening 只带来了 `+0.0014` 的平均成功率提升，并没有统一优于 `round19`；`pick_smooth_metal` 与 `pick_metal_heavy` 仍各回落约 5 个百分点。
-- `belief_state` 当前主要由任务关键词和规则命中情况派生，`uncertainty_profile` 主要是覆盖率 / 缺口统计，`solver` 主要是少量候选模板重打分。
+- 仿真当前代码语义以 `outputs/current_observer_step_replan/` 为准；`round19/current` 继续保留为历史基线，`round20` 只保留为 placement-stage precision 实验归档。
+- 当前 observer 已接到执行主链，step replan 已接到 `rag_feedback` 主路径，但它们仍是轻量执行期估计与局部修正，不是完整后验滤波与 MPC。
+- `belief_state` 仍然首先从知识证据长出来，执行期观测主要进入 feedback replan，而不是从头替代 retrieval-belief 前置链。
+- `pick_metal_heavy` 目前依然完全失败，是下一轮最明显的剩余缺口。
 - simulation evidence ablation 目前只覆盖对象特定 force rule，对速度 / 净空等更细粒度规则的删减实验仍未展开。
 
 ## 7. 对比口径

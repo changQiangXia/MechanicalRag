@@ -8,7 +8,7 @@ from __future__ import annotations
 import random
 import time
 from pathlib import Path
-from typing import Tuple
+from typing import Any, Callable, Tuple
 
 import numpy as np
 
@@ -433,6 +433,350 @@ def _compute_transport_dynamics(
     return force_gain, force_clip, static_push_estimate
 
 
+def _default_object_profile() -> dict[str, Any]:
+    return {
+        "mass_kg": 0.05,
+        "surface_friction": 0.5,
+        "fragility": 0.7,
+        "velocity_scale": 0.8,
+        "target_tolerance": 0.04,
+        "size_xyz": (0.025, 0.025, 0.025),
+        "preferred_approach_height": 0.05,
+        "approach_height_tolerance": 0.02,
+    }
+
+
+def _normalize_execution_params(params: dict[str, Any]) -> dict[str, float]:
+    transport_velocity = max(0.12, min(0.8, float(params.get("transport_velocity", 0.30))))
+    placement_velocity = max(
+        0.12,
+        min(transport_velocity, float(params.get("placement_velocity", transport_velocity))),
+    )
+    gripper_force = max(5.0, min(50.0, float(params.get("gripper_force", 25.0))))
+    lift_force = max(gripper_force, min(50.0, float(params.get("lift_force", gripper_force))))
+    transfer_force = max(gripper_force, min(50.0, float(params.get("transfer_force", gripper_force))))
+    return {
+        "gripper_force": round(gripper_force, 4),
+        "approach_height": round(max(0.02, min(0.08, float(params.get("approach_height", 0.05)))), 4),
+        "transport_velocity": round(transport_velocity, 4),
+        "lift_force": round(lift_force, 4),
+        "transfer_force": round(transfer_force, 4),
+        "placement_velocity": round(placement_velocity, 4),
+        "transfer_alignment": round(max(0.0, min(1.0, float(params.get("transfer_alignment", 0.0)))), 4),
+        "lift_clearance": round(max(0.03, min(0.14, float(params.get("lift_clearance", 0.06)))), 4),
+    }
+
+
+def _evaluate_execution_plan(
+    *,
+    object_pos: Tuple[float, float, float],
+    target_pos: Tuple[float, float, float],
+    params: dict[str, Any],
+    object_profile: dict[str, Any] | None = None,
+    rng: random.Random | None = None,
+) -> dict[str, Any]:
+    profile = _default_object_profile()
+    if object_profile:
+        profile.update(object_profile)
+    normalized = _normalize_execution_params(params)
+    horizontal_distance = sum((a - b) ** 2 for a, b in zip(object_pos, target_pos)) ** 0.5
+    travel_distance = (
+        horizontal_distance
+        + 2.0 * normalized["approach_height"]
+        + 2.0 * normalized["lift_clearance"]
+    )
+    recommended_velocity, min_lift_clearance = _estimate_motion_targets(
+        mass_kg=float(profile["mass_kg"]),
+        surface_friction=float(profile["surface_friction"]),
+        fragility=float(profile["fragility"]),
+        size_xyz=tuple(profile["size_xyz"]),
+    )
+    min_force_needed, max_safe_force, nominal_force = _estimate_force_window(
+        mass_kg=float(profile["mass_kg"]),
+        surface_friction=float(profile["surface_friction"]),
+        fragility=float(profile["fragility"]),
+        travel_distance=travel_distance,
+        size_xyz=tuple(profile["size_xyz"]),
+    )
+    success, diag = _success_model(
+        normalized["gripper_force"],
+        min_force_needed=min_force_needed,
+        max_safe_force=max_safe_force,
+        nominal_force=nominal_force,
+        surface_friction=float(profile["surface_friction"]),
+        mass_kg=float(profile["mass_kg"]),
+        fragility=float(profile["fragility"]),
+        travel_distance=travel_distance,
+        horizontal_distance=horizontal_distance,
+        approach_height=normalized["approach_height"],
+        transport_velocity=normalized["transport_velocity"],
+        lift_force=normalized["lift_force"],
+        transfer_force=normalized["transfer_force"],
+        transfer_alignment=normalized["transfer_alignment"],
+        placement_velocity=normalized["placement_velocity"],
+        lift_clearance=normalized["lift_clearance"],
+        recommended_velocity=recommended_velocity,
+        min_lift_clearance=min_lift_clearance,
+        preferred_approach_height=float(profile["preferred_approach_height"]),
+        approach_height_tolerance=float(profile["approach_height_tolerance"]),
+        rng=rng,
+    )
+    lift_speed = max(0.05, 0.22 * float(profile["velocity_scale"]) / (1.0 + float(profile["mass_kg"]) * 1.8))
+    transport_speed = max(0.05, normalized["transport_velocity"])
+    placement_speed = max(0.05, normalized["placement_velocity"])
+    elapsed = (
+        (2.0 * normalized["approach_height"] / lift_speed)
+        + (2.0 * normalized["lift_clearance"] / lift_speed)
+        + (horizontal_distance / transport_speed)
+        + (0.35 * normalized["lift_clearance"] / placement_speed)
+    )
+    distance = 0.0 if success else 0.03 + 0.04 * max(diag["slip_risk"], diag["compression_risk"])
+    info = {
+        "distance": round(distance, 4),
+        "steps": 12,
+        "sim_time": round(elapsed, 4),
+        "wall_time": round(elapsed, 4),
+        "travel_distance": round(travel_distance, 4),
+        "horizontal_distance": round(horizontal_distance, 4),
+        "transport_velocity": round(normalized["transport_velocity"], 4),
+        "lift_force": round(normalized["lift_force"], 4),
+        "transfer_force": round(normalized["transfer_force"], 4),
+        "transfer_alignment": round(normalized["transfer_alignment"], 4),
+        "placement_velocity": round(normalized["placement_velocity"], 4),
+        "lift_clearance": round(normalized["lift_clearance"], 4),
+        "force_gain": 0.0,
+        "force_clip": 0.0,
+        "static_push_estimate": 0.0,
+        "approach_height_error": round(
+            abs(normalized["approach_height"] - float(profile["preferred_approach_height"])),
+            4,
+        ),
+        "physics_ok": True,
+        "grip_success": success,
+        "failure_bucket": diag["failure_bucket"],
+        "dominant_failure_mode": diag["dominant_failure_mode"],
+        "slip_risk": diag["slip_risk"],
+        "compression_risk": diag["compression_risk"],
+        "velocity_risk": diag["velocity_risk"],
+        "clearance_risk": diag["clearance_risk"],
+        "lift_hold_risk": diag["lift_hold_risk"],
+        "transfer_sway_risk": diag["transfer_sway_risk"],
+        "placement_settle_risk": diag["placement_settle_risk"],
+        "stability_score": diag["stability_score"],
+        "nominal_force": diag["nominal_force"],
+        "min_force_needed": diag["min_force_needed"],
+        "max_safe_force": diag["max_safe_force"],
+        "recommended_velocity": diag["recommended_velocity"],
+        "dynamic_transport_mode": diag["dynamic_transport_mode"],
+        "dynamic_placement_velocity_cap": diag["dynamic_placement_velocity_cap"],
+        "min_lift_clearance": diag["min_lift_clearance"],
+        "dynamic_clearance_target": diag["dynamic_clearance_target"],
+        "dynamic_force_target": diag["dynamic_force_target"],
+        "dynamic_lift_force_shortfall": diag["dynamic_lift_force_shortfall"],
+        "lift_center_offset": diag["lift_center_offset"],
+        "lift_stage_control_active": diag["lift_stage_control_active"],
+        "placement_stage_control_active": diag.get("placement_stage_control_active", False),
+        "placement_transfer_carryover": diag.get("placement_transfer_carryover", 0.0),
+        "placement_clearance_excess": diag.get("placement_clearance_excess", 0.0),
+        "profile": profile,
+    }
+    return {
+        "success": success,
+        "elapsed": elapsed,
+        "info": info,
+        "diag": diag,
+        "profile": profile,
+        "params": normalized,
+        "horizontal_distance": horizontal_distance,
+        "min_lift_clearance": min_lift_clearance,
+    }
+
+
+def _build_observer_trace(
+    evaluation: dict[str, Any],
+    *,
+    observation_start_index: int = 0,
+) -> list[dict[str, Any]]:
+    params = evaluation["params"]
+    diag = evaluation["diag"]
+    info = evaluation["info"]
+    recommended_velocity = float(diag["recommended_velocity"])
+    dynamic_placement_velocity_cap = float(diag["dynamic_placement_velocity_cap"])
+    dynamic_clearance_target = float(diag["dynamic_clearance_target"])
+    horizontal_distance = float(evaluation["horizontal_distance"])
+    final_distance = float(info["distance"])
+    estimated_failure_stage = str(diag["failure_bucket"]).replace("_fail", "")
+    if estimated_failure_stage == "success":
+        estimated_failure_stage = "none"
+
+    stage_rows = [
+        {
+            "stage": "approach",
+            "stage_progress": 0.15,
+            "distance_to_target": horizontal_distance + params["approach_height"] + params["lift_clearance"],
+            "stability_score": max(0.0, min(1.0, info["stability_score"] - 0.05 * info["approach_height_error"])),
+            "slip_indicator": round(max(0.0, 0.35 * float(info["slip_risk"])), 4),
+            "compression_indicator": round(max(0.0, 0.35 * float(info["compression_risk"])), 4),
+            "velocity_margin": round(recommended_velocity - params["transport_velocity"], 4),
+            "clearance_margin": round(params["lift_clearance"] - dynamic_clearance_target, 4),
+            "risk_score": round(max(0.0, info["approach_height_error"]), 4),
+        },
+        {
+            "stage": "grasp",
+            "stage_progress": 0.35,
+            "distance_to_target": horizontal_distance + params["lift_clearance"],
+            "stability_score": max(0.0, min(1.0, info["stability_score"] - 0.10 * float(info["slip_risk"]))),
+            "slip_indicator": round(float(info["slip_risk"]), 4),
+            "compression_indicator": round(float(info["compression_risk"]), 4),
+            "velocity_margin": round(recommended_velocity - params["transport_velocity"], 4),
+            "clearance_margin": round(params["lift_clearance"] - float(info["min_lift_clearance"]), 4),
+            "risk_score": round(max(float(info["slip_risk"]), float(info["compression_risk"])), 4),
+        },
+        {
+            "stage": "lift",
+            "stage_progress": 0.55,
+            "distance_to_target": horizontal_distance * 0.7,
+            "stability_score": max(0.0, min(1.0, info["stability_score"] - 0.12 * float(info["lift_hold_risk"]))),
+            "slip_indicator": round(max(float(info["slip_risk"]), float(info["lift_hold_risk"])), 4),
+            "compression_indicator": round(float(info["compression_risk"]), 4),
+            "velocity_margin": round(recommended_velocity - params["transport_velocity"], 4),
+            "clearance_margin": round(params["lift_clearance"] - dynamic_clearance_target, 4),
+            "risk_score": round(max(float(info["lift_hold_risk"]), max(0.0, dynamic_clearance_target - params["lift_clearance"])), 4),
+        },
+        {
+            "stage": "transfer",
+            "stage_progress": 0.78,
+            "distance_to_target": horizontal_distance * 0.35,
+            "stability_score": max(0.0, min(1.0, info["stability_score"] - 0.15 * float(info["transfer_sway_risk"]))),
+            "slip_indicator": round(float(info["slip_risk"]), 4),
+            "compression_indicator": round(float(info["compression_risk"]), 4),
+            "velocity_margin": round(dynamic_placement_velocity_cap - params["transport_velocity"], 4),
+            "clearance_margin": round(params["lift_clearance"] - dynamic_clearance_target, 4),
+            "risk_score": round(max(float(info["transfer_sway_risk"]), float(info["velocity_risk"])), 4),
+        },
+        {
+            "stage": "place",
+            "stage_progress": 1.0,
+            "distance_to_target": final_distance,
+            "stability_score": float(info["stability_score"]),
+            "slip_indicator": round(float(info["slip_risk"]) * 0.5, 4),
+            "compression_indicator": round(float(info["compression_risk"]) * 0.5, 4),
+            "velocity_margin": round(dynamic_placement_velocity_cap - params["placement_velocity"], 4),
+            "clearance_margin": round(params["lift_clearance"] - dynamic_clearance_target, 4),
+            "risk_score": round(float(info["placement_settle_risk"]), 4),
+        },
+    ]
+    trace: list[dict[str, Any]] = []
+    for offset, row in enumerate(stage_rows):
+        trigger_reason = ""
+        if row["stage"] == "grasp":
+            if row["slip_indicator"] > 0.12:
+                trigger_reason = "slip_indicator"
+            elif row["compression_indicator"] > 0.12:
+                trigger_reason = "compression_indicator"
+        elif row["stage"] == "lift":
+            if row["clearance_margin"] < -0.002:
+                trigger_reason = "clearance_margin"
+            elif row["risk_score"] > 0.18:
+                trigger_reason = "lift_hold_risk"
+        elif row["stage"] == "transfer":
+            if row["velocity_margin"] < -0.01:
+                trigger_reason = "velocity_margin"
+            elif row["risk_score"] > 0.18:
+                trigger_reason = "transfer_sway_risk"
+        elif row["stage"] == "place" and row["risk_score"] > 0.18:
+            trigger_reason = "placement_settle_risk"
+        trace.append(
+            {
+                "observation_index": observation_start_index + offset,
+                **row,
+                "estimated_failure_stage": estimated_failure_stage,
+                "trigger_reason": trigger_reason,
+            }
+        )
+    return trace
+
+
+def simulate_stepwise_execution(
+    *,
+    object_pos: Tuple[float, float, float],
+    target_pos: Tuple[float, float, float],
+    params: dict[str, Any],
+    object_profile: dict[str, Any] | None = None,
+    step_replan_callback: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any] | None] | None = None,
+    max_step_replans: int = 0,
+    rng: random.Random | None = None,
+) -> tuple[bool, float, dict[str, Any]]:
+    current_feedback_state = dict(params)
+    current_params = _normalize_execution_params(current_feedback_state)
+    observer_trace: list[dict[str, Any]] = []
+    step_replan_trace: list[dict[str, Any]] = []
+    observation_index = 0
+    step_replan_count = 0
+
+    while True:
+        evaluation = _evaluate_execution_plan(
+            object_pos=object_pos,
+            target_pos=target_pos,
+            params=current_params,
+            object_profile=object_profile,
+            rng=rng,
+        )
+        iteration_trace = _build_observer_trace(
+            evaluation,
+            observation_start_index=observation_index,
+        )
+        observer_trace.extend(iteration_trace)
+        observation_index += len(iteration_trace)
+        if step_replan_callback is None or step_replan_count >= max_step_replans:
+            break
+
+        updated_params = None
+        trigger_snapshot = None
+        for snapshot in iteration_trace:
+            if not snapshot["trigger_reason"]:
+                continue
+            candidate = step_replan_callback(dict(snapshot), dict(current_feedback_state))
+            if candidate is None:
+                continue
+            normalized_candidate = _normalize_execution_params(candidate)
+            if normalized_candidate == current_params:
+                continue
+            updated_params = normalized_candidate
+            trigger_snapshot = snapshot
+            break
+        if updated_params is None or trigger_snapshot is None:
+            break
+        step_replan_trace.append(
+            {
+                "observation_index": trigger_snapshot["observation_index"],
+                "stage": trigger_snapshot["stage"],
+                "trigger_reason": trigger_snapshot["trigger_reason"],
+                "seed_plan": dict(current_params),
+                "final_plan": dict(updated_params),
+            }
+        )
+        current_feedback_state = dict(candidate)
+        current_params = updated_params
+        step_replan_count += 1
+
+    final_evaluation = _evaluate_execution_plan(
+        object_pos=object_pos,
+        target_pos=target_pos,
+        params=current_params,
+        object_profile=object_profile,
+        rng=rng,
+    )
+    info = dict(final_evaluation["info"])
+    info["observer_trace"] = observer_trace
+    info["step_replan_trace"] = step_replan_trace
+    info["step_replan_count"] = step_replan_count
+    info["execution_feedback_mode"] = "step_observer_replan" if step_replan_count > 0 else "observer_only"
+    current_feedback_state.update(current_params)
+    info["applied_params"] = dict(current_feedback_state)
+    return final_evaluation["success"], final_evaluation["elapsed"], info
+
+
 class ArmSimEnv:
     """
     桌面抓取仿真环境（MuJoCo）。
@@ -514,6 +858,8 @@ class ArmSimEnv:
         lift_clearance: float = 0.06,
         object_profile: dict | None = None,
         max_steps: int = 800,
+        step_replan_callback: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any] | None] | None = None,
+        max_step_replans: int = 0,
     ) -> Tuple[bool, float, dict]:
         """
         执行 pick-and-place，成功与否由物体属性、执行轨迹和给定控制参数共同决定。
@@ -544,6 +890,35 @@ class ArmSimEnv:
         lift_force = gripper_force if lift_force is None else max(gripper_force, lift_force)
         transfer_force = gripper_force if transfer_force is None else max(gripper_force, transfer_force)
         transfer_alignment = max(0.0, min(1.0, transfer_alignment))
+        adaptive_trace_info = None
+        if step_replan_callback is not None or max_step_replans > 0:
+            _, _, adaptive_trace_info = simulate_stepwise_execution(
+                object_pos=object_pos,
+                target_pos=target_pos,
+                params={
+                    "gripper_force": gripper_force,
+                    "approach_height": approach_height,
+                    "transport_velocity": transport_velocity,
+                    "lift_force": lift_force,
+                    "transfer_force": transfer_force,
+                    "placement_velocity": placement_velocity,
+                    "transfer_alignment": transfer_alignment,
+                    "lift_clearance": lift_clearance,
+                },
+                object_profile=profile,
+                step_replan_callback=step_replan_callback,
+                max_step_replans=max_step_replans,
+            )
+            applied_params = adaptive_trace_info.get("applied_params", {})
+            gripper_force = float(applied_params.get("gripper_force", gripper_force))
+            approach_height = float(applied_params.get("approach_height", approach_height))
+            transport_velocity = float(applied_params.get("transport_velocity", transport_velocity))
+            lift_force = float(applied_params.get("lift_force", lift_force))
+            transfer_force = float(applied_params.get("transfer_force", transfer_force))
+            placement_velocity = float(applied_params.get("placement_velocity", placement_velocity))
+            transfer_alignment = float(applied_params.get("transfer_alignment", transfer_alignment))
+            lift_clearance = float(applied_params.get("lift_clearance", lift_clearance))
+        staged_distance = 2.0 * approach_height + 2.0 * lift_clearance + horizontal_distance
 
         # 静摩擦补偿让大件、薄壁件和重金属件都保留难度差异，同时具备完成条件。
         force_gain, force_clip, static_push_estimate = _compute_transport_dynamics(
@@ -670,6 +1045,12 @@ class ArmSimEnv:
                 "placement_velocity": round(placement_velocity, 4),
             },
         }
+        if adaptive_trace_info is not None:
+            info["observer_trace"] = adaptive_trace_info.get("observer_trace", [])
+            info["step_replan_trace"] = adaptive_trace_info.get("step_replan_trace", [])
+            info["step_replan_count"] = adaptive_trace_info.get("step_replan_count", 0)
+            info["execution_feedback_mode"] = adaptive_trace_info.get("execution_feedback_mode", "observer_only")
+            info["applied_params"] = adaptive_trace_info.get("applied_params", {})
         return success, sim_elapsed, info
 
     def close(self) -> None:
@@ -712,122 +1093,26 @@ if not HAS_MUJOCO:
             lift_clearance: float = 0.06,
             object_profile: dict | None = None,
             max_steps: int = 400,
+            step_replan_callback: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any] | None] | None = None,
+            max_step_replans: int = 0,
         ) -> Tuple[bool, float, dict]:
-            profile = {
-                "mass_kg": 0.05,
-                "surface_friction": 0.5,
-                "fragility": 0.7,
-                "velocity_scale": 0.8,
-                "target_tolerance": 0.04,
-                "size_xyz": (0.025, 0.025, 0.025),
-                "preferred_approach_height": 0.05,
-                "approach_height_tolerance": 0.02,
-            }
-            if object_profile:
-                profile.update(object_profile)
-            horizontal_distance = sum((a - b) ** 2 for a, b in zip(object_pos, target_pos)) ** 0.5
-            travel_distance = horizontal_distance + 2.0 * approach_height + 2.0 * lift_clearance
-            placement_velocity = transport_velocity if placement_velocity is None else min(transport_velocity, placement_velocity)
-            lift_force = gripper_force if lift_force is None else max(gripper_force, lift_force)
-            transfer_force = gripper_force if transfer_force is None else max(gripper_force, transfer_force)
-            transfer_alignment = max(0.0, min(1.0, transfer_alignment))
-            lift_speed = max(0.05, 0.22 * profile["velocity_scale"] / (1.0 + profile["mass_kg"] * 1.8))
-            transport_speed = max(0.05, transport_velocity)
-            placement_speed = max(0.05, placement_velocity)
-            elapsed = (
-                (2.0 * approach_height / lift_speed)
-                + (2.0 * lift_clearance / lift_speed)
-                + (horizontal_distance / transport_speed)
-                + (0.35 * lift_clearance / placement_speed)
-            )
-            recommended_velocity, min_lift_clearance = _estimate_motion_targets(
-                mass_kg=profile["mass_kg"],
-                surface_friction=profile["surface_friction"],
-                fragility=profile["fragility"],
-                size_xyz=tuple(profile["size_xyz"]),
-            )
-            min_force_needed, max_safe_force, nominal_force = _estimate_force_window(
-                mass_kg=profile["mass_kg"],
-                surface_friction=profile["surface_friction"],
-                fragility=profile["fragility"],
-                travel_distance=travel_distance,
-                size_xyz=tuple(profile["size_xyz"]),
-            )
-            success, grip_diag = _success_model(
-                gripper_force,
-                min_force_needed=min_force_needed,
-                max_safe_force=max_safe_force,
-                nominal_force=nominal_force,
-                surface_friction=profile["surface_friction"],
-                mass_kg=profile["mass_kg"],
-                fragility=profile["fragility"],
-                travel_distance=travel_distance,
-                horizontal_distance=horizontal_distance,
-                approach_height=approach_height,
-                transport_velocity=transport_velocity,
-                lift_force=lift_force,
-                transfer_force=transfer_force,
-                transfer_alignment=transfer_alignment,
-                placement_velocity=placement_velocity,
-                lift_clearance=lift_clearance,
-                recommended_velocity=recommended_velocity,
-                min_lift_clearance=min_lift_clearance,
-                preferred_approach_height=profile["preferred_approach_height"],
-                approach_height_tolerance=profile["approach_height_tolerance"],
-            )
-            failure_bucket = "success" if success else grip_diag["failure_bucket"]
-            info = {
-                "distance": 0.0 if success else horizontal_distance,
-                "steps": max_steps,
-                "sim_time": round(elapsed, 4),
-                "travel_distance": round(travel_distance, 4),
-                "horizontal_distance": round(horizontal_distance, 4),
-                "approach_height_error": round(abs(approach_height - profile["preferred_approach_height"]), 4),
-                "transport_velocity": round(transport_velocity, 4),
-                "lift_force": round(lift_force, 4),
-                "transfer_force": round(transfer_force, 4),
-                "transfer_alignment": round(transfer_alignment, 4),
-                "placement_velocity": round(placement_velocity, 4),
-                "lift_clearance": round(lift_clearance, 4),
-                "physics_ok": True,
-                "grip_success": success,
-                "failure_bucket": failure_bucket,
-                "dominant_failure_mode": grip_diag["dominant_failure_mode"],
-                "slip_risk": grip_diag["slip_risk"],
-                "compression_risk": grip_diag["compression_risk"],
-                "velocity_risk": grip_diag["velocity_risk"],
-                "clearance_risk": grip_diag["clearance_risk"],
-                "lift_hold_risk": grip_diag["lift_hold_risk"],
-                "transfer_sway_risk": grip_diag["transfer_sway_risk"],
-                "placement_settle_risk": grip_diag["placement_settle_risk"],
-                "lift_hold_success_prob": grip_diag["lift_hold_success_prob"],
-                "transfer_success_prob": grip_diag["transfer_success_prob"],
-                "placement_success_prob": grip_diag["placement_success_prob"],
-                "stability_score": grip_diag["stability_score"],
-                "nominal_force": grip_diag["nominal_force"],
-                "min_force_needed": grip_diag["min_force_needed"],
-                "max_safe_force": grip_diag["max_safe_force"],
-                "recommended_velocity": grip_diag["recommended_velocity"],
-                "dynamic_transport_mode": grip_diag["dynamic_transport_mode"],
-                "dynamic_placement_velocity_cap": grip_diag["dynamic_placement_velocity_cap"],
-                "min_lift_clearance": grip_diag["min_lift_clearance"],
-                "dynamic_clearance_target": grip_diag["dynamic_clearance_target"],
-                "dynamic_force_target": grip_diag["dynamic_force_target"],
-                "dynamic_lift_force_shortfall": grip_diag["dynamic_lift_force_shortfall"],
-                "lift_center_offset": grip_diag["lift_center_offset"],
-                "lift_stage_control_active": grip_diag["lift_stage_control_active"],
-                "profile": profile,
-                "stage_plan": {
-                    "approach_height": round(approach_height, 4),
-                    "lift_clearance": round(lift_clearance, 4),
-                    "transport_velocity": round(transport_velocity, 4),
-                    "lift_force": round(lift_force, 4),
-                    "transfer_force": round(transfer_force, 4),
-                    "transfer_alignment": round(transfer_alignment, 4),
-                    "placement_velocity": round(placement_velocity, 4),
+            return simulate_stepwise_execution(
+                object_pos=object_pos,
+                target_pos=target_pos,
+                params={
+                    "gripper_force": gripper_force,
+                    "approach_height": approach_height,
+                    "transport_velocity": transport_velocity,
+                    "lift_force": lift_force if lift_force is not None else gripper_force,
+                    "transfer_force": transfer_force if transfer_force is not None else gripper_force,
+                    "placement_velocity": placement_velocity if placement_velocity is not None else transport_velocity,
+                    "transfer_alignment": transfer_alignment,
+                    "lift_clearance": lift_clearance,
                 },
-            }
-            return success, elapsed, info
+                object_profile=object_profile,
+                step_replan_callback=step_replan_callback,
+                max_step_replans=max_step_replans,
+            )
 
         def close(self) -> None:
             pass

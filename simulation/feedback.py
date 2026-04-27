@@ -129,6 +129,58 @@ def build_feedback_signal(
     )
 
 
+def build_feedback_signal_from_observation(
+    previous_params: dict[str, Any],
+    observation: dict[str, Any],
+) -> FeedbackSignal:
+    stage = str(observation.get("stage", "unknown"))
+    stage_failure_bucket = {
+        "grasp": "lift_hold_fail",
+        "lift": "lift_hold_fail",
+        "transfer": "transfer_sway_fail",
+        "place": "placement_settle_fail",
+    }.get(stage, "unknown_failure")
+    slip_indicator = float(observation.get("slip_indicator", 0.0))
+    compression_indicator = float(observation.get("compression_indicator", 0.0))
+    velocity_margin = float(observation.get("velocity_margin", 0.0))
+    clearance_margin = float(observation.get("clearance_margin", 0.0))
+    stage_risk = float(observation.get("risk_score", 0.0))
+    failure_bucket = str(observation.get("estimated_failure_stage", "none"))
+    if failure_bucket in {"none", "success"}:
+        failure_bucket = stage_failure_bucket
+    elif not failure_bucket.endswith("_fail"):
+        failure_bucket = f"{failure_bucket}_fail"
+    transport_velocity = float(previous_params.get("transport_velocity", 0.3))
+    placement_velocity = float(previous_params.get("placement_velocity", transport_velocity))
+    if stage == "place":
+        velocity_risk = max(0.0, -velocity_margin)
+        placement_settle_risk = stage_risk
+    elif stage == "transfer":
+        velocity_risk = max(0.0, -velocity_margin)
+        placement_settle_risk = 0.0
+    else:
+        velocity_risk = max(0.0, -velocity_margin) * 0.5
+        placement_settle_risk = 0.0
+    return FeedbackSignal(
+        success=False,
+        gripper_force=float(previous_params.get("gripper_force", 25.0)),
+        distance=float(observation.get("distance_to_target", 0.0)),
+        steps=int(observation.get("observation_index", 0)),
+        transport_velocity=transport_velocity,
+        lift_clearance=float(previous_params.get("lift_clearance", 0.06)),
+        slip_risk=slip_indicator,
+        compression_risk=compression_indicator,
+        stability_score=float(observation.get("stability_score", 0.0)),
+        velocity_risk=velocity_risk,
+        clearance_risk=max(0.0, -clearance_margin),
+        lift_hold_risk=stage_risk if stage in {"grasp", "lift"} else 0.0,
+        transfer_sway_risk=stage_risk if stage == "transfer" else 0.0,
+        placement_settle_risk=placement_settle_risk,
+        failure_bucket=failure_bucket,
+        dynamic_transport_mode=str(previous_params.get("dynamic_transport_mode", "static")),
+    )
+
+
 def build_feedback_replan_request(
     previous_params: dict[str, Any],
     signal: FeedbackSignal,

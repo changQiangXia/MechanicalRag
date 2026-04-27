@@ -1,0 +1,36 @@
+MechanicalRag observer / step-replan showcase
+============================================
+
+Date: 2026-04-27 UTC
+Output directory: outputs/current_observer_step_replan/
+
+What changed
+------------
+- Control path is now: evidence -> belief -> belief_constraint_synthesis seed -> local solve -> observer / step replan.
+- env.py now emits execution-time observer snapshots.
+- rag_feedback now replans inside a single execution when stage risk crosses a trigger threshold.
+
+Headline results
+----------------
+- rag_feedback 12-task multi-seed mean success rate: 0.8361
+- rag 12-task multi-seed mean success rate: 0.6708
+- rag_feedback over rag delta: +0.1653
+
+Key task outcomes
+-----------------
+- pick_large_part_far: 0.9167 ± 0.1041
+- pick_thin_wall_fast: 0.8833 ± 0.0577
+- pick_smooth_metal_fast: 0.8333 ± 0.0764
+- pick_metal_heavy_fast: 0.8500 ± 0.0500
+- pick_metal_heavy: 0.0000 ± 0.0000
+
+Execution-loop notes
+--------------------
+- observer_trace is present for rag_feedback executions.
+- step_replan_trace appears only when execution margins actually cross the trigger threshold.
+- In the current benchmark, replan triggers are sparse rather than universal.
+
+Main remaining gap
+------------------
+- Static heavy smooth-metal pickup still fails at the environment layer.
+- The current observer is a lightweight execution-time estimator, not a full posterior filter or MPC stack.

@@ -234,6 +234,40 @@ class CandidateControlPlan:
         }
 
 
+@dataclass
+class EvidenceConstraintHints:
+    force_floor: float | None = None
+    force_cap: float | None = None
+    transport_velocity_floor: float | None = None
+    transport_velocity_cap: float | None = None
+    placement_velocity_cap: float | None = None
+    clearance_floor: float | None = None
+    clearance_target: float | None = None
+    approach_height_target: float | None = None
+    alignment_target: float | None = None
+    lift_force_margin: float = 0.0
+    transfer_force_margin: float = 0.0
+    gripper_force_bias: float = 0.0
+    source_notes: list[str] = field(default_factory=list)
+
+    def to_trace_dict(self) -> dict[str, Any]:
+        return {
+            "force_floor": None if self.force_floor is None else round(self.force_floor, 4),
+            "force_cap": None if self.force_cap is None else round(self.force_cap, 4),
+            "transport_velocity_floor": None if self.transport_velocity_floor is None else round(self.transport_velocity_floor, 4),
+            "transport_velocity_cap": None if self.transport_velocity_cap is None else round(self.transport_velocity_cap, 4),
+            "placement_velocity_cap": None if self.placement_velocity_cap is None else round(self.placement_velocity_cap, 4),
+            "clearance_floor": None if self.clearance_floor is None else round(self.clearance_floor, 4),
+            "clearance_target": None if self.clearance_target is None else round(self.clearance_target, 4),
+            "approach_height_target": None if self.approach_height_target is None else round(self.approach_height_target, 4),
+            "alignment_target": None if self.alignment_target is None else round(self.alignment_target, 4),
+            "lift_force_margin": round(self.lift_force_margin, 4),
+            "transfer_force_margin": round(self.transfer_force_margin, 4),
+            "gripper_force_bias": round(self.gripper_force_bias, 4),
+            "source_notes": list(self.source_notes),
+        }
+
+
 def summarize_control_evidence(
     *,
     features: dict[str, bool],
@@ -627,6 +661,118 @@ def _normalize_plan(plan: CandidateControlPlan) -> CandidateControlPlan:
     )
 
 
+def synthesize_control_seed(
+    default_plan: dict[str, float],
+    belief: ControlBeliefBundle,
+    hints: EvidenceConstraintHints,
+) -> tuple[dict[str, float], dict[str, Any]]:
+    base = _normalize_plan(CandidateControlPlan(label="belief_seed", **default_plan))
+    notes = list(hints.source_notes)
+
+    gripper_force = max(
+        base.gripper_force,
+        belief.evidence_state.force_center - 0.20 * belief.evidence_state.force_std,
+    )
+    gripper_force += float(hints.gripper_force_bias)
+    if belief.uncertainty.conservative_mode:
+        gripper_force += 0.6
+        notes.append("seed_uncertainty_force_guard")
+    if belief.object_state.friction_band in {"low", "medium_low"}:
+        gripper_force += 0.4
+        notes.append("seed_low_friction_margin")
+    if hints.force_floor is not None:
+        gripper_force = max(gripper_force, float(hints.force_floor))
+    if hints.force_cap is not None:
+        gripper_force = min(gripper_force, float(hints.force_cap))
+
+    approach_height = base.approach_height
+    if hints.approach_height_target is not None:
+        approach_height = float(hints.approach_height_target)
+    elif belief.object_state.fragility_band == "high":
+        approach_height = max(approach_height, 0.05)
+        notes.append("seed_fragility_height_guard")
+
+    transport_velocity = base.transport_velocity
+    if belief.uncertainty.conservative_mode:
+        transport_velocity -= 0.02
+    if belief.task_constraints.preferred_transport_mode == "long_transfer":
+        transport_velocity = min(transport_velocity, 0.22)
+        notes.append("seed_long_transfer_velocity_guard")
+    elif belief.task_constraints.preferred_transport_mode == "high_speed_low_friction":
+        transport_velocity = min(transport_velocity, 0.30)
+        notes.append("seed_high_speed_low_friction_cap")
+    if hints.transport_velocity_floor is not None:
+        transport_velocity = max(transport_velocity, float(hints.transport_velocity_floor))
+    if hints.transport_velocity_cap is not None:
+        transport_velocity = min(transport_velocity, float(hints.transport_velocity_cap))
+
+    placement_velocity = min(base.placement_velocity, transport_velocity)
+    if belief.task_constraints.precision_priority >= 0.75:
+        placement_velocity = min(placement_velocity, transport_velocity - 0.01)
+    if hints.placement_velocity_cap is not None:
+        placement_velocity = min(placement_velocity, float(hints.placement_velocity_cap))
+
+    lift_clearance = base.lift_clearance
+    if belief.task_constraints.stability_priority >= 0.75:
+        lift_clearance = max(lift_clearance, 0.06)
+    if hints.clearance_floor is not None:
+        lift_clearance = max(lift_clearance, float(hints.clearance_floor))
+    if hints.clearance_target is not None:
+        lift_clearance = max(lift_clearance, float(hints.clearance_target))
+
+    transfer_alignment = base.transfer_alignment if belief.task_constraints.required_alignment else 0.0
+    if belief.task_constraints.required_alignment:
+        transfer_alignment = max(
+            transfer_alignment,
+            0.55 + 0.25 * belief.evidence_state.alignment_confidence,
+        )
+        notes.append("seed_alignment_requirement")
+    if hints.alignment_target is not None:
+        transfer_alignment = max(transfer_alignment, float(hints.alignment_target))
+
+    lift_force = max(gripper_force, base.lift_force)
+    transfer_force = max(gripper_force, base.transfer_force)
+    if belief.task_constraints.required_lift_margin:
+        lift_force = max(lift_force, gripper_force + 0.5)
+        notes.append("seed_lift_margin_requirement")
+    if belief.object_state.friction_band in {"low", "medium_low"}:
+        transfer_force = max(transfer_force, gripper_force + 0.4)
+    if hints.lift_force_margin > 0.0:
+        lift_force = max(lift_force, gripper_force + float(hints.lift_force_margin))
+    if hints.transfer_force_margin > 0.0:
+        transfer_force = max(transfer_force, gripper_force + float(hints.transfer_force_margin))
+
+    seed_plan = _normalize_plan(
+        CandidateControlPlan(
+            label="belief_seed",
+            gripper_force=gripper_force,
+            approach_height=approach_height,
+            transport_velocity=transport_velocity,
+            lift_force=lift_force,
+            transfer_force=transfer_force,
+            placement_velocity=placement_velocity,
+            transfer_alignment=transfer_alignment,
+            lift_clearance=lift_clearance,
+        )
+    )
+    return {
+        "gripper_force": seed_plan.gripper_force,
+        "approach_height": seed_plan.approach_height,
+        "transport_velocity": seed_plan.transport_velocity,
+        "lift_force": seed_plan.lift_force,
+        "transfer_force": seed_plan.transfer_force,
+        "placement_velocity": seed_plan.placement_velocity,
+        "transfer_alignment": seed_plan.transfer_alignment,
+        "lift_clearance": seed_plan.lift_clearance,
+    }, {
+        "seed_mode": "belief_constraint_synthesis",
+        "seed_notes": notes,
+        "belief_transport_mode": belief.task_constraints.preferred_transport_mode,
+        "hints": hints.to_trace_dict(),
+        "seed_plan": seed_plan.to_trace_dict(),
+    }
+
+
 def _build_candidate_seeds(
     base: CandidateControlPlan,
     belief: ControlBeliefBundle,
@@ -713,7 +859,7 @@ def solve_control_plan(
     belief: ControlBeliefBundle,
     replan_request: dict[str, Any] | None = None,
 ) -> tuple[dict[str, float], dict[str, Any]]:
-    base_label = "feedback_seed" if replan_request is not None else "rule_aggregate"
+    base_label = "feedback_seed" if replan_request is not None else "belief_seed"
     base = _normalize_plan(CandidateControlPlan(label=base_label, **base_plan))
     candidates = _build_candidate_seeds(base, belief, replan_request=replan_request)
     notes: list[str] = []
@@ -1074,6 +1220,9 @@ def replan_control_plan(
     next_params["feedback_replan_trace"] = {
         "failure_bucket": replan_request.get("failure_bucket", "unknown_failure"),
         "stage_bias": replan_request.get("stage_bias", "none"),
+        "observation_index": replan_request.get("observation_index"),
+        "observation_stage": replan_request.get("observation_stage"),
+        "trigger_reason": replan_request.get("trigger_reason"),
         "failure_attribution": replan_request.get("failure_attribution", {}),
         "updated_uncertainty_reasons": trace["uncertainty_reasons"],
         "belief_update": belief_update_trace,

@@ -15,10 +15,12 @@ from langchain_community.vectorstores import Chroma
 from chroma_compat import get_chroma_client_settings
 from model_provider import resolve_model_path
 from .control_core import (
+    EvidenceConstraintHints,
     build_control_belief,
     replan_control_plan,
     solve_control_plan,
     summarize_control_evidence,
+    synthesize_control_seed,
 )
 
 
@@ -424,6 +426,318 @@ def _aggregate_plan(
         available_alignment_rules=available_alignment_rules,
         available_lift_stage_rules=available_lift_stage_rules,
         available_support_contact_rules=available_support_contact_rules,
+    )
+
+    velocity_floors = [float(rule["velocity_floor"]) for rule in rules if rule["velocity_floor"] is not None]
+    velocity_caps = [float(rule["velocity_cap"]) for rule in rules if rule["velocity_cap"] is not None]
+    velocity_bands = [tuple(rule["velocity_band"]) for rule in numeric_motion_rules if rule.get("velocity_band") is not None]
+    clearance_floors = [float(rule["clearance_floor"]) for rule in numeric_motion_rules if rule.get("clearance_floor") is not None]
+    clearance_targets = [float(rule["clearance_target"]) for rule in numeric_motion_rules if rule.get("clearance_target") is not None]
+    approach_targets = [float(rule["approach_height_target"]) for rule in motion_rules if rule["approach_height_target"] is not None]
+
+    belief_force_floor = None
+    if belief.uncertainty.conservative_mode:
+        belief_force_floor = max(
+            float(default_force),
+            float(evidence_summary.force_center) - 0.35 * float(evidence_summary.force_std),
+        )
+
+    composite_force_floor = None
+    if (
+        matched_hint is not None
+        and len(matched_hint["keywords"]) >= 2
+        and (features["heavy"] or features["long_transfer"])
+        and force_rule_mode == "all"
+    ):
+        composite_force_floor = float(default_force)
+
+    motion_aware_force_floor = None
+    if (
+        motion_rule_mode == "all"
+        and available_motion_rules
+        and features["heavy"]
+        and features["high_speed"]
+        and features["metal"]
+    ):
+        motion_aware_force_floor = float(default_force) + 1.0
+    elif motion_rule_mode == "all" and available_motion_rules and features["long_transfer"] and features["large"]:
+        motion_aware_force_floor = float(default_force) + 1.5
+
+    rubber_material_force_floor = None
+    if features["rubber"] and not features["high_speed"]:
+        rubber_material_force_floor = float(default_force) + 3.5
+
+    thin_wall_support_force_floor = None
+    if motion_rule_mode == "all" and features["thin_wall"] and available_support_contact_rules and not bool(specific_force_rules):
+        thin_wall_support_force_floor = float(default_force) + 4.0
+
+    heavy_metal_force_center_floor = None
+    if force_rule_mode == "all" and bool(specific_force_rules) and features["heavy"] and features["metal"] and not features["high_speed"]:
+        heavy_metal_force_center_floor = float(default_force) + 4.0
+
+    dynamic_heavy_metal_force_center_floor = None
+    if motion_rule_mode == "all" and available_motion_rules and force_rule_mode == "all" and bool(specific_force_rules) and features["heavy"] and features["high_speed"] and features["metal"]:
+        dynamic_heavy_metal_force_center_floor = float(default_force) + 3.0
+
+    static_smooth_metal_force_cap = None
+    dynamic_smooth_metal_force_cap = None
+    if features["smooth_metal"] and not features["heavy"]:
+        if features["high_speed"] and available_motion_rules and bool(specific_force_rules):
+            dynamic_smooth_metal_force_cap = float(default_force) - 6.0
+        elif not features["high_speed"]:
+            static_smooth_metal_force_cap = float(default_force) - 1.5
+
+    force_floor_candidates = [
+        candidate
+        for candidate in (
+            belief_force_floor,
+            composite_force_floor,
+            motion_aware_force_floor,
+            rubber_material_force_floor,
+            thin_wall_support_force_floor,
+            heavy_metal_force_center_floor,
+            dynamic_heavy_metal_force_center_floor,
+        )
+        if candidate is not None
+    ]
+    force_cap_candidates = [
+        candidate
+        for candidate in (
+            dynamic_smooth_metal_force_cap,
+            static_smooth_metal_force_cap,
+        )
+        if candidate is not None
+    ]
+
+    long_transfer_velocity_band = None
+    transport_velocity_floor = max(velocity_floors) if velocity_floors else None
+    transport_velocity_cap = min(velocity_caps) if velocity_caps else None
+    if features["heavy"] and features["high_speed"] and available_motion_rules:
+        transport_velocity_cap = min(float(default_velocity), transport_velocity_cap or float(default_velocity))
+    if velocity_bands:
+        lo = max(band[0] for band in velocity_bands)
+        hi = min(band[1] for band in velocity_bands)
+        if lo <= hi:
+            long_transfer_velocity_band = [round(lo, 4), round(hi, 4)]
+            transport_velocity_floor = max(transport_velocity_floor or lo, lo)
+            transport_velocity_cap = min(transport_velocity_cap or hi, hi)
+
+    long_transfer_placement_velocity_cap = None
+    if features["long_transfer"] and features["large"] and available_numeric_motion_rules:
+        precision_cap = 0.15 if belief.task_constraints.precision_priority < 0.85 else 0.14
+        long_transfer_placement_velocity_cap = round(max(0.12, min(transport_velocity_cap or default_velocity, precision_cap)), 4)
+
+    dynamic_smooth_metal_clearance_floor = None
+    if features["smooth_metal"] and features["high_speed"] and not features["heavy"] and available_motion_rules:
+        dynamic_smooth_metal_clearance_floor = 0.065
+
+    rubber_material_clearance_floor = None
+    if features["rubber"] and not features["high_speed"]:
+        rubber_material_clearance_floor = 0.06
+
+    thin_wall_support_clearance_cap = float(default_clearance) if (features["thin_wall"] and available_support_contact_rules and not features["high_speed"]) else None
+    long_transfer_numeric_clearance_floor = max(clearance_floors) if clearance_floors else None
+    long_transfer_clearance_target = None
+    if clearance_targets:
+        weighted_target = sum(clearance_targets) / len(clearance_targets)
+        long_transfer_clearance_target = weighted_target
+        if long_transfer_numeric_clearance_floor is not None:
+            long_transfer_clearance_target = max(
+                long_transfer_numeric_clearance_floor,
+                min(weighted_target, long_transfer_numeric_clearance_floor + 0.01),
+            )
+
+    clearance_floor_candidates = [
+        candidate
+        for candidate in (
+            0.062 if belief.task_constraints.stability_priority >= 0.82 and belief.object_state.dynamic_load_band == "high" else None,
+            0.055 if belief.task_constraints.stability_priority >= 0.82 and belief.object_state.dynamic_load_band != "high" else None,
+            rubber_material_clearance_floor,
+            dynamic_smooth_metal_clearance_floor,
+            long_transfer_numeric_clearance_floor,
+        )
+        if candidate is not None
+    ]
+    clearance_floor = max(clearance_floor_candidates) if clearance_floor_candidates else None
+    clearance_target = long_transfer_clearance_target
+
+    approach_height_target = None
+    if approach_targets:
+        approach_height_target = sum(approach_targets) / len(approach_targets)
+    elif belief.task_constraints.safety_priority >= 0.85 and belief.object_state.fragility_band == "high":
+        approach_height_target = max(default_height, 0.05)
+
+    long_transfer_alignment_target = None
+    if belief.task_constraints.required_alignment:
+        long_transfer_alignment_target = min(
+            0.95,
+            0.65
+            + 0.05 * min(2, len(alignment_rules))
+            + (0.05 if available_numeric_motion_rules else 0.0)
+            + (0.05 if bool(specific_force_rules) else 0.0),
+        )
+
+    long_transfer_lift_force_margin = 0.0
+    if belief.task_constraints.required_lift_margin:
+        long_transfer_lift_force_margin = min(
+            0.8,
+            0.25
+            + 0.10 * min(2, len(lift_stage_rules))
+            + (0.05 if available_alignment_rules else 0.0)
+            + (0.05 if available_numeric_motion_rules else 0.0),
+        )
+
+    long_transfer_alignment_force_margin = 0.0
+    if belief.task_constraints.required_alignment:
+        long_transfer_alignment_force_margin = min(
+            0.6,
+            0.25 + 0.5 * max(0.0, (long_transfer_alignment_target or 0.55) - 0.5),
+        )
+
+    motion_path_force_compensation = min(
+        2.0,
+        max(0.0, 10.0 * max(0.0, (clearance_target or default_clearance) - default_clearance)),
+    )
+    if approach_height_target is not None:
+        motion_path_force_compensation += min(0.8, 6.0 * max(0.0, approach_height_target - default_height))
+
+    hints = EvidenceConstraintHints(
+        force_floor=max(force_floor_candidates) if force_floor_candidates else None,
+        force_cap=min(force_cap_candidates) if force_cap_candidates else None,
+        transport_velocity_floor=transport_velocity_floor,
+        transport_velocity_cap=transport_velocity_cap,
+        placement_velocity_cap=long_transfer_placement_velocity_cap,
+        clearance_floor=clearance_floor,
+        clearance_target=clearance_target,
+        approach_height_target=approach_height_target,
+        alignment_target=long_transfer_alignment_target,
+        lift_force_margin=long_transfer_lift_force_margin,
+        transfer_force_margin=long_transfer_alignment_force_margin or (2.0 if features["smooth_metal"] and features["high_speed"] and not features["heavy"] else 0.0),
+        gripper_force_bias=motion_path_force_compensation,
+        source_notes=[
+            "belief_constraint_seed",
+            *(["numeric_motion_band"] if long_transfer_velocity_band is not None else []),
+            *(["specific_force_center"] if selected_force_rules else []),
+        ],
+    )
+    pre_solve_plan, seed_trace = synthesize_control_seed(
+        {
+            "gripper_force": default_force,
+            "approach_height": default_height,
+            "transport_velocity": default_velocity,
+            "lift_force": default_force,
+            "transfer_force": default_force,
+            "placement_velocity": default_velocity,
+            "transfer_alignment": 0.0,
+            "lift_clearance": default_clearance,
+        },
+        belief,
+        hints,
+    )
+    solved_plan, solver_trace = solve_control_plan(pre_solve_plan, belief)
+    calibration_notes = list(seed_trace["seed_notes"])
+    for note in solver_trace["solver_adjustment_notes"]:
+        if note not in calibration_notes:
+            calibration_notes.append(note)
+
+    dynamic_transport_mode = belief.task_constraints.preferred_transport_mode
+    high_speed_transfer_force_margin = 2.0 if features["smooth_metal"] and features["high_speed"] and not features["heavy"] else None
+    high_speed_placement_velocity_target = long_transfer_placement_velocity_cap if dynamic_transport_mode == "high_speed_low_friction" else None
+    long_transfer_lift_force_target = round(float(pre_solve_plan["lift_force"]), 4) if long_transfer_lift_force_margin > 0.0 else None
+
+    trace = {
+        "selected_rules": [
+            {
+                "entry_id": rule["entry_id"],
+                "category": rule["category"],
+                "clause": rule["clause"],
+                "score": rule["score"],
+                "matched_terms": rule["matched_terms"],
+                "force_candidates": rule["force_candidates"],
+                "rule_type": rule["rule_type"],
+            }
+            for rule in selected_rules
+        ],
+        "rule_count": len(rules),
+        "support_score": support_score,
+        "conflict_count": force_conflict,
+        "force_rule_mode": force_rule_mode,
+        "motion_rule_mode": motion_rule_mode,
+        **belief.to_trace_dict(),
+        "seed_mode": seed_trace["seed_mode"],
+        "seed_notes": seed_trace["seed_notes"],
+        "seed_hints": seed_trace["hints"],
+        "seed_plan": seed_trace["seed_plan"],
+        "matched_hint_keywords": list(matched_hint["keywords"]) if matched_hint is not None else [],
+        "available_specific_force_rules": available_specific_force_rules,
+        "suppressed_specific_force_rules": suppressed_specific_force_rules,
+        "available_motion_rules": available_motion_rules,
+        "suppressed_motion_rules": suppressed_motion_rules,
+        "available_support_contact_rules": available_support_contact_rules,
+        "available_numeric_motion_rules": available_numeric_motion_rules,
+        "available_alignment_rules": available_alignment_rules,
+        "available_lift_stage_rules": available_lift_stage_rules,
+        "used_specific_force_rules": bool(selected_force_rules) and not suppressed_specific_force_rules and bool(specific_force_rules),
+        "used_generic_force_rules": bool(generic_force_rules),
+        "used_motion_rules": available_motion_rules and not suppressed_motion_rules,
+        "used_support_contact_rules": available_support_contact_rules and not suppressed_motion_rules,
+        "used_alignment_rules": available_alignment_rules and not suppressed_motion_rules and dynamic_transport_mode == "long_transfer",
+        "used_lift_stage_rules": available_lift_stage_rules and not suppressed_motion_rules and long_transfer_lift_force_margin > 0.0,
+        "pre_solve_plan": pre_solve_plan,
+        "belief_force_floor": belief_force_floor,
+        "composite_force_floor": composite_force_floor,
+        "motion_aware_force_floor": motion_aware_force_floor,
+        "thin_wall_support_force_floor": thin_wall_support_force_floor,
+        "rubber_material_force_floor": rubber_material_force_floor,
+        "heavy_metal_force_center_floor": heavy_metal_force_center_floor,
+        "dynamic_heavy_metal_force_center_floor": dynamic_heavy_metal_force_center_floor,
+        "long_transfer_force_center_floor": max(force_floor_candidates) if features["long_transfer"] and features["large"] and force_floor_candidates else None,
+        "long_transfer_stage_force_floor": max(force_floor_candidates) if features["long_transfer"] and features["large"] and long_transfer_clearance_target is not None and force_floor_candidates else None,
+        "long_transfer_dynamic_force_margin": round(hints.gripper_force_bias, 4) if hints.gripper_force_bias > 0.0 else None,
+        "long_transfer_velocity_band": long_transfer_velocity_band,
+        "long_transfer_placement_velocity_cap": long_transfer_placement_velocity_cap,
+        "dynamic_transport_mode": dynamic_transport_mode,
+        "lift_force": round(float(solved_plan["lift_force"]), 4),
+        "long_transfer_lift_force_target": long_transfer_lift_force_target,
+        "long_transfer_lift_force_margin": round(long_transfer_lift_force_margin, 4) if long_transfer_lift_force_margin > 0.0 else None,
+        "transfer_force": round(float(solved_plan["transfer_force"]), 4),
+        "transfer_alignment": round(float(solved_plan["transfer_alignment"]), 4),
+        "long_transfer_alignment_target": long_transfer_alignment_target,
+        "long_transfer_alignment_force_margin": round(long_transfer_alignment_force_margin, 4) if long_transfer_alignment_force_margin > 0.0 else None,
+        "high_speed_transfer_force_margin": high_speed_transfer_force_margin,
+        "high_speed_placement_velocity_target": high_speed_placement_velocity_target,
+        "motion_aware_force_cap": min(force_cap_candidates) if force_cap_candidates else None,
+        "dynamic_smooth_metal_force_cap": dynamic_smooth_metal_force_cap,
+        "dynamic_smooth_metal_clearance_floor": dynamic_smooth_metal_clearance_floor,
+        "static_smooth_metal_force_cap": static_smooth_metal_force_cap,
+        "thin_wall_support_clearance_cap": thin_wall_support_clearance_cap,
+        "rubber_material_clearance_floor": rubber_material_clearance_floor,
+        "long_transfer_numeric_clearance_floor": long_transfer_numeric_clearance_floor,
+        "long_transfer_clearance_target": long_transfer_clearance_target,
+        "motion_path_force_compensation": round(motion_path_force_compensation, 4),
+        "solver_mode": solver_trace["solver_mode"],
+        "solver_selected_candidate": solver_trace["solver_selected_candidate"],
+        "solver_selected_score": solver_trace["solver_selected_score"],
+        "solver_score_breakdown": solver_trace["solver_score_breakdown"],
+        "solver_candidate_scores": solver_trace["solver_candidate_scores"],
+        "solver_seed_candidate": solver_trace["solver_seed_candidate"],
+        "solver_seed_score": solver_trace["solver_seed_score"],
+        "solver_local_search_iterations": solver_trace["solver_local_search_iterations"],
+        "solver_local_search_improvement": solver_trace["solver_local_search_improvement"],
+        "solver_local_search_trace": solver_trace["solver_local_search_trace"],
+        "solver_adjustment_notes": solver_trace["solver_adjustment_notes"],
+        "calibration_notes": calibration_notes,
+    }
+    return (
+        max(5.0, min(50.0, solved_plan["gripper_force"])),
+        max(0.02, min(0.08, solved_plan["approach_height"])),
+        max(0.12, min(0.8, solved_plan["transport_velocity"])),
+        max(0.03, min(0.14, solved_plan["lift_clearance"])),
+        max(solved_plan["gripper_force"], min(50.0, solved_plan["lift_force"])),
+        max(solved_plan["gripper_force"], min(50.0, solved_plan["transfer_force"])),
+        max(0.12, min(0.8, solved_plan["placement_velocity"])),
+        max(0.0, min(1.0, solved_plan["transfer_alignment"])),
+        trace,
     )
 
     force = default_force
@@ -1172,6 +1486,10 @@ class RAGController:
             "belief_state_coverage": trace["belief_state_coverage"],
             "uncertainty_conservative_mode": trace["uncertainty_conservative_mode"],
             "uncertainty_reasons": trace["uncertainty_reasons"],
+            "seed_mode": trace["seed_mode"],
+            "seed_notes": trace["seed_notes"],
+            "seed_hints": trace["seed_hints"],
+            "seed_plan": trace["seed_plan"],
             "solver_mode": trace["solver_mode"],
             "solver_selected_candidate": trace["solver_selected_candidate"],
             "solver_selected_score": trace["solver_selected_score"],
@@ -1309,6 +1627,10 @@ class RAGController:
                     "belief_state_coverage": trace["belief_state_coverage"],
                     "uncertainty_conservative_mode": trace["uncertainty_conservative_mode"],
                     "uncertainty_reasons": trace["uncertainty_reasons"],
+                    "seed_mode": trace["seed_mode"],
+                    "seed_notes": trace["seed_notes"],
+                    "seed_hints": trace["seed_hints"],
+                    "seed_plan": trace["seed_plan"],
                     "solver_mode": trace["solver_mode"],
                     "solver_selected_candidate": trace["solver_selected_candidate"],
                     "solver_selected_score": trace["solver_selected_score"],
@@ -1413,3 +1735,29 @@ class RAGController:
             signal=signal,
             step=adjustment_step,
         )
+
+    def get_params_after_observation(
+        self,
+        task_description: str,
+        previous_params: dict[str, Any],
+        observation: dict[str, Any],
+        adjustment_step: float = 4.0,
+    ) -> dict[str, Any]:
+        from .feedback import (
+            build_feedback_replan_request,
+            build_feedback_signal_from_observation,
+            suggest_force_adjustment,
+        )
+
+        signal = build_feedback_signal_from_observation(previous_params, observation)
+        suggestion = suggest_force_adjustment(signal)
+        replan_request = build_feedback_replan_request(
+            previous_params,
+            signal,
+            suggestion,
+            step=adjustment_step,
+        )
+        replan_request["observation_index"] = observation.get("observation_index")
+        replan_request["trigger_reason"] = observation.get("trigger_reason")
+        replan_request["observation_stage"] = observation.get("stage")
+        return replan_control_plan(previous_params, replan_request)

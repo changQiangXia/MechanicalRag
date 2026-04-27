@@ -15,10 +15,10 @@
 
 截至 `2026-04-27 UTC`：
 
-- 当前仓库代码语义对应 `outputs/current_core_thickening/` 这次 control-core thickening 验证
+- 当前仓库代码语义对应 `outputs/current_observer_step_replan/` 这次 observer / step-replan 闭环验证
 - `outputs/current/` 继续保留为 `round19` 历史基线
 - `round20` 作为 placement-stage 实验归档保留在 `outputs/current_round20_sim/`
-- README、overview、simulation 文档需要围绕“历史基线 + 最新 thickening 实验”两层口径组织，而不是继续写成单一 `round19 current`
+- README、overview、simulation 文档需要围绕“历史基线 + 最新 observer-step-replan 闭环”两层口径组织，而不是继续写成单一 `round19 current`
 
 ## 3. 顶层结构
 
@@ -82,26 +82,26 @@ QA 流程被拆成三段：
 
 - `simulation/rag_controller.py`
   - 只基于知识库证据和任务描述生成参数
-  - 先做规则聚合，再把中间量交给 `control_core`
+  - 先做 evidence / belief 提炼，再把 seed synthesis 和 local solve 交给 `control_core`
   - 不再使用 benchmark 参考范围去 clamp 参数
 
 - `simulation/control_core.py`
-  - 把规则聚合后的中间量提升为显式 `ObjectBeliefState`
+  - 把 evidence 提升为显式 `ObjectBeliefState`
   - 单独建模 `TaskConstraintSet`、`UncertaintyProfile` 与 `StageIntent`
-  - 通过 lightweight solver 在多组 candidate control plan 中做选择
-  - 向上层返回 `belief_state`、`belief_state_coverage`、`uncertainty_conservative_mode`、`solver_selected_candidate` 等诊断字段
-  - 但它当前本质上仍是规则派生的符号化中间层与候选重打分适配层，不是观测后验估计器或真正的优化求解器
+  - 通过 `belief_constraint_synthesis` 先生成 seed，再用 lightweight solver 在多组 candidate control plan 中做选择
+  - 向上层返回 `belief_state`、`seed_mode`、`seed_plan`、`belief_state_coverage`、`uncertainty_conservative_mode`、`solver_selected_candidate` 等诊断字段
+  - 但它当前本质上仍是轻量 belief / uncertainty / local solve 层，不是完整观测后验估计器或真正的优化求解器
 
 - `simulation/env.py`
   - 根据质量、摩擦、fragility、尺寸、接近高度等物体属性推导内部力学窗口
   - 成功判定不再接收外部 `ideal_force_range`
-  - 向上层暴露 `slip_risk`、`compression_risk`、`stability_score`
-  - 对长距离动态任务还显式输出 `lift_hold_risk`、`transfer_sway_risk`、`placement_settle_risk`
+  - 向上层暴露执行期 `observer_trace`
+  - 对长距离动态任务显式输出 `lift_hold_risk`、`transfer_sway_risk`、`placement_settle_risk`
 
 - `simulation/feedback.py`
   - 根据环境反馈调参
   - 不再读取真值边界
-  - 当前显式使用 stage-specific risk 做局部回调，而不是只依赖单一 `stability_score`
+  - 当前显式使用 stage-specific risk 做 step 级局部回调，而不是只依赖单一 `stability_score`
 
 - `simulation/tasks.py`
   - `reference_force_range` 只用于分析输出
@@ -142,7 +142,7 @@ QA 流程被拆成三段：
 
 输出目录：
 
-- `outputs/current_core_thickening/`
+- `outputs/current_observer_step_replan/`
 - `outputs/current/`
 - `outputs/current_round20_sim/`
 
@@ -156,6 +156,6 @@ QA 流程被拆成三段：
 
 - QA 仍然保留受控模板，但模板现在服务于“证据约束回答”，不再直接伪装成独立方法增益。
 - 仿真仍然是简化控制问题，不是完整机械臂控制栈；但评测边界已经比之前干净。
-- control-core thickening 目前只带来了轻微平均增益，并没有统一优于 `round19`；中等难度任务上的回落说明 belief / solver 层之后还需要 observer / local replan。
-- 更具体地说，当前 `belief_state` 主要是任务关键词和规则命中的派生状态，`uncertainty_profile` 主要是 coverage / gap 统计，`solver` 主要是候选模板重打分，而且它进入主链的位置仍偏后。
+- observer / step-replan 闭环已经补上，且 `rag_feedback` 相对 `rag` seed-only 路径有明显提升；但 static heavy-metal 任务仍完全失败。
+- 更具体地说，当前 `belief_state` 主要仍是知识证据派生状态，执行期观测主要进入 feedback replan；`uncertainty_profile` 仍偏 coverage / gap 统计，solver 仍是轻量 local search。
 - 为兼顾现有运行成本，仍保留 `direct_llm` / `fixed` / `rag_learned` 等基线，但它们都挂在统一 benchmark runner 上。
