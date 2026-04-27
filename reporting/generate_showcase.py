@@ -16,6 +16,144 @@ def _format_pct(value: float) -> str:
     return f"{value * 100:.2f}%"
 
 
+def _method_aliases(method: str) -> list[str]:
+    aliases = [method]
+    if method == "rag":
+        aliases.append("rag_feedback")
+    elif method == "rag_feedback":
+        aliases.append("rag")
+    return aliases
+
+
+def _method_entry(row: dict, method: str) -> dict:
+    methods = row.get("methods", {})
+    for alias in _method_aliases(method):
+        entry = methods.get(alias)
+        if entry is not None:
+            return entry
+    return {}
+
+
+def _method_metric(row: dict, method: str, field: str, default=None):
+    entry = _method_entry(row, method)
+    if field in entry:
+        return entry[field]
+    for alias in _method_aliases(method):
+        flat_key = f"{alias}_{field}"
+        if flat_key in row:
+            return row[flat_key]
+    return default
+
+
+def _plan_mean(row: dict, method: str, field: str, default=None):
+    entry = _method_entry(row, method)
+    value = entry.get("executed_plan_stats", {}).get("mean", {}).get(field)
+    if value is not None:
+        return value
+    for alias in _method_aliases(method):
+        for flat_key in (f"{alias}_{field}_mean", f"{alias}_{field}"):
+            if flat_key in row:
+                return row[flat_key]
+    return default
+
+
+def _flatten_method_row(row: dict) -> dict:
+    flat = dict(row)
+    methods = row.get("methods")
+    if not isinstance(methods, dict):
+        return flat
+    for method, payload in methods.items():
+        for alias in _method_aliases(method):
+            for key, value in payload.items():
+                if key in {
+                    "seed_plan",
+                    "executed_plan_stats",
+                    "planner_diagnostics",
+                    "failure_rates",
+                    "avg_risks",
+                    "reference_force_deviation_stats",
+                }:
+                    continue
+                flat[f"{alias}_{key}"] = value
+
+            executed = payload.get("executed_plan_stats", {})
+            for key, value in executed.get("mean", {}).items():
+                flat[f"{alias}_{key}"] = value
+                flat[f"{alias}_{key}_mean"] = value
+            for key, value in executed.items():
+                if key.endswith("_mode"):
+                    flat[f"{alias}_{key[:-5]}"] = value
+
+            planner = payload.get("planner_diagnostics", {})
+            for key, value in planner.items():
+                flat[f"{alias}_{key}"] = value
+                if key.endswith("_mode"):
+                    flat[f"{alias}_{key[:-5]}"] = value
+
+            failure_rates = payload.get("failure_rates", {})
+            for key, value in failure_rates.items():
+                flat[f"{alias}_{key}"] = value
+                if key.endswith("_mean"):
+                    flat[f"{alias}_{key.replace('_fail_mean', '_fail_rate_mean')}"] = value
+                if key.endswith("_std"):
+                    flat[f"{alias}_{key.replace('_fail_std', '_fail_rate_std')}"] = value
+
+            avg_risks = payload.get("avg_risks", {})
+            for key, value in avg_risks.items():
+                flat[f"{alias}_avg_{key}"] = value
+
+            ref_stats = payload.get("reference_force_deviation_stats", {})
+            if ref_stats.get("mean") is not None:
+                flat[f"{alias}_reference_force_deviation"] = ref_stats["mean"]
+                flat[f"{alias}_reference_force_deviation_mean"] = ref_stats["mean"]
+            for key, value in ref_stats.items():
+                flat[f"{alias}_reference_force_deviation_{key}"] = value
+    return flat
+
+
+def _flatten_benchmark_row(row: dict) -> dict:
+    flat = dict(row)
+    scalar_fields = (
+        "success_rate",
+        "avg_time_sec",
+        "avg_steps",
+        "avg_distance_error",
+        "avg_slip_risk",
+        "avg_compression_risk",
+        "avg_velocity_risk",
+        "avg_clearance_risk",
+        "avg_lift_hold_risk",
+        "avg_transfer_sway_risk",
+        "avg_placement_settle_risk",
+        "avg_stability_score",
+        "physics_fail_rate",
+        "lift_hold_fail_rate",
+        "transfer_sway_fail_rate",
+        "placement_settle_fail_rate",
+    )
+    for field in scalar_fields:
+        if field in flat and f"{field}_mean" not in flat:
+            flat[f"{field}_mean"] = flat[field]
+
+    executed = row.get("executed_plan_stats", {})
+    for key, value in executed.get("mean", {}).items():
+        flat[key] = value
+        flat[f"{key}_mean"] = value
+    for key, value in executed.items():
+        if key.endswith("_mode"):
+            flat[key[:-5]] = value
+
+    planner = row.get("planner_diagnostics", {})
+    for key, value in planner.items():
+        flat[key] = value
+
+    ref_stats = row.get("reference_force_deviation_stats", {})
+    if ref_stats.get("mean") is not None:
+        flat["reference_force_deviation"] = ref_stats["mean"]
+        flat["reference_force_deviation_mean"] = ref_stats["mean"]
+    return flat
+
+
 def build_summary(
     qa_path: str,
     sim_compare_path: str,
@@ -24,9 +162,9 @@ def build_summary(
     output_path: str,
 ) -> None:
     qa_detail = _load_json(qa_path)
-    sim_compare = _load_json(sim_compare_path)
-    sim_multi_seed = _load_json(sim_multi_seed_path)
-    sim_benchmark = _load_json(sim_benchmark_path)
+    sim_compare = [_flatten_method_row(row) for row in _load_json(sim_compare_path)]
+    sim_multi_seed = [_flatten_method_row(row) for row in _load_json(sim_multi_seed_path)]
+    sim_benchmark = [_flatten_benchmark_row(row) for row in _load_json(sim_benchmark_path)]
 
     summaries = qa_detail["summaries"]
     methods = ("direct_llm", "base_rag", "improved_rag", "problem_solving_rag")

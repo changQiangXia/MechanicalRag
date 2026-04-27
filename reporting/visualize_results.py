@@ -31,6 +31,70 @@ METHOD_LABELS = {
 }
 
 
+def _method_aliases(method: str) -> list[str]:
+    aliases = [method]
+    if method == "rag":
+        aliases.append("rag_feedback")
+    elif method == "rag_feedback":
+        aliases.append("rag")
+    return aliases
+
+
+def _method_entry(row: dict, method: str) -> dict:
+    methods = row.get("methods", {})
+    for alias in _method_aliases(method):
+        entry = methods.get(alias)
+        if entry is not None:
+            return entry
+    return {}
+
+
+def _method_metric(row: dict, method: str, field: str, default=np.nan):
+    entry = _method_entry(row, method)
+    if field in entry:
+        return entry[field]
+    for alias in _method_aliases(method):
+        flat_key = f"{alias}_{field}"
+        if flat_key in row:
+            return row[flat_key]
+    return default
+
+
+def _plan_mean(row: dict, method: str, field: str, default=np.nan):
+    entry = _method_entry(row, method)
+    value = entry.get("executed_plan_stats", {}).get("mean", {}).get(field)
+    if value is not None:
+        return value
+    for alias in _method_aliases(method):
+        for flat_key in (f"{alias}_{field}", f"{alias}_{field}_mean"):
+            if flat_key in row:
+                return row[flat_key]
+    return default
+
+
+def _planner_metric(row: dict, method: str, field: str, default=np.nan):
+    entry = _method_entry(row, method)
+    value = entry.get("planner_diagnostics", {}).get(field)
+    if value is not None:
+        return value
+    for alias in _method_aliases(method):
+        flat_key = f"{alias}_{field}"
+        if flat_key in row:
+            return row[flat_key]
+    return default
+
+
+def _reference_force_deviation_mean(row: dict, method: str, default=np.nan):
+    entry = _method_entry(row, method)
+    stats = entry.get("reference_force_deviation_stats", {})
+    if isinstance(stats, dict) and stats.get("mean") is not None:
+        return stats["mean"]
+    value = _method_metric(row, method, "reference_force_deviation", default)
+    if isinstance(value, dict):
+        return value.get("mean", default)
+    return value
+
+
 def _save(fig: plt.Figure, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
@@ -41,6 +105,9 @@ def _save(fig: plt.Figure, path: Path) -> None:
 def _extract_methods_from_sim_rows(sim_rows: list[dict], suffix: str = "_success_rate") -> list[str]:
     methods = set()
     for row in sim_rows:
+        if "methods" in row:
+            methods.update(row.get("methods", {}).keys())
+            continue
         for key in row:
             if key.endswith(suffix):
                 methods.add(key[: -len(suffix)])
@@ -160,7 +227,7 @@ def plot_sim_success(sim_rows: list[dict], output_dir: Path) -> None:
     fig, ax = plt.subplots(figsize=(12, 5))
     offsets = np.linspace(-width, width, num=len(methods))
     for offset, method in zip(offsets, methods):
-        values = [row.get(f"{method}_success_rate", 0.0) for row in sim_rows]
+        values = [float(_method_metric(row, method, "success_rate", 0.0)) for row in sim_rows]
         ax.bar(x + offset, values, width=width, label=METHOD_LABELS.get(method, method))
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("Success Rate")
@@ -180,8 +247,11 @@ def plot_sim_success_ci(sim_rows: list[dict], output_dir: Path) -> None:
     fig, ax = plt.subplots(figsize=(12, 5))
     offsets = np.linspace(-width, width, num=len(methods))
     for offset, method in zip(offsets, methods):
-        values = np.array([row.get(f"{method}_success_rate", 0.0) for row in sim_rows], dtype=float)
-        cis = [row.get(f"{method}_success_rate_ci95", [value, value]) for row, value in zip(sim_rows, values)]
+        values = np.array([_method_metric(row, method, "success_rate", 0.0) for row in sim_rows], dtype=float)
+        cis = [
+            _method_metric(row, method, "success_rate_ci95", [value, value])
+            for row, value in zip(sim_rows, values)
+        ]
         yerr_low = [max(0.0, value - ci[0]) for value, ci in zip(values, cis)]
         yerr_high = [max(0.0, ci[1] - value) for value, ci in zip(values, cis)]
         ax.bar(
@@ -210,8 +280,8 @@ def plot_sim_time_steps(sim_rows: list[dict], output_dir: Path) -> None:
 
     fig, axes = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
     for offset, method in zip(offsets, methods):
-        times = [row.get(f"{method}_avg_time_sec", 0.0) for row in sim_rows]
-        steps = [row.get(f"{method}_avg_steps", 0.0) for row in sim_rows]
+        times = [float(_method_metric(row, method, "avg_time_sec", 0.0)) for row in sim_rows]
+        steps = [float(_method_metric(row, method, "avg_steps", 0.0)) for row in sim_rows]
         axes[0].bar(x + offset, times, width=width, label=METHOD_LABELS.get(method, method))
         axes[1].bar(x + offset, steps, width=width, label=METHOD_LABELS.get(method, method))
     axes[0].set_ylabel("Avg Sim Time (s)")
@@ -234,7 +304,7 @@ def plot_sim_force(sim_rows: list[dict], output_dir: Path) -> None:
         lo, hi = row["reference_force_range"]
         ax.vlines(row_idx, lo, hi, color="#999999", linewidth=8, alpha=0.4)
     for method in methods:
-        forces = [row.get(f"{method}_gripper_force", np.nan) for row in sim_rows]
+        forces = [_plan_mean(row, method, "gripper_force") for row in sim_rows]
         ax.plot(x, forces, marker="o", linewidth=2, label=METHOD_LABELS.get(method, method))
     ax.set_ylabel("Gripper Force (N)")
     ax.set_title("Predicted Force and Reference Range")
@@ -253,7 +323,7 @@ def plot_sim_distance_error(sim_rows: list[dict], output_dir: Path) -> None:
     fig, ax = plt.subplots(figsize=(12, 5))
     offsets = np.linspace(-width, width, num=len(methods))
     for offset, method in zip(offsets, methods):
-        values = [row.get(f"{method}_avg_distance_error", 0.0) for row in sim_rows]
+        values = [float(_method_metric(row, method, "avg_distance_error", 0.0)) for row in sim_rows]
         ax.bar(x + offset, values, width=width, label=METHOD_LABELS.get(method, method))
     ax.set_ylabel("Avg Distance Error")
     ax.set_title("Simulation Distance Error")
@@ -272,7 +342,10 @@ def plot_sim_force_deviation(sim_rows: list[dict], output_dir: Path) -> None:
     fig, ax = plt.subplots(figsize=(12, 5))
     offsets = np.linspace(-width, width, num=len(methods))
     for offset, method in zip(offsets, methods):
-        values = [row.get(f"{method}_reference_force_deviation", 0.0) for row in sim_rows]
+        values = [
+            float(_reference_force_deviation_mean(row, method, 0.0))
+            for row in sim_rows
+        ]
         ax.bar(x + offset, values, width=width, label=METHOD_LABELS.get(method, method))
     ax.set_ylabel("Absolute Force Deviation (N)")
     ax.set_title("Deviation from Reference Force Center")
@@ -291,7 +364,7 @@ def plot_sim_approach_height(sim_rows: list[dict], output_dir: Path) -> None:
     reference = [row.get("reference_approach_height", np.nan) for row in sim_rows]
     ax.plot(x, reference, marker="s", linewidth=2.2, linestyle="--", color="#444444", label="Reference")
     for method in methods:
-        heights = [row.get(f"{method}_approach_height", np.nan) for row in sim_rows]
+        heights = [_plan_mean(row, method, "approach_height") for row in sim_rows]
         ax.plot(x, heights, marker="o", linewidth=2, label=METHOD_LABELS.get(method, method))
     ax.set_ylabel("Approach Height (m)")
     ax.set_title("Approach Height Comparison")
@@ -308,8 +381,8 @@ def plot_sim_control_plan(sim_rows: list[dict], output_dir: Path) -> None:
 
     fig, axes = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
     for method in methods:
-        velocities = [row.get(f"{method}_transport_velocity", np.nan) for row in sim_rows]
-        clearances = [row.get(f"{method}_lift_clearance", np.nan) for row in sim_rows]
+        velocities = [_plan_mean(row, method, "transport_velocity") for row in sim_rows]
+        clearances = [_plan_mean(row, method, "lift_clearance") for row in sim_rows]
         axes[0].plot(x, velocities, marker="o", linewidth=2, label=METHOD_LABELS.get(method, method))
         axes[1].plot(x, clearances, marker="o", linewidth=2, label=METHOD_LABELS.get(method, method))
     axes[0].set_ylabel("Transport Velocity (m/s)")
@@ -325,10 +398,18 @@ def plot_sim_control_plan(sim_rows: list[dict], output_dir: Path) -> None:
 def plot_sim_success_gain(sim_rows: list[dict], output_dir: Path) -> None:
     tasks = _task_names(sim_rows)
     x = np.arange(len(tasks))
-    rag_gain_vs_direct = [row.get("rag_success_rate", 0.0) - row.get("direct_llm_success_rate", 0.0) for row in sim_rows]
-    heuristic_key = "task_heuristic_success_rate" if any("task_heuristic_success_rate" in row for row in sim_rows) else "fixed_success_rate"
-    rag_gain_vs_heuristic = [row.get("rag_success_rate", 0.0) - row.get(heuristic_key, 0.0) for row in sim_rows]
-    heuristic_label = "RAG - Task Heuristic" if heuristic_key == "task_heuristic_success_rate" else "RAG - Fixed"
+    rag_gain_vs_direct = [
+        float(_method_metric(row, "rag", "success_rate", 0.0))
+        - float(_method_metric(row, "direct_llm", "success_rate", 0.0))
+        for row in sim_rows
+    ]
+    heuristic_method = "task_heuristic" if any(_method_metric(row, "task_heuristic", "success_rate", np.nan) == _method_metric(row, "task_heuristic", "success_rate", np.nan) for row in sim_rows) else "fixed"
+    rag_gain_vs_heuristic = [
+        float(_method_metric(row, "rag", "success_rate", 0.0))
+        - float(_method_metric(row, heuristic_method, "success_rate", 0.0))
+        for row in sim_rows
+    ]
+    heuristic_label = "RAG - Task Heuristic" if heuristic_method == "task_heuristic" else "RAG - Fixed"
 
     width = 0.34
     fig, ax = plt.subplots(figsize=(12, 5))
@@ -356,7 +437,10 @@ def plot_sim_split_summary(sim_rows: list[dict], output_dir: Path) -> None:
         values = []
         for split in splits:
             split_rows = [row for row in sim_rows if row.get("task_split") == split]
-            metric = np.mean([row.get(f"{method}_success_rate", 0.0) for row in split_rows]) if split_rows else 0.0
+            metric = (
+                np.mean([_method_metric(row, method, "success_rate", 0.0) for row in split_rows])
+                if split_rows else 0.0
+            )
             values.append(metric)
         ax.bar(x + offset, values, width=width, label=METHOD_LABELS.get(method, method))
     ax.set_ylim(0, 1.05)
@@ -377,8 +461,8 @@ def plot_multi_seed_success(sim_rows: list[dict], output_dir: Path) -> None:
     fig, ax = plt.subplots(figsize=(12, 5))
     offsets = np.linspace(-width, width, num=len(methods))
     for offset, method in zip(offsets, methods):
-        means = [row.get(f"{method}_success_rate_mean", 0.0) for row in sim_rows]
-        stds = [row.get(f"{method}_success_rate_std", 0.0) for row in sim_rows]
+        means = [float(_method_metric(row, method, "success_rate_mean", 0.0)) for row in sim_rows]
+        stds = [float(_method_metric(row, method, "success_rate_std", 0.0)) for row in sim_rows]
         ax.bar(x + offset, means, width=width, yerr=stds, capsize=3, label=METHOD_LABELS.get(method, method))
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("Mean Success Rate")
@@ -392,9 +476,9 @@ def plot_multi_seed_success(sim_rows: list[dict], output_dir: Path) -> None:
 def plot_sim_belief_diagnostics(sim_rows: list[dict], output_dir: Path) -> None:
     tasks = _task_names(sim_rows)
     x = np.arange(len(tasks))
-    belief_coverages = [row.get("rag_belief_state_coverage_mean", np.nan) for row in sim_rows]
-    conservative_rates = [row.get("rag_uncertainty_conservative_mode_mean", np.nan) for row in sim_rows]
-    solver_labels = [str(row.get("rag_solver_selected_candidate", "n/a")) for row in sim_rows]
+    belief_coverages = [_planner_metric(row, "rag", "belief_state_coverage_mean", np.nan) for row in sim_rows]
+    conservative_rates = [_planner_metric(row, "rag", "uncertainty_conservative_mode_mean", np.nan) for row in sim_rows]
+    solver_labels = [str(_planner_metric(row, "rag", "solver_selected_candidate_mode", "n/a")) for row in sim_rows]
 
     fig, axes = plt.subplots(2, 1, figsize=(12, 7), sharex=True)
     axes[0].bar(x, belief_coverages, color="#4c956c")
@@ -454,7 +538,11 @@ def main() -> None:
     if multi_seed_path.exists():
         multi_seed_rows = json.loads(multi_seed_path.read_text(encoding="utf-8"))
         plot_multi_seed_success(multi_seed_rows, output_dir)
-        if any("rag_belief_state_coverage_mean" in row for row in multi_seed_rows):
+        if any(
+            _planner_metric(row, "rag", "belief_state_coverage_mean", np.nan)
+            == _planner_metric(row, "rag", "belief_state_coverage_mean", np.nan)
+            for row in multi_seed_rows
+        ):
             plot_sim_belief_diagnostics(multi_seed_rows, output_dir)
 
     print(f"图表已生成到: {output_dir}")
