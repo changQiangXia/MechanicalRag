@@ -13,12 +13,12 @@
 
 本设计文档描述仓库主线如何整理成可维护工程骨架，也记录当前有效版本的边界。
 
-截至 `2026-04-24 UTC`：
+截至 `2026-04-27 UTC`：
 
-- 当前 authoritative 主线固定为 `outputs/current/`，对应 `round19`
-- `round20` 已完整执行。结果没有超过 `round19`，主线继续保持 `round19`
-- 仓库代码语义、README、overview 与 simulation 文档现在都已经重新对齐到 `round19 current`
-- `round20` 作为实验归档保留在 `outputs/current_round20_sim/` 与 round20 checklist 中
+- 当前仓库代码语义对应 `outputs/current_core_thickening/` 这次 control-core thickening 验证
+- `outputs/current/` 继续保留为 `round19` 历史基线
+- `round20` 作为 placement-stage 实验归档保留在 `outputs/current_round20_sim/`
+- README、overview、simulation 文档需要围绕“历史基线 + 最新 thickening 实验”两层口径组织，而不是继续写成单一 `round19 current`
 
 ## 3. 顶层结构
 
@@ -60,32 +60,12 @@ QA 流程被拆成三段：
 1. 查询理解
    - 输出 `QueryPlan`
    - 包含问题类型、focus terms、object terms、query expansions、preferred categories
-
 2. 证据选择
    - 统一从知识库条目向量库中检索
    - 显式产出 `evidence_trace`
-   - 用 lexical hits、object hits、category bonus、semantic score 排序
-
 3. 约束回答
-   - 先尝试基于证据片段直接抽取/压缩
+   - 先尝试基于证据片段直接抽取 / 压缩
    - 只有必要时才走 LLM fallback
-   - 输出 `selected_clauses`，保证回答可追溯
-
-### 4.3 评测设计
-
-`qa/evaluation.py` 输出两层统计：
-
-- 总体 summary
-- split-wise summary
-
-数据划分：
-
-- `core`
-- `paraphrase`
-- `robustness`
-- `holdout`
-
-这样可以把“熟题命中”和“改写/扰动/未见题稳健性”拆开看，避免只看一个总分。
 
 ## 5. 仿真设计
 
@@ -102,16 +82,25 @@ QA 流程被拆成三段：
 
 - `simulation/rag_controller.py`
   - 只基于知识库证据和任务描述生成参数
+  - 先做规则聚合，再把中间量交给 `control_core`
   - 不再使用 benchmark 参考范围去 clamp 参数
+
+- `simulation/control_core.py`
+  - 把规则聚合后的中间量提升为显式 `ObjectBeliefState`
+  - 单独建模 `TaskConstraintSet`、`UncertaintyProfile` 与 `StageIntent`
+  - 通过 lightweight solver 在多组 candidate control plan 中做选择
+  - 向上层返回 `belief_state`、`belief_state_coverage`、`uncertainty_conservative_mode`、`solver_selected_candidate` 等诊断字段
 
 - `simulation/env.py`
   - 根据质量、摩擦、fragility、尺寸、接近高度等物体属性推导内部力学窗口
   - 成功判定不再接收外部 `ideal_force_range`
-  - 向上层只暴露 `slip_risk`、`compression_risk`、`stability_score`
+  - 向上层暴露 `slip_risk`、`compression_risk`、`stability_score`
+  - 对长距离动态任务还显式输出 `lift_hold_risk`、`transfer_sway_risk`、`placement_settle_risk`
 
 - `simulation/feedback.py`
   - 根据环境反馈调参
   - 不再读取真值边界
+  - 当前显式使用 stage-specific risk 做局部回调，而不是只依赖单一 `stability_score`
 
 - `simulation/tasks.py`
   - `reference_force_range` 只用于分析输出
@@ -152,8 +141,9 @@ QA 流程被拆成三段：
 
 输出目录：
 
+- `outputs/current_core_thickening/`
 - `outputs/current/`
-- `outputs/visualizations/`
+- `outputs/current_round20_sim/`
 
 历史与归档：
 
@@ -165,4 +155,5 @@ QA 流程被拆成三段：
 
 - QA 仍然保留受控模板，但模板现在服务于“证据约束回答”，不再直接伪装成独立方法增益。
 - 仿真仍然是简化控制问题，不是完整机械臂控制栈；但评测边界已经比之前干净。
+- control-core thickening 目前只带来了轻微平均增益，并没有统一优于 `round19`；中等难度任务上的回落说明 belief / solver 层之后还需要 observer / local replan。
 - 为兼顾现有运行成本，仍保留 `direct_llm` / `fixed` / `rag_learned` 等基线，但它们都挂在统一 benchmark runner 上。
