@@ -192,6 +192,191 @@ def _trial_records_path(output_path: str) -> Path:
     return path.with_name(f"{path.stem}_trial_records{path.suffix}")
 
 
+def _rounded_mean(values: list[float]) -> float:
+    return round(statistics.mean(values), 4) if values else 0.0
+
+
+def _rounded_std(values: list[float]) -> float:
+    return round(statistics.stdev(values), 4) if len(values) > 1 else 0.0
+
+
+def _task_contexts_from_results(*result_lists: list[BenchmarkResult]) -> list[tuple[TaskConfig | None, BenchmarkResult | None]]:
+    contexts: list[tuple[TaskConfig | None, BenchmarkResult | None]] = []
+    seen: set[str] = set()
+    known_tasks = {task.task_id: task for task in BENCHMARK_TASKS}
+    for task in BENCHMARK_TASKS:
+        contexts.append((task, None))
+        seen.add(task.task_id)
+    for results in result_lists:
+        for result in results:
+            if result.task_id in seen:
+                continue
+            contexts.append((known_tasks.get(result.task_id), result))
+            seen.add(result.task_id)
+    return contexts
+
+
+def _task_row_metadata(
+    task: TaskConfig | None,
+    fallback_result: BenchmarkResult | None,
+) -> dict:
+    assert task is not None or fallback_result is not None
+    if task is not None:
+        return {
+            "task_id": task.task_id,
+            "task_label": task_label(task),
+            "task_description": task.description,
+            "task_split": task.split,
+            "challenge_tags": list(task.challenge_tags),
+            "reference_force_range": list(task.reference_force_range),
+            "reference_force_center": round(reference_force_center(task), 4),
+            "reference_approach_height": reference_approach_height(task),
+        }
+    assert fallback_result is not None
+    return {
+        "task_id": fallback_result.task_id,
+        "task_label": fallback_result.task_description,
+        "task_description": fallback_result.task_description,
+        "task_split": fallback_result.task_split,
+        "challenge_tags": [],
+        "reference_force_range": list(fallback_result.reference_force_range),
+        "reference_force_center": None,
+        "reference_approach_height": None,
+    }
+
+
+def _method_summary(result: BenchmarkResult) -> dict:
+    return {
+        "success_rate": round(result.success_rate, 4),
+        "success_count": result.success_count,
+        "success_rate_ci95": [round(result.ci95_low, 4), round(result.ci95_high, 4)],
+        "avg_time_sec": round(result.avg_time, 4),
+        "avg_steps": round(result.avg_steps, 2),
+        "avg_distance_error": round(result.avg_distance_error, 4),
+        "reference_force_deviation_stats": result.reference_force_deviation_stats,
+        "avg_risks": {
+            "slip_risk": round(result.avg_slip_risk, 4),
+            "compression_risk": round(result.avg_compression_risk, 4),
+            "velocity_risk": round(result.avg_velocity_risk, 4),
+            "clearance_risk": round(result.avg_clearance_risk, 4),
+            "lift_hold_risk": round(result.avg_lift_hold_risk, 4),
+            "transfer_sway_risk": round(result.avg_transfer_sway_risk, 4),
+            "placement_settle_risk": round(result.avg_placement_settle_risk, 4),
+            "stability_score": round(result.avg_stability_score, 4),
+        },
+        "failure_rates": {
+            "physics_fail": round(result.physics_fail_rate, 4),
+            "lift_hold_fail": round(result.lift_hold_fail_rate, 4),
+            "transfer_sway_fail": round(result.transfer_sway_fail_rate, 4),
+            "placement_settle_fail": round(result.placement_settle_fail_rate, 4),
+            "dominant_failure_mode": result.dominant_failure_mode,
+        },
+        "seed_plan": result.seed_plan,
+        "executed_plan_stats": result.executed_plan_stats,
+        "planner_diagnostics": result.planner_diagnostics,
+    }
+
+
+def _aggregate_nested_plan_stats(task_runs: list[BenchmarkResult]) -> dict:
+    plans = []
+    for run in task_runs:
+        plan = dict(run.executed_plan_stats.get("mean", {}))
+        for field in CATEGORICAL_PLAN_FIELDS:
+            mode_key = f"{field}_mode"
+            if mode_key in run.executed_plan_stats:
+                plan[field] = run.executed_plan_stats[mode_key]
+        plans.append(plan)
+    return _aggregate_plan_stats(plans)
+
+
+def _aggregate_nested_scalar_stats(task_runs: list[BenchmarkResult]) -> dict:
+    values = [
+        float(run.reference_force_deviation_stats["mean"])
+        for run in task_runs
+        if run.reference_force_deviation_stats.get("mean") is not None
+    ]
+    stats = _aggregate_scalar_stats(values)
+    return {key: round(value, 4) for key, value in stats.items()}
+
+
+def _aggregate_planner_diagnostics(task_runs: list[BenchmarkResult]) -> dict:
+    summary: dict[str, object] = {}
+    keys = sorted(
+        {
+            key
+            for run in task_runs
+            for key in run.planner_diagnostics
+        }
+    )
+    for key in keys:
+        values = [run.planner_diagnostics[key] for run in task_runs if key in run.planner_diagnostics]
+        if not values:
+            continue
+        if all(isinstance(value, bool) for value in values):
+            numeric = [1.0 if value else 0.0 for value in values]
+            summary[f"{key}_mean"] = _rounded_mean(numeric)
+            summary[f"{key}_std"] = _rounded_std(numeric)
+            continue
+        if all(isinstance(value, (int, float)) and not isinstance(value, bool) for value in values):
+            numeric = [float(value) for value in values]
+            summary[f"{key}_mean"] = _rounded_mean(numeric)
+            summary[f"{key}_std"] = _rounded_std(numeric)
+            continue
+        summary[f"{key}_mode"] = Counter(str(value) for value in values).most_common(1)[0][0]
+    return summary
+
+
+def _aggregate_failure_rates(task_runs: list[BenchmarkResult]) -> dict:
+    failure_fields = {
+        "physics_fail": [run.physics_fail_rate for run in task_runs],
+        "lift_hold_fail": [run.lift_hold_fail_rate for run in task_runs],
+        "transfer_sway_fail": [run.transfer_sway_fail_rate for run in task_runs],
+        "placement_settle_fail": [run.placement_settle_fail_rate for run in task_runs],
+    }
+    summary = {
+        f"{field}_mean": _rounded_mean(values)
+        for field, values in failure_fields.items()
+    }
+    summary.update(
+        {
+            f"{field}_std": _rounded_std(values)
+            for field, values in failure_fields.items()
+        }
+    )
+    dominant_modes = [run.dominant_failure_mode for run in task_runs if run.dominant_failure_mode]
+    summary["dominant_failure_mode"] = (
+        Counter(dominant_modes).most_common(1)[0][0] if dominant_modes else "none"
+    )
+    return summary
+
+
+def _run_benchmark_method_results(
+    *,
+    data_path: str,
+    n_trials_per_task: int,
+    seed: int,
+    methods: list[str],
+    output_dir: str | None,
+) -> dict[str, list[BenchmarkResult]]:
+    output_dir_path = Path(output_dir) if output_dir is not None else None
+    if output_dir_path is not None:
+        output_dir_path.mkdir(parents=True, exist_ok=True)
+    all_results: dict[str, list[BenchmarkResult]] = {}
+    for method in methods:
+        out_file = None
+        if output_dir_path is not None:
+            out_file = str(output_dir_path / f"simulation_benchmark_{method}.json")
+        all_results[method] = run_benchmark(
+            data_path=data_path,
+            n_trials_per_task=n_trials_per_task,
+            gui=False,
+            seed=seed,
+            output_path=out_file,
+            method=method,
+        )
+    return all_results
+
+
 def _summarize_params(params: dict) -> dict:
     kept = {}
     for key in (
@@ -670,170 +855,75 @@ def run_benchmark_multi_seed_report(
     }
 
     summary_rows: list[dict] = []
-    for task in BENCHMARK_TASKS:
-        task_runs = [
-            next(result for result in per_seed_results[seed] if result.task_id == task.task_id)
-            for seed in seeds
-        ]
-
-        def _mean(values: list[float]) -> float:
-            return round(statistics.mean(values), 4)
-
-        def _std(values: list[float]) -> float:
-            return round(statistics.stdev(values), 4) if len(values) > 1 else 0.0
-
+    for task, fallback_result in _task_contexts_from_results(*per_seed_results.values()):
+        metadata = _task_row_metadata(task, fallback_result)
+        task_id = metadata["task_id"]
+        task_runs = []
+        for seed in seeds:
+            match = next(
+                (
+                    result
+                    for result in per_seed_results[seed]
+                    if result.task_id == task_id and result.method == method
+                ),
+                None,
+            )
+            if match is None:
+                task_runs = []
+                break
+            task_runs.append(match)
+        if not task_runs:
+            continue
         success_rates = [run.success_rate for run in task_runs]
         avg_times = [run.avg_time for run in task_runs]
         avg_steps = [run.avg_steps for run in task_runs]
         distance_errors = [run.avg_distance_error for run in task_runs]
-        force_deviations = [run.reference_force_deviation for run in task_runs]
-        slip_risks = [run.avg_slip_risk for run in task_runs]
-        compression_risks = [run.avg_compression_risk for run in task_runs]
-        velocity_risks = [run.avg_velocity_risk for run in task_runs]
-        clearance_risks = [run.avg_clearance_risk for run in task_runs]
-        lift_hold_risks = [run.avg_lift_hold_risk for run in task_runs]
-        transfer_sway_risks = [run.avg_transfer_sway_risk for run in task_runs]
-        placement_settle_risks = [run.avg_placement_settle_risk for run in task_runs]
-        stability_scores = [run.avg_stability_score for run in task_runs]
-        physics_fail_rates = [run.physics_fail_rate for run in task_runs]
-        lift_hold_fail_rates = [run.lift_hold_fail_rate for run in task_runs]
-        transfer_sway_fail_rates = [run.transfer_sway_fail_rate for run in task_runs]
-        placement_settle_fail_rates = [run.placement_settle_fail_rate for run in task_runs]
-        gripper_forces = [float(run.params_used.get("gripper_force", 0.0)) for run in task_runs]
-        lift_forces = [
-            float(run.params_used.get("lift_force", run.params_used.get("gripper_force", 0.0)))
-            for run in task_runs
-        ]
-        transfer_forces = [
-            float(run.params_used.get("transfer_force", run.params_used.get("gripper_force", 0.0)))
-            for run in task_runs
-        ]
-        transfer_alignments = [
-            float(run.params_used.get("transfer_alignment", 0.0))
-            for run in task_runs
-        ]
-        approach_heights = [float(run.params_used.get("approach_height", 0.0)) for run in task_runs]
-        transport_velocities = [float(run.params_used.get("transport_velocity", 0.0)) for run in task_runs]
-        placement_velocities = [float(run.params_used.get("placement_velocity", run.params_used.get("transport_velocity", 0.0))) for run in task_runs]
-        lift_clearances = [float(run.params_used.get("lift_clearance", 0.0)) for run in task_runs]
-        dynamic_transport_modes = [
-            str(run.params_used.get("dynamic_transport_mode", "static"))
-            for run in task_runs
-        ]
-        failure_rate_means = {
-            "physics_fail": _mean(physics_fail_rates),
-            "lift_hold_fail": _mean(lift_hold_fail_rates),
-            "transfer_sway_fail": _mean(transfer_sway_fail_rates),
-            "placement_settle_fail": _mean(placement_settle_fail_rates),
+        avg_risks = {
+            "slip_risk_mean": _rounded_mean([run.avg_slip_risk for run in task_runs]),
+            "slip_risk_std": _rounded_std([run.avg_slip_risk for run in task_runs]),
+            "compression_risk_mean": _rounded_mean([run.avg_compression_risk for run in task_runs]),
+            "compression_risk_std": _rounded_std([run.avg_compression_risk for run in task_runs]),
+            "velocity_risk_mean": _rounded_mean([run.avg_velocity_risk for run in task_runs]),
+            "velocity_risk_std": _rounded_std([run.avg_velocity_risk for run in task_runs]),
+            "clearance_risk_mean": _rounded_mean([run.avg_clearance_risk for run in task_runs]),
+            "clearance_risk_std": _rounded_std([run.avg_clearance_risk for run in task_runs]),
+            "lift_hold_risk_mean": _rounded_mean([run.avg_lift_hold_risk for run in task_runs]),
+            "lift_hold_risk_std": _rounded_std([run.avg_lift_hold_risk for run in task_runs]),
+            "transfer_sway_risk_mean": _rounded_mean([run.avg_transfer_sway_risk for run in task_runs]),
+            "transfer_sway_risk_std": _rounded_std([run.avg_transfer_sway_risk for run in task_runs]),
+            "placement_settle_risk_mean": _rounded_mean([run.avg_placement_settle_risk for run in task_runs]),
+            "placement_settle_risk_std": _rounded_std([run.avg_placement_settle_risk for run in task_runs]),
+            "stability_score_mean": _rounded_mean([run.avg_stability_score for run in task_runs]),
+            "stability_score_std": _rounded_std([run.avg_stability_score for run in task_runs]),
         }
-
+        methods_payload = {
+            method: {
+                "success_rate_mean": _rounded_mean(success_rates),
+                "success_rate_std": _rounded_std(success_rates),
+                "avg_time_sec_mean": _rounded_mean(avg_times),
+                "avg_time_sec_std": _rounded_std(avg_times),
+                "avg_steps_mean": _rounded_mean(avg_steps),
+                "avg_steps_std": _rounded_std(avg_steps),
+                "avg_distance_error_mean": _rounded_mean(distance_errors),
+                "avg_distance_error_std": _rounded_std(distance_errors),
+                "avg_risks": avg_risks,
+                "executed_plan_stats": _aggregate_nested_plan_stats(task_runs),
+                "reference_force_deviation_stats": _aggregate_nested_scalar_stats(task_runs),
+                "planner_diagnostics": _aggregate_planner_diagnostics(task_runs),
+                "failure_rates": _aggregate_failure_rates(task_runs),
+                "per_seed_success_rate": {
+                    str(seed): round(run.success_rate, 4)
+                    for seed, run in zip(seeds, task_runs)
+                },
+            }
+        }
         summary_rows.append(
             {
-                "task_id": task.task_id,
-                "task_label": task_label(task),
-                "task_description": task.description,
-                "task_split": task.split,
-                "challenge_tags": list(task.challenge_tags),
-                "method": method,
+                **metadata,
                 "seeds": seeds,
                 "n_trials_per_seed": n_trials_per_task,
                 "total_trials": n_trials_per_task * len(seeds),
-                "reference_force_range": list(task.reference_force_range),
-                "reference_force_center": round(reference_force_center(task), 4),
-                "reference_approach_height": reference_approach_height(task),
-                "success_rate_mean": _mean(success_rates),
-                "success_rate_std": _std(success_rates),
-                "avg_time_sec_mean": _mean(avg_times),
-                "avg_time_sec_std": _std(avg_times),
-                "avg_steps_mean": _mean(avg_steps),
-                "avg_steps_std": _std(avg_steps),
-                "avg_distance_error_mean": _mean(distance_errors),
-                "avg_distance_error_std": _std(distance_errors),
-                "reference_force_deviation_mean": _mean(force_deviations),
-                "reference_force_deviation_std": _std(force_deviations),
-                "avg_slip_risk_mean": _mean(slip_risks),
-                "avg_slip_risk_std": _std(slip_risks),
-                "avg_compression_risk_mean": _mean(compression_risks),
-                "avg_compression_risk_std": _std(compression_risks),
-                "avg_velocity_risk_mean": _mean(velocity_risks),
-                "avg_velocity_risk_std": _std(velocity_risks),
-                "avg_clearance_risk_mean": _mean(clearance_risks),
-                "avg_clearance_risk_std": _std(clearance_risks),
-                "avg_lift_hold_risk_mean": _mean(lift_hold_risks),
-                "avg_lift_hold_risk_std": _std(lift_hold_risks),
-                "avg_transfer_sway_risk_mean": _mean(transfer_sway_risks),
-                "avg_transfer_sway_risk_std": _std(transfer_sway_risks),
-                "avg_placement_settle_risk_mean": _mean(placement_settle_risks),
-                "avg_placement_settle_risk_std": _std(placement_settle_risks),
-                "avg_stability_score_mean": _mean(stability_scores),
-                "avg_stability_score_std": _std(stability_scores),
-                "physics_fail_rate_mean": failure_rate_means["physics_fail"],
-                "physics_fail_rate_std": _std(physics_fail_rates),
-                "lift_hold_fail_rate_mean": failure_rate_means["lift_hold_fail"],
-                "lift_hold_fail_rate_std": _std(lift_hold_fail_rates),
-                "transfer_sway_fail_rate_mean": failure_rate_means["transfer_sway_fail"],
-                "transfer_sway_fail_rate_std": _std(transfer_sway_fail_rates),
-                "placement_settle_fail_rate_mean": failure_rate_means["placement_settle_fail"],
-                "placement_settle_fail_rate_std": _std(placement_settle_fail_rates),
-                "dominant_failure_mode": (
-                    max(failure_rate_means, key=failure_rate_means.get)
-                    if any(value > 0.0 for value in failure_rate_means.values())
-                    else "none"
-                ),
-                "gripper_force_mean": _mean(gripper_forces),
-                "gripper_force_std": _std(gripper_forces),
-                "lift_force_mean": _mean(lift_forces),
-                "lift_force_std": _std(lift_forces),
-                "transfer_force_mean": _mean(transfer_forces),
-                "transfer_force_std": _std(transfer_forces),
-                "transfer_alignment_mean": _mean(transfer_alignments),
-                "transfer_alignment_std": _std(transfer_alignments),
-                "approach_height_mean": _mean(approach_heights),
-                "approach_height_std": _std(approach_heights),
-                "transport_velocity_mean": _mean(transport_velocities),
-                "transport_velocity_std": _std(transport_velocities),
-                "placement_velocity_mean": _mean(placement_velocities),
-                "placement_velocity_std": _std(placement_velocities),
-                "lift_clearance_mean": _mean(lift_clearances),
-                "lift_clearance_std": _std(lift_clearances),
-                "dynamic_transport_mode": Counter(dynamic_transport_modes).most_common(1)[0][0],
-                "belief_state_coverage_mean": _mean(
-                    [float(run.params_used.get("belief_state_coverage", 0.0)) for run in task_runs]
-                ),
-                "uncertainty_conservative_mode_mean": _mean(
-                    [1.0 if run.params_used.get("uncertainty_conservative_mode") else 0.0 for run in task_runs]
-                ),
-                "solver_selected_candidate": Counter(
-                    [str(run.params_used.get("solver_selected_candidate", "rule_aggregate")) for run in task_runs]
-                ).most_common(1)[0][0],
-                "evidence_rule_count_mean": _mean(
-                    [float(run.params_used.get("evidence_rule_count", 0.0)) for run in task_runs]
-                ),
-                "evidence_support_score_mean": _mean(
-                    [float(run.params_used.get("evidence_support_score", 0.0)) for run in task_runs]
-                ),
-                "evidence_conflict_count_mean": _mean(
-                    [float(run.params_used.get("evidence_conflict_count", 0.0)) for run in task_runs]
-                ),
-                "available_specific_force_rules_mean": _mean(
-                    [1.0 if run.params_used.get("available_specific_force_rules") else 0.0 for run in task_runs]
-                ),
-                "suppressed_specific_force_rules_mean": _mean(
-                    [1.0 if run.params_used.get("suppressed_specific_force_rules") else 0.0 for run in task_runs]
-                ),
-                "available_motion_rules_mean": _mean(
-                    [1.0 if run.params_used.get("available_motion_rules") else 0.0 for run in task_runs]
-                ),
-                "suppressed_motion_rules_mean": _mean(
-                    [1.0 if run.params_used.get("suppressed_motion_rules") else 0.0 for run in task_runs]
-                ),
-                "available_lift_stage_rules_mean": _mean(
-                    [1.0 if run.params_used.get("available_lift_stage_rules") else 0.0 for run in task_runs]
-                ),
-                "used_lift_stage_rules_mean": _mean(
-                    [1.0 if run.params_used.get("used_lift_stage_rules") else 0.0 for run in task_runs]
-                ),
-                "per_seed_success_rate": {str(seed): round(run.success_rate, 4) for seed, run in zip(seeds, task_runs)},
+                "methods": methods_payload,
             }
         )
 
@@ -849,18 +939,20 @@ def run_benchmark_multi_seed_report(
             "-" * 108,
         ]
         for row in summary_rows:
+            payload = row["methods"][method]
             lines.append(
                 f"{row['task_label']:<32} "
-                f"{row['success_rate_mean']:.2%}±{row['success_rate_std']:.2%} "
-                f"{row['avg_stability_score_mean']:.3f}±{row['avg_stability_score_std']:.3f} "
-                f"{row['avg_time_sec_mean']:.3f}s±{row['avg_time_sec_std']:.3f}"
+                f"{payload['success_rate_mean']:.2%}±{payload['success_rate_std']:.2%} "
+                f"{payload['avg_risks']['stability_score_mean']:.3f}±{payload['avg_risks']['stability_score_std']:.3f} "
+                f"{payload['avg_time_sec_mean']:.3f}s±{payload['avg_time_sec_std']:.3f}"
             )
-            if row.get("belief_state_coverage_mean") is not None and row.get("solver_selected_candidate") is not None:
+            planner = payload["planner_diagnostics"]
+            if planner.get("belief_state_coverage_mean") is not None and planner.get("solver_selected_candidate_mode") is not None:
                 lines.append(
                     " " * 4
-                    + f"belief={row['belief_state_coverage_mean']:.3f}, "
-                    + f"conservative_rate={row['uncertainty_conservative_mode_mean']:.2%}, "
-                    + f"solver={row['solver_selected_candidate']}"
+                    + f"belief={planner['belief_state_coverage_mean']:.3f}, "
+                    + f"conservative_rate={planner.get('uncertainty_conservative_mode_mean', 0.0):.2%}, "
+                    + f"solver={planner['solver_selected_candidate_mode']}"
                 )
         lines.append("")
         lines.append(f"JSON: {output_path}")
@@ -874,96 +966,59 @@ def run_benchmark_comparison(
     seed: int = 42,
     output_dir: str | None = None,
     methods: list[str] | None = None,
-) -> dict[str, list[BenchmarkResult]]:
+) -> list[dict]:
     methods = methods or ["rag", "task_heuristic", "fixed"]
-    output_dir = Path(output_dir or "outputs/current")
-    output_dir.mkdir(parents=True, exist_ok=True)
-    all_results: dict[str, list[BenchmarkResult]] = {}
-
-    for method in methods:
-        out_file = output_dir / f"simulation_benchmark_{method}.json"
-        all_results[method] = run_benchmark(
-            data_path=data_path,
-            n_trials_per_task=n_trials_per_task,
-            gui=False,
-            seed=seed,
-            output_path=str(out_file),
-            method=method,
-        )
+    output_dir_path = Path(output_dir) if output_dir is not None else None
+    all_results = _run_benchmark_method_results(
+        data_path=data_path,
+        n_trials_per_task=n_trials_per_task,
+        seed=seed,
+        methods=methods,
+        output_dir=output_dir,
+    )
 
     comparison = []
-    for task in BENCHMARK_TASKS:
+    for task, fallback_result in _task_contexts_from_results(*all_results.values()):
+        metadata = _task_row_metadata(task, fallback_result)
+        task_id = metadata["task_id"]
         row = {
-            "task_id": task.task_id,
-            "task_label": task_label(task),
-            "task_description": task.description,
-            "task_split": task.split,
-            "challenge_tags": list(task.challenge_tags),
-            "reference_force_range": list(task.reference_force_range),
-            "reference_force_center": round(reference_force_center(task), 4),
-            "reference_approach_height": reference_approach_height(task),
+            **metadata,
+            "methods": {},
         }
         for method in methods:
-            result = next(r for r in all_results[method] if r.task_id == task.task_id)
-            row[f"{method}_success_rate"] = round(result.success_rate, 4)
-            row[f"{method}_success_count"] = result.success_count
-            row[f"{method}_success_rate_ci95"] = [round(result.ci95_low, 4), round(result.ci95_high, 4)]
-            row[f"{method}_gripper_force"] = result.params_used.get("gripper_force")
-            row[f"{method}_lift_force"] = result.params_used.get("lift_force", result.params_used.get("gripper_force"))
-            row[f"{method}_transfer_force"] = result.params_used.get("transfer_force")
-            row[f"{method}_transfer_alignment"] = result.params_used.get("transfer_alignment")
-            row[f"{method}_approach_height"] = result.params_used.get("approach_height")
-            row[f"{method}_transport_velocity"] = result.params_used.get("transport_velocity")
-            row[f"{method}_placement_velocity"] = result.params_used.get("placement_velocity")
-            row[f"{method}_lift_clearance"] = result.params_used.get("lift_clearance")
-            row[f"{method}_dynamic_transport_mode"] = result.params_used.get("dynamic_transport_mode")
-            error = approach_height_error(task, result.params_used.get("approach_height"))
-            row[f"{method}_approach_height_error"] = None if error is None else round(error, 4)
-            row[f"{method}_avg_time_sec"] = round(result.avg_time, 4)
-            row[f"{method}_avg_steps"] = round(result.avg_steps, 2)
-            row[f"{method}_avg_distance_error"] = round(result.avg_distance_error, 4)
-            row[f"{method}_reference_force_deviation"] = round(result.reference_force_deviation, 4)
-            row[f"{method}_avg_velocity_risk"] = round(result.avg_velocity_risk, 4)
-            row[f"{method}_avg_clearance_risk"] = round(result.avg_clearance_risk, 4)
-            row[f"{method}_avg_lift_hold_risk"] = round(result.avg_lift_hold_risk, 4)
-            row[f"{method}_avg_transfer_sway_risk"] = round(result.avg_transfer_sway_risk, 4)
-            row[f"{method}_avg_placement_settle_risk"] = round(result.avg_placement_settle_risk, 4)
-            row[f"{method}_avg_stability_score"] = round(result.avg_stability_score, 4)
-            row[f"{method}_physics_fail_rate"] = round(result.physics_fail_rate, 4)
-            row[f"{method}_lift_hold_fail_rate"] = round(result.lift_hold_fail_rate, 4)
-            row[f"{method}_transfer_sway_fail_rate"] = round(result.transfer_sway_fail_rate, 4)
-            row[f"{method}_placement_settle_fail_rate"] = round(result.placement_settle_fail_rate, 4)
-            row[f"{method}_dominant_failure_mode"] = result.dominant_failure_mode
-            row[f"{method}_evidence_rule_count"] = result.params_used.get("evidence_rule_count")
-            row[f"{method}_evidence_support_score"] = result.params_used.get("evidence_support_score")
-            row[f"{method}_evidence_conflict_count"] = result.params_used.get("evidence_conflict_count")
-            row[f"{method}_force_rule_mode"] = result.params_used.get("force_rule_mode")
-            row[f"{method}_motion_rule_mode"] = result.params_used.get("motion_rule_mode")
-            row[f"{method}_available_specific_force_rules"] = result.params_used.get("available_specific_force_rules")
-            row[f"{method}_suppressed_specific_force_rules"] = result.params_used.get("suppressed_specific_force_rules")
-            row[f"{method}_available_motion_rules"] = result.params_used.get("available_motion_rules")
-            row[f"{method}_suppressed_motion_rules"] = result.params_used.get("suppressed_motion_rules")
+            result = next((r for r in all_results[method] if r.task_id == task_id), None)
+            if result is None:
+                continue
+            row["methods"][method] = _method_summary(result)
+            if task is not None:
+                error = approach_height_error(task, result.executed_plan_stats.get("mean", {}).get("approach_height"))
+                if error is not None:
+                    row["methods"][method]["approach_height_error"] = round(error, 4)
+        if not row["methods"]:
+            continue
         comparison.append(row)
 
-    comparison_path = output_dir / "simulation_comparison_rag_vs_baseline.json"
-    write_json(comparison_path, comparison)
-    table_path = output_dir / "simulation_comparison_rag_vs_baseline.txt"
-    lines = [
-        "RAG vs 基线 对比结果",
-        "=" * 68,
-        f"n_trials_per_task={n_trials_per_task}, seed={seed}",
-        "",
-        f"{'任务':<32} {'参考力范围(N)':<14} " + " ".join(f"{method}_成功率" for method in methods),
-        "-" * 68,
-    ]
-    for task in BENCHMARK_TASKS:
-        reference = f"{task.reference_force_range[0]}-{task.reference_force_range[1]}"
-        rates = [f"{next(r for r in all_results[method] if r.task_id == task.task_id).success_rate:.2%}" for method in methods]
-        lines.append(f"{task_label(task):<32} {reference:<14} " + " ".join(rates))
-    lines.append("")
-    lines.append(f"对比 JSON: {comparison_path}")
-    write_table(table_path, lines)
-    return all_results
+    if output_dir_path is not None:
+        comparison_path = output_dir_path / "simulation_comparison_rag_vs_baseline.json"
+        write_json(comparison_path, comparison)
+        table_path = output_dir_path / "simulation_comparison_rag_vs_baseline.txt"
+        lines = [
+            "RAG vs 基线 对比结果",
+            "=" * 68,
+            f"n_trials_per_task={n_trials_per_task}, seed={seed}",
+            "",
+            f"{'任务':<32} {'参考力范围(N)':<14} " + " ".join(f"{method}_成功率" for method in methods),
+            "-" * 68,
+        ]
+        for row in comparison:
+            reference_range = row["reference_force_range"]
+            reference = f"{reference_range[0]}-{reference_range[1]}"
+            rates = [f"{row['methods'][method]['success_rate']:.2%}" for method in methods]
+            lines.append(f"{row['task_label']:<32} {reference:<14} " + " ".join(rates))
+        lines.append("")
+        lines.append(f"对比 JSON: {comparison_path}")
+        write_table(table_path, lines)
+    return comparison
 
 
 def _write_split_summary(
@@ -1062,12 +1117,12 @@ def run_benchmark_comparison_multi_seed(
     rates: dict[tuple[str, str], list[float]] = {}
     results_by_seed: dict[int, dict[str, list[BenchmarkResult]]] = {}
     for seed in seeds:
-        all_results = run_benchmark_comparison(
+        all_results = _run_benchmark_method_results(
             data_path=data_path,
             n_trials_per_task=n_trials_per_task,
             seed=seed,
-            output_dir=str(output_dir),
             methods=methods,
+            output_dir=str(output_dir),
         )
         results_by_seed[seed] = all_results
         for method in methods:
@@ -1413,12 +1468,12 @@ def run_evidence_ablation_multi_seed(
 
     results_by_seed: dict[int, dict[str, list[BenchmarkResult]]] = {}
     for seed in seeds:
-        results_by_seed[seed] = run_benchmark_comparison(
+        results_by_seed[seed] = _run_benchmark_method_results(
             data_path=data_path,
             n_trials_per_task=n_trials_per_task,
             seed=seed,
-            output_dir=str(output_dir),
             methods=methods,
+            output_dir=str(output_dir),
         )
 
     comparison_rows: list[dict] = []
@@ -1598,12 +1653,12 @@ def run_motion_ablation_multi_seed(
 
     results_by_seed: dict[int, dict[str, list[BenchmarkResult]]] = {}
     for seed in seeds:
-        results_by_seed[seed] = run_benchmark_comparison(
+        results_by_seed[seed] = _run_benchmark_method_results(
             data_path=data_path,
             n_trials_per_task=n_trials_per_task,
             seed=seed,
-            output_dir=str(output_dir),
             methods=methods,
+            output_dir=str(output_dir),
         )
 
     comparison_rows: list[dict] = []

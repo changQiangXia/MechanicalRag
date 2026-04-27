@@ -167,6 +167,108 @@ class BenchmarkSchemaTest(unittest.TestCase):
         self.assertNotIn("params_used", row)
         self.assertNotIn("params", row)
 
+    def test_comparison_uses_executed_plan_stats_mean_values(self):
+        result = runner.BenchmarkResult(
+            task_id="pick_demo",
+            task_description="测试抓取任务",
+            task_split="test",
+            reference_force_range=(10.0, 14.0),
+            n_trials=2,
+            success_count=1,
+            success_rate=0.5,
+            avg_time=1.1,
+            avg_steps=12.0,
+            avg_distance_error=0.015,
+            ci95_low=0.1,
+            ci95_high=0.9,
+            reference_force_deviation_stats={"mean": 1.0, "std": 0.0, "min": 1.0, "max": 1.0},
+            avg_slip_risk=0.15,
+            avg_compression_risk=0.0,
+            avg_velocity_risk=0.0,
+            avg_clearance_risk=0.05,
+            avg_lift_hold_risk=0.15,
+            avg_transfer_sway_risk=0.05,
+            avg_placement_settle_risk=0.05,
+            avg_stability_score=0.75,
+            physics_fail_rate=0.0,
+            lift_hold_fail_rate=0.0,
+            transfer_sway_fail_rate=0.5,
+            placement_settle_fail_rate=0.0,
+            dominant_failure_mode="transfer_sway_fail",
+            seed_plan={"gripper_force": 12.0},
+            executed_plan_stats={
+                "mean": {"gripper_force": 12.0, "transport_velocity": 0.26, "lift_clearance": 0.0575},
+                "std": {"gripper_force": 1.0},
+                "dynamic_transport_mode_mode": "static",
+                "execution_feedback_mode_mode": "observer_only",
+            },
+            planner_diagnostics={"belief_state_coverage": 0.8},
+            trial_records=[],
+            method="rag_feedback",
+        )
+
+        with patch.object(runner, "run_benchmark", return_value=[result]):
+            rows = runner.run_benchmark_comparison(
+                n_trials_per_task=2,
+                methods=["rag_feedback"],
+                output_dir=None,
+            )
+
+        method_row = rows[0]["methods"]["rag_feedback"]
+        self.assertEqual(method_row["executed_plan_stats"]["mean"]["gripper_force"], 12.0)
+        self.assertNotIn("rag_feedback_gripper_force", rows[0])
+
+    def test_multi_seed_report_keeps_executed_plan_stats_nested_under_method(self):
+        base = runner.BenchmarkResult(
+            task_id="pick_demo",
+            task_description="测试抓取任务",
+            task_split="test",
+            reference_force_range=(10.0, 14.0),
+            n_trials=2,
+            success_count=2,
+            success_rate=1.0,
+            avg_time=1.0,
+            avg_steps=12.0,
+            avg_distance_error=0.0,
+            ci95_low=0.5,
+            ci95_high=1.0,
+            reference_force_deviation_stats={"mean": 1.0, "std": 0.0, "min": 1.0, "max": 1.0},
+            avg_slip_risk=0.1,
+            avg_compression_risk=0.0,
+            avg_velocity_risk=0.0,
+            avg_clearance_risk=0.0,
+            avg_lift_hold_risk=0.1,
+            avg_transfer_sway_risk=0.0,
+            avg_placement_settle_risk=0.0,
+            avg_stability_score=0.9,
+            physics_fail_rate=0.0,
+            lift_hold_fail_rate=0.0,
+            transfer_sway_fail_rate=0.0,
+            placement_settle_fail_rate=0.0,
+            dominant_failure_mode="none",
+            seed_plan={"gripper_force": 12.0},
+            executed_plan_stats={
+                "mean": {"gripper_force": 12.0, "transport_velocity": 0.26, "lift_clearance": 0.0575},
+                "std": {"gripper_force": 1.0},
+                "dynamic_transport_mode_mode": "static",
+                "execution_feedback_mode_mode": "observer_only",
+            },
+            planner_diagnostics={"belief_state_coverage": 0.8, "solver_selected_candidate": "belief_seed"},
+            trial_records=[],
+            method="rag_feedback",
+        )
+
+        with patch.object(runner, "run_benchmark", side_effect=[[base], [base], [base]]):
+            rows = runner.run_benchmark_multi_seed_report(
+                n_trials_per_task=2,
+                seeds=[42, 43, 44],
+                method="rag_feedback",
+                output_path=None,
+            )
+
+        self.assertEqual(rows[0]["methods"]["rag_feedback"]["executed_plan_stats"]["mean"]["gripper_force"], 12.0)
+        self.assertEqual(rows[0]["methods"]["rag_feedback"]["planner_diagnostics"]["belief_state_coverage_mean"], 0.8)
+
 
 if __name__ == "__main__":
     unittest.main()
