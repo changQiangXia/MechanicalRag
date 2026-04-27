@@ -260,3 +260,91 @@ def build_feedback_replan_request(
         "previous_solver_mode": previous_params.get("solver_mode"),
         "previous_solver_selected_candidate": previous_params.get("solver_selected_candidate"),
     }
+
+
+def _phase_observation_from_snapshot(observation: dict[str, Any], stage: str) -> dict[str, Any]:
+    return {
+        "phase": stage,
+        "contact_stability_obs": round(max(0.0, 1.0 - float(observation.get("slip_indicator", 0.0))), 4),
+        "micro_slip_obs": round(float(observation.get("slip_indicator", 0.0)), 4),
+        "payload_ratio_obs": round(1.0 + float(observation.get("compression_indicator", 0.0)), 4),
+        "lift_progress_obs": round(max(0.0, 1.0 - float(observation.get("distance_to_target", 0.0))), 4),
+        "lift_reserve_obs": round(-float(observation.get("risk_score", 0.0)) if stage == "lift" else 0.0, 4),
+        "tilt_obs": round(float(observation.get("compression_indicator", 0.0)) if stage == "lift" else 0.0, 4),
+        "sway_obs": round(float(observation.get("risk_score", 0.0)) if stage == "transfer" else 0.0, 4),
+        "velocity_stress_obs": round(max(0.0, -float(observation.get("velocity_margin", 0.0))), 4),
+        "settle_obs": round(float(observation.get("risk_score", 0.0)) if stage == "place" else 0.0, 4),
+        "placement_error_obs": round(float(observation.get("distance_to_target", 0.0)), 4),
+        "observation_confidence": round(float(observation.get("observation_confidence", 0.76)), 4),
+        "trigger_reason": str(observation.get("trigger_reason", "")),
+    }
+
+
+def build_observation_replan_request(
+    previous_params: dict[str, Any],
+    observation: dict[str, Any],
+    suggestion: str,
+    step: float = 4.0,
+) -> dict[str, Any]:
+    del previous_params
+    stage = str(observation.get("phase", observation.get("stage", "unknown")))
+    requested_suffix_start = str(observation.get("requested_suffix_start", stage))
+    replan_mode = str(observation.get("replan_mode", "hard_fail"))
+    phase_observation = dict(observation.get("phase_observation") or _phase_observation_from_snapshot(observation, stage))
+    phase_observation["phase"] = str(phase_observation.get("phase", stage))
+    phase_observation["observation_confidence"] = round(float(phase_observation.get("observation_confidence", 0.76)), 4)
+    phase_observation["trigger_reason"] = str(
+        phase_observation.get("trigger_reason", observation.get("trigger_reason", ""))
+    )
+
+    if stage == "grasp":
+        grip_delta = max(0.8, step * 0.18)
+        if suggestion == "decrease":
+            grip_delta = -min(1.2, max(0.4, step * 0.15))
+        param_deltas = {
+            "gripper_force": grip_delta,
+            "transfer_alignment": 0.06,
+        }
+    elif stage == "lift":
+        param_deltas = {
+            "lift_force": max(0.8, step * 0.18),
+            "lift_clearance": 0.005,
+            "transport_velocity": -0.02,
+        }
+    elif stage == "transfer":
+        param_deltas = {
+            "transport_velocity": -0.03,
+            "placement_velocity": -0.03,
+            "transfer_alignment": 0.08,
+        }
+    else:
+        param_deltas = {
+            "placement_velocity": -0.04,
+            "lift_clearance": 0.003,
+        }
+
+    return {
+        "failure_bucket": str(
+            observation.get(
+                "estimated_failure_stage",
+                observation.get("trigger_reason", f"{stage}_phase_replan"),
+            )
+        ),
+        "stage_bias": stage,
+        "requested_suffix_start": requested_suffix_start,
+        "replan_mode": replan_mode,
+        "suggestion": suggestion,
+        "phase_observation": phase_observation,
+        "failure_attribution": {
+            "risk_score": round(float(observation.get("risk_score", 0.0)), 4),
+            "slip_indicator": round(float(observation.get("slip_indicator", 0.0)), 4),
+            "compression_indicator": round(float(observation.get("compression_indicator", 0.0)), 4),
+            "velocity_margin": round(float(observation.get("velocity_margin", 0.0)), 4),
+            "clearance_margin": round(float(observation.get("clearance_margin", 0.0)), 4),
+        },
+        "uncertainty_reasons": [f"observation_{stage}_stage", f"observation_{replan_mode}"],
+        "param_deltas": {key: round(value, 4) for key, value in param_deltas.items()},
+        "observation_index": observation.get("observation_index"),
+        "trigger_reason": observation.get("trigger_reason"),
+        "observation_stage": observation.get("stage", stage),
+    }

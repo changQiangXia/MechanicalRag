@@ -13,7 +13,13 @@ from typing import Any, Callable, Tuple
 
 import numpy as np
 
-from .control_core import PhaseObservation, apply_phase_observation, build_execution_prior
+from .control_core import (
+    PhaseObservation,
+    apply_phase_observation,
+    build_execution_prior,
+    decide_observation_replan,
+    roll_execution_belief_forward,
+)
 
 try:
     import mujoco
@@ -1011,6 +1017,7 @@ def simulate_stepwise_execution(
     observation_index = 0
     phase_index = 0
     last_evaluation: dict[str, Any] | None = None
+    execution_belief = build_execution_prior(current_feedback_state, phase=PHASE_SEQUENCE[0])
 
     while phase_index < len(PHASE_SEQUENCE):
         evaluation = _evaluate_execution_plan(
@@ -1024,6 +1031,11 @@ def simulate_stepwise_execution(
         replan_applied = False
         while phase_index < len(PHASE_SEQUENCE):
             phase = PHASE_SEQUENCE[phase_index]
+            phase_prior = (
+                execution_belief
+                if execution_belief.phase == phase
+                else roll_execution_belief_forward(execution_belief, next_phase=phase)
+            )
             frozen_prefix_plan.setdefault(phase, dict(current_params))
             observation, phase_success, phase_info = _evaluate_phase_execution(
                 phase=phase,
@@ -1053,8 +1065,14 @@ def simulate_stepwise_execution(
                     **phase_info,
                 }
             )
-            phase_prior = build_execution_prior(current_feedback_state, phase=phase)
             posterior, belief_trace = apply_phase_observation(phase_prior, observation)
+            decision = decide_observation_replan(
+                posterior,
+                observation,
+                phase_success=phase_success,
+                remaining_phases=list(PHASE_SEQUENCE[phase_index + 1 :]),
+            )
+            current_feedback_state["execution_belief_state"] = posterior.to_trace_dict()
             belief_update_trace.append(
                 {
                     "observation_index": observation_index,
@@ -1063,11 +1081,25 @@ def simulate_stepwise_execution(
                     "posterior": posterior.to_trace_dict(),
                     "trigger_reason": belief_trace["trigger_reason"],
                     "updated_latents": belief_trace["updated_latents"],
+                    "decision": decision.to_trace_dict(),
+                }
+            )
+            phase_snapshot.update(
+                {
+                    "phase": phase,
+                    "phase_success": phase_success,
+                    "requested_suffix_start": decision.requested_suffix_start,
+                    "replan_mode": decision.replan_mode,
+                    "phase_observation": asdict(observation),
+                    "belief_prior": phase_prior.to_trace_dict(),
+                    "belief_posterior": posterior.to_trace_dict(),
+                    "risk_latents": list(decision.risk_latents),
                 }
             )
             observation_index += 1
 
-            if phase_success:
+            if not decision.should_replan:
+                execution_belief = posterior
                 phase_index += 1
                 continue
 
@@ -1127,14 +1159,18 @@ def simulate_stepwise_execution(
                     "observation_index": phase_snapshot["observation_index"],
                     "phase": phase,
                     "stage": phase,
-                    "start_phase": phase,
-                    "trigger_reason": phase_snapshot["trigger_reason"],
-                    "frozen_prefix": list(PHASE_SEQUENCE[:phase_index]),
+                    "start_phase": decision.requested_suffix_start,
+                    "replan_mode": decision.replan_mode,
+                    "trigger_reason": decision.trigger_reason,
+                    "frozen_prefix": list(PHASE_SEQUENCE[: phase_index + (1 if decision.replan_mode == "soft_risk" else 0)]),
+                    "risk_latents": list(decision.risk_latents),
                     "seed_plan": dict(evaluation["params"]),
                     "final_plan": dict(current_params),
                 }
             )
             counterfactual_replan_trace.append(trace_row)
+            phase_index = PHASE_SEQUENCE.index(decision.requested_suffix_start)
+            execution_belief = build_execution_prior(current_feedback_state, phase=PHASE_SEQUENCE[phase_index])
             replan_applied = True
             break
 
@@ -1236,6 +1272,7 @@ class ArmSimEnv:
         placement_velocity: float | None = None,
         lift_clearance: float = 0.06,
         object_profile: dict | None = None,
+        control_context: dict[str, Any] | None = None,
         max_steps: int = 800,
         step_replan_callback: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any] | None] | None = None,
         max_step_replans: int = 0,
@@ -1271,10 +1308,9 @@ class ArmSimEnv:
         transfer_alignment = max(0.0, min(1.0, transfer_alignment))
         adaptive_trace_info = None
         if step_replan_callback is not None or max_step_replans > 0:
-            _, _, adaptive_trace_info = simulate_stepwise_execution(
-                object_pos=object_pos,
-                target_pos=target_pos,
-                params={
+            execution_params = dict(control_context or {})
+            execution_params.update(
+                {
                     "gripper_force": gripper_force,
                     "approach_height": approach_height,
                     "transport_velocity": transport_velocity,
@@ -1283,7 +1319,12 @@ class ArmSimEnv:
                     "placement_velocity": placement_velocity,
                     "transfer_alignment": transfer_alignment,
                     "lift_clearance": lift_clearance,
-                },
+                }
+            )
+            _, _, adaptive_trace_info = simulate_stepwise_execution(
+                object_pos=object_pos,
+                target_pos=target_pos,
+                params=execution_params,
                 object_profile=profile,
                 step_replan_callback=step_replan_callback,
                 max_step_replans=max_step_replans,
@@ -1475,14 +1516,14 @@ if not HAS_MUJOCO:
             placement_velocity: float | None = None,
             lift_clearance: float = 0.06,
             object_profile: dict | None = None,
+            control_context: dict[str, Any] | None = None,
             max_steps: int = 400,
             step_replan_callback: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any] | None] | None = None,
             max_step_replans: int = 0,
         ) -> Tuple[bool, float, dict]:
-            return simulate_stepwise_execution(
-                object_pos=object_pos,
-                target_pos=target_pos,
-                params={
+            params = dict(control_context or {})
+            params.update(
+                {
                     "gripper_force": gripper_force,
                     "approach_height": approach_height,
                     "transport_velocity": transport_velocity,
@@ -1491,7 +1532,12 @@ if not HAS_MUJOCO:
                     "placement_velocity": placement_velocity if placement_velocity is not None else transport_velocity,
                     "transfer_alignment": transfer_alignment,
                     "lift_clearance": lift_clearance,
-                },
+                }
+            )
+            return simulate_stepwise_execution(
+                object_pos=object_pos,
+                target_pos=target_pos,
+                params=params,
                 object_profile=object_profile,
                 step_replan_callback=step_replan_callback,
                 max_step_replans=max_step_replans,

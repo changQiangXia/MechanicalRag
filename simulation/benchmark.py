@@ -28,7 +28,21 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT_DIR / "simulation_benchmark_result.json"))
     parser.add_argument(
         "--method",
-        choices=("rag", "rag_generic_only", "rag_no_motion_rules", "rag_multi", "rag_random", "rag_llm", "direct_llm", "rag_learned", "rag_feedback", "fixed", "task_heuristic", "random"),
+        choices=(
+            "rag",
+            "rag_generic_only",
+            "rag_no_motion_rules",
+            "rag_multi",
+            "rag_random",
+            "rag_llm",
+            "direct_llm",
+            "rag_learned",
+            "rag_feedback",
+            "rag_feedback_observer_only",
+            "fixed",
+            "task_heuristic",
+            "random",
+        ),
         default="rag_feedback",
     )
     parser.add_argument("--max_feedback_retries", type=int, default=1)
@@ -36,7 +50,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--compare_multi_seed", action="store_true")
     parser.add_argument("--report_multi_seed", action="store_true")
     parser.add_argument("--seeds", type=int, nargs="+", default=[42, 43, 44])
-    parser.add_argument("--multi_seed_methods", nargs="+", default=["rag", "rag_feedback", "task_heuristic", "fixed"])
+    parser.add_argument(
+        "--multi_seed_methods",
+        nargs="+",
+        default=["rag", "rag_feedback", "rag_feedback_observer_only", "task_heuristic", "fixed"],
+    )
     parser.add_argument("--ablation_retrieval", action="store_true")
     parser.add_argument("--compare_learned", action="store_true")
     parser.add_argument("--compare_llm", action="store_true")
@@ -128,7 +146,7 @@ def main() -> None:
     elif args.compare_direct_llm:
         compare_methods = ["rag", "rag_learned", "task_heuristic", "direct_llm", "fixed"]
     elif args.compare_feedback:
-        compare_methods = ["rag", "rag_feedback", "task_heuristic", "fixed"]
+        compare_methods = ["rag", "rag_feedback", "rag_feedback_observer_only", "task_heuristic", "fixed"]
     elif args.compare:
         compare_methods = ["rag", "rag_learned", "task_heuristic", "fixed"]
 

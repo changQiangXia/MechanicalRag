@@ -246,6 +246,24 @@ class ExecutionBelief:
 
 
 @dataclass
+class ExecutionReplanDecision:
+    should_replan: bool
+    replan_mode: str
+    requested_suffix_start: str
+    trigger_reason: str
+    risk_latents: list[str]
+
+    def to_trace_dict(self) -> dict[str, Any]:
+        return {
+            "should_replan": self.should_replan,
+            "replan_mode": self.replan_mode,
+            "requested_suffix_start": self.requested_suffix_start,
+            "trigger_reason": self.trigger_reason,
+            "risk_latents": list(self.risk_latents),
+        }
+
+
+@dataclass
 class CounterfactualIntervention:
     label: str
     param_deltas: dict[str, float]
@@ -340,6 +358,58 @@ def apply_phase_observation(
     }
 
 
+def roll_execution_belief_forward(
+    belief: ExecutionBelief,
+    *,
+    next_phase: str,
+) -> ExecutionBelief:
+    rolled = ExecutionBelief(**asdict(belief))
+    rolled.phase = next_phase
+    return rolled
+
+
+def decide_observation_replan(
+    posterior: ExecutionBelief,
+    observation: PhaseObservation,
+    *,
+    phase_success: bool,
+    remaining_phases: list[str],
+) -> ExecutionReplanDecision:
+    if not phase_success:
+        return ExecutionReplanDecision(
+            should_replan=True,
+            replan_mode="hard_fail",
+            requested_suffix_start=observation.phase,
+            trigger_reason=observation.trigger_reason or f"{observation.phase}_fail",
+            risk_latents=[observation.phase],
+        )
+    if not remaining_phases:
+        return ExecutionReplanDecision(False, "none", "none", "", [])
+
+    risk_latents: list[str] = []
+    if observation.phase == "grasp" and posterior.grip_hold_margin < 0.02:
+        risk_latents.append("grip_hold_margin")
+    if observation.phase == "lift" and posterior.load_support_margin < -0.14:
+        risk_latents.append("load_support_margin")
+    if observation.phase == "lift" and posterior.lift_reserve < -0.08:
+        risk_latents.append("lift_reserve")
+    if observation.phase == "transfer" and posterior.transfer_disturbance > 0.30:
+        risk_latents.append("transfer_disturbance")
+    if observation.phase == "transfer" and posterior.pose_alignment_error > 0.26:
+        risk_latents.append("pose_alignment_error")
+
+    if not risk_latents:
+        return ExecutionReplanDecision(False, "none", "none", "", [])
+
+    return ExecutionReplanDecision(
+        should_replan=True,
+        replan_mode="soft_risk",
+        requested_suffix_start=remaining_phases[0],
+        trigger_reason=observation.trigger_reason or f"soft_{observation.phase}_risk",
+        risk_latents=risk_latents,
+    )
+
+
 def _heavy_static_candidates() -> list[CounterfactualIntervention]:
     return [
         CounterfactualIntervention(
@@ -393,11 +463,70 @@ def _heavy_static_candidates() -> list[CounterfactualIntervention]:
     ]
 
 
+def _phase_repair_candidates(phase: str) -> list[CounterfactualIntervention]:
+    if phase == "grasp":
+        return [
+            CounterfactualIntervention(
+                "gripper_force_up",
+                {"gripper_force": 1.0},
+                ["grip_hold_margin"],
+                0.0,
+            ),
+            CounterfactualIntervention(
+                "gripper_plus_alignment",
+                {"gripper_force": 0.8, "transfer_alignment": 0.06},
+                ["grip_hold_margin", "pose_alignment_error"],
+                0.0,
+            ),
+        ]
+    if phase == "lift":
+        return _heavy_static_candidates()
+    if phase == "transfer":
+        return [
+            CounterfactualIntervention(
+                "transport_velocity_down",
+                {"transport_velocity": -0.03, "placement_velocity": -0.03},
+                ["transfer_disturbance"],
+                0.0,
+            ),
+            CounterfactualIntervention(
+                "transfer_alignment_up",
+                {"transfer_alignment": 0.08},
+                ["pose_alignment_error"],
+                0.0,
+            ),
+            CounterfactualIntervention(
+                "transfer_force_plus_velocity",
+                {"transfer_force": 1.0, "transport_velocity": -0.02, "placement_velocity": -0.02},
+                ["transfer_disturbance", "load_support_margin"],
+                0.0,
+            ),
+        ]
+    return [
+        CounterfactualIntervention(
+            "placement_velocity_down",
+            {"placement_velocity": -0.04},
+            ["placement_settle"],
+            0.0,
+        ),
+        CounterfactualIntervention(
+            "lift_clearance_up",
+            {"lift_clearance": 0.003},
+            ["placement_precision", "pose_alignment_error"],
+            0.0,
+        ),
+    ]
+
+
 def _predicted_latent_gains(
     belief: ExecutionBelief,
     deltas: dict[str, float],
 ) -> dict[str, float]:
+    del belief
     velocity_drop = max(0.0, -float(deltas.get("transport_velocity", 0.0)))
+    placement_velocity_drop = max(0.0, -float(deltas.get("placement_velocity", 0.0)))
+    transfer_alignment_gain = max(0.0, float(deltas.get("transfer_alignment", 0.0)))
+    clearance_gain = max(0.0, float(deltas.get("lift_clearance", 0.0)))
     return {
         "load_support_margin": round(
             0.14 * float(deltas.get("lift_force", 0.0))
@@ -413,6 +542,15 @@ def _predicted_latent_gains(
             4,
         ),
         "grip_hold_margin": round(0.07 * float(deltas.get("gripper_force", 0.0)), 4),
+        "transfer_disturbance": round(
+            1.4 * velocity_drop
+            + 0.8 * placement_velocity_drop
+            + 0.04 * float(deltas.get("transfer_force", 0.0)),
+            4,
+        ),
+        "pose_alignment_error": round(0.85 * transfer_alignment_gain + 1.8 * clearance_gain, 4),
+        "placement_settle": round(1.5 * placement_velocity_drop + 0.3 * velocity_drop + 0.8 * clearance_gain, 4),
+        "placement_precision": round(0.45 * placement_velocity_drop + 0.35 * transfer_alignment_gain + 5.0 * clearance_gain, 4),
     }
 
 
@@ -422,34 +560,72 @@ def diagnose_failure_cause(
     current_plan: dict[str, float],
 ) -> CounterfactualDiagnosis:
     del current_plan
-    if belief.load_support_margin <= min(belief.grip_hold_margin, belief.lift_reserve):
+    if observation.phase == "grasp":
+        if belief.grip_hold_margin < 0.0 or observation.micro_slip_obs > 0.12:
+            diagnosed_cause = "contact_slip"
+            requirements = {
+                "grip_hold_margin": max(0.0, max(-belief.grip_hold_margin, observation.micro_slip_obs - 0.10)),
+            }
+        else:
+            diagnosed_cause = "contact_alignment_loss"
+            requirements = {
+                "pose_alignment_error": max(0.0, belief.pose_alignment_error - 0.22),
+            }
+    elif observation.phase == "transfer":
+        if belief.transfer_disturbance > 0.30 or observation.sway_obs >= observation.velocity_stress_obs:
+            diagnosed_cause = "transfer_disturbance_overload"
+            requirements = {
+                "transfer_disturbance": max(0.0, belief.transfer_disturbance - 0.24),
+            }
+        else:
+            diagnosed_cause = "alignment_drift"
+            requirements = {
+                "pose_alignment_error": max(0.0, belief.pose_alignment_error - 0.22),
+            }
+    elif observation.phase == "place":
+        if observation.settle_obs > 0.12:
+            diagnosed_cause = "placement_settle_instability"
+            requirements = {
+                "placement_settle": max(0.0, observation.settle_obs - 0.12),
+            }
+        else:
+            diagnosed_cause = "placement_precision_loss"
+            requirements = {
+                "placement_precision": max(0.0, observation.placement_error_obs - 0.04),
+            }
+    elif belief.load_support_margin <= min(belief.grip_hold_margin, belief.lift_reserve):
         diagnosed_cause = "under_supported_load"
+        requirements = {
+            "load_support_margin": max(0.0, -belief.load_support_margin),
+            "lift_reserve": max(0.0, -belief.lift_reserve),
+            "grip_hold_margin": max(0.0, -belief.grip_hold_margin),
+        }
     elif belief.grip_hold_margin < 0.0:
         diagnosed_cause = "load_induced_slip"
+        requirements = {
+            "load_support_margin": max(0.0, -belief.load_support_margin),
+            "lift_reserve": max(0.0, -belief.lift_reserve),
+            "grip_hold_margin": max(0.0, -belief.grip_hold_margin),
+        }
     else:
         diagnosed_cause = "alignment_coupled_overload"
+        requirements = {
+            "load_support_margin": max(0.0, -belief.load_support_margin),
+            "lift_reserve": max(0.0, -belief.lift_reserve),
+            "grip_hold_margin": max(0.0, -belief.grip_hold_margin),
+        }
 
-    required_support = max(0.0, -belief.load_support_margin)
-    required_lift = max(0.0, -belief.lift_reserve)
-    required_grip = max(0.0, -belief.grip_hold_margin)
+    active_requirements = {
+        name: round(value, 4)
+        for name, value in requirements.items()
+        if value > 1e-6
+    }
 
     ranked: list[tuple[bool, CounterfactualIntervention]] = []
-    for candidate in _heavy_static_candidates():
+    for candidate in _phase_repair_candidates(observation.phase):
         gains = _predicted_latent_gains(belief, candidate.param_deltas)
-        sufficient = (
-            gains["load_support_margin"] >= required_support
-            and gains["lift_reserve"] >= required_lift
-            and gains["grip_hold_margin"] >= required_grip
-        )
-        flip_gain = round(
-            gains["load_support_margin"]
-            + gains["lift_reserve"]
-            + 0.5 * gains["grip_hold_margin"]
-            - required_support
-            - required_lift
-            - 0.5 * required_grip,
-            4,
-        )
+        sufficient = all(gains.get(name, 0.0) >= value for name, value in active_requirements.items())
+        flip_gain = round(sum(gains.get(name, 0.0) - value for name, value in active_requirements.items()), 4)
         ranked.append(
             (
                 sufficient,
@@ -483,17 +659,24 @@ def diagnose_failure_cause(
 def repair_suffix_plan(
     current_plan: dict[str, float],
     *,
-    current_phase: str,
+    diagnosis_phase: str | None = None,
+    start_phase: str | None = None,
+    current_phase: str | None = None,
     diagnosis: CounterfactualDiagnosis,
 ) -> dict[str, Any]:
+    if diagnosis_phase is None:
+        diagnosis_phase = current_phase or "lift"
+    if start_phase is None:
+        start_phase = current_phase or diagnosis_phase
     next_plan = dict(current_plan)
     for key, delta in diagnosis.selected_intervention.param_deltas.items():
         next_plan[key] = round(float(next_plan.get(key, 0.0)) + float(delta), 4)
-    next_plan["suffix_replan_start_stage"] = current_phase
+    next_plan["suffix_replan_start_stage"] = start_phase
     next_plan["execution_feedback_mode"] = "suffix_counterfactual_replan"
     next_plan["counterfactual_replan_trace"] = [
         {
-            "start_phase": current_phase,
+            "diagnosis_phase": diagnosis_phase,
+            "start_phase": start_phase,
             "diagnosed_cause": diagnosis.diagnosed_cause,
             "selected_intervention": diagnosis.selected_intervention.label,
             "predicted_flip_gain": diagnosis.predicted_flip_gain,
@@ -1525,7 +1708,7 @@ def replan_control_plan(
     phase_observation_payload = replan_request.get("phase_observation")
     counterfactual_belief_update = None
     counterfactual_diagnosis = None
-    if isinstance(phase_observation_payload, dict) and requested_suffix_start == "lift":
+    if isinstance(phase_observation_payload, dict):
         observation = PhaseObservation(**dict(phase_observation_payload))
         counterfactual_seed = dict(previous_params)
         counterfactual_seed.update(solved_plan)
@@ -1534,7 +1717,8 @@ def replan_control_plan(
         diagnosis = diagnose_failure_cause(posterior, observation, solved_plan)
         repaired_plan = repair_suffix_plan(
             solved_plan,
-            current_phase=observation.phase,
+            diagnosis_phase=observation.phase,
+            start_phase=requested_suffix_start if requested_suffix_start in STAGE_ORDER else observation.phase,
             diagnosis=diagnosis,
         )
         for key in plan_keys:

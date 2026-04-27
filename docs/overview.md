@@ -18,16 +18,18 @@ MechanicalRag 关注的是机械知识如何同时服务两个场景：
 - 最新闭环目录：`outputs/current_observer_step_replan/`
 - `round19` 历史基线：`outputs/current/`
 - `round20` 实验目录：`outputs/current_round20_sim/`
-- 当前仿真主链已经改成 `evidence -> belief -> seed synthesize -> local solve -> phase observation -> posterior update -> suffix repair`
+- rolling posterior + soft-trigger suffix repair 已在默认结果中实际触发；这证明默认 `rag_feedback` 主线不再只是 observer logging，但不等于它已经成为总体最优主线
 - `observer_trace` 现在只是兼容字段；主执行日志是 `phase_execution_trace`、`observation_trace`、`belief_update_trace`、`counterfactual_replan_trace`
+- 这条语义的当前公开证据至少在 `pick_metal_heavy` 上已经成立：`online_diagnosis_count=60`、`suffix_counterfactual_replan_count=60`，且 `rag_feedback=96.67%` 高于 `rag_feedback_observer_only=90.00%`
+- `rag_feedback` 仍保留 post-failure retry 兜底；online repair 的贡献目前应按 task 逐项审计，而不是外推成所有任务上的统一增益或默认整体最优结论
 - 当前关键结果：
-  - `rag_feedback` 12 任务多 seed平均成功率 `0.8847`
-  - 相对 `rag` seed-only 路径，平均提升 `+0.1542`
-  - `pick_metal_heavy = 0.8667 ± 0.0289`
-  - `pick_metal_heavy_fast = 0.8667 ± 0.0764`
-  - `pick_large_part_far = 0.9167 ± 0.0764`
-  - `pick_thin_wall_fast = 0.8167 ± 0.0577`
-  - `pick_smooth_metal_fast = 0.9000 ± 0.0000`
+  - 当前公开结果里，`rag_feedback_observer_only` 12 任务多 seed平均成功率 `0.9055`，高于默认 `rag_feedback` 的 `0.8583`
+  - 相对 `rag` seed-only 路径，默认 `rag_feedback` 平均提升 `+0.1278`
+  - `pick_metal_heavy = 0.9667 ± 0.0577`
+  - `pick_metal_heavy_fast = 0.8833 ± 0.0289`
+  - `pick_large_part_far = 0.9333 ± 0.0764`
+  - `pick_thin_wall_fast = 0.7833 ± 0.1258`
+  - `pick_smooth_metal_fast = 0.7000 ± 0.0866`
 - 当前重载验收口径已满足：
   - `pick_metal_heavy >= 0.30`
   - `pick_metal_heavy_fast` 绝对成功率下降不超过 `0.05`
@@ -91,6 +93,18 @@ MechanicalRag 关注的是机械知识如何同时服务两个场景：
 - `outputs/current/`
 - `outputs/current_round20_sim/`
 
+### 3.4 关键机制理解
+
+当前 simulation 主链可以顺着 `evidence -> belief -> seed -> solve -> observation -> repair` 来理解。`evidence` 负责把检索到的机械知识带入任务，`belief` 把这些知识整理成项目内部使用的状态描述，`seed` 生成第一版控制计划，`solve` 在这份初稿附近做局部修正，`observation` 负责把执行阶段的风险带回控制链，`repair` 则根据这些阶段信息决定是否调整后续阶段计划。
+
+这条链的变量定义集中放在 [控制链术语](terms_and_mechanisms.md#control-chain-terms) 和 [执行日志字段](terms_and_mechanisms.md#execution-trace-fields)。
+
+### 3.5 结果字段说明
+
+当前结果文件里最容易被反复查询的字段主要有两类。`observer-only ablation` 用来区分是否真的发生了执行中修正；`executed_plan_stats` 则展示任务级终态控制计划的统计，而不是单次 trial 的瞬时值。
+
+更完整的结果字段定义见 [结果统计字段](terms_and_mechanisms.md#result-stat-fields)。
+
 ## 4. 运行入口
 
 ### 4.1 环境与模型
@@ -116,7 +130,7 @@ python -m simulation.benchmark --report_multi_seed --method rag_feedback --n_tri
 python -m simulation.benchmark --compare_feedback --n_trials 20 --seed 42 --output_dir outputs/current_observer_step_replan
 python -m simulation.benchmark --compare_evidence_ablation --n_trials 20 --seeds 42 43 44 --output_dir outputs/current
 python -m simulation.benchmark --compare_motion_ablation --n_trials 20 --seeds 42 43 44 --output_dir outputs/current
-python -m simulation.benchmark --compare_multi_seed --n_trials 20 --seeds 42 43 44 --multi_seed_methods rag rag_feedback task_heuristic fixed --output_dir outputs/current_observer_step_replan
+python -m simulation.benchmark --compare_multi_seed --n_trials 20 --seeds 42 43 44 --multi_seed_methods rag rag_feedback rag_feedback_observer_only task_heuristic fixed --output_dir outputs/current_observer_step_replan
 ```
 
 ### 4.4 图表与摘要
@@ -154,7 +168,7 @@ python reporting/visualize_results.py --qa_json outputs/current/qa_evaluation_de
 - 仿真当前代码语义以 `outputs/current_observer_step_replan/` 为准；`round19/current` 继续保留为历史基线，`round20` 只保留为 placement-stage precision 实验归档。
 - 当前 observer 已升级成 phase observation，`rag_feedback` 主路径已接到 `suffix_counterfactual_replan`，但 observation / posterior 仍是轻量执行期估计与局部修正，不是完整后验滤波与 MPC。
 - `belief_state` 仍然首先从知识证据长出来，执行期观测主要进入 feedback replan，而不是从头替代 retrieval-belief 前置链。
-- 当前最明显的剩余缺口已经不再是 `pick_metal_heavy`，而是如何继续把 local suffix repair 推进成更强的 posterior filter / planner。
+- 当前最明显的剩余缺口不再只是 `pick_metal_heavy`，而是如何在不牺牲 `pick_smooth_metal`、`pick_smooth_metal_fast`、`pick_metal_heavy_fast` 等任务的前提下，继续把 local suffix repair 推进成更强的 posterior filter / planner。
 - simulation evidence ablation 目前只覆盖对象特定 force rule，对速度 / 净空等更细粒度规则的删减实验仍未展开。
 
 ## 7. 对比口径

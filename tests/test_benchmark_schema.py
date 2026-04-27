@@ -33,6 +33,49 @@ def _task() -> TaskConfig:
 
 
 class BenchmarkSchemaTest(unittest.TestCase):
+    def test_online_diagnosis_summary_counts_soft_and_hard_replans(self):
+        summary = runner._online_diagnosis_summary(
+            [
+                {
+                    "success": True,
+                    "execution_feedback_mode": "suffix_counterfactual_replan",
+                    "feedback_retry_count": 0,
+                    "counterfactual_replan_trace": [
+                        {
+                            "replan_mode": "soft_risk",
+                            "diagnosed_cause": "transfer_disturbance_overload",
+                            "selected_intervention": "transport_velocity_down",
+                        }
+                    ],
+                },
+                {
+                    "success": False,
+                    "execution_feedback_mode": "suffix_counterfactual_replan",
+                    "feedback_retry_count": 1,
+                    "counterfactual_replan_trace": [
+                        {
+                            "replan_mode": "hard_fail",
+                            "diagnosed_cause": "under_supported_load",
+                            "selected_intervention": "lift_force_up",
+                        }
+                    ],
+                },
+                {
+                    "success": True,
+                    "execution_feedback_mode": "observer_only",
+                    "feedback_retry_count": 0,
+                    "counterfactual_replan_trace": [],
+                },
+            ]
+        )
+
+        self.assertEqual(summary["suffix_counterfactual_replan_count"], 2)
+        self.assertEqual(summary["observer_only_count"], 1)
+        self.assertEqual(summary["online_diagnosis_count"], 2)
+        self.assertEqual(summary["soft_risk_replan_count"], 1)
+        self.assertEqual(summary["hard_fail_replan_count"], 1)
+        self.assertEqual(summary["online_replan_success_rate"], 0.5)
+
     def test_run_benchmark_separates_seed_plan_from_executed_plan_stats(self):
         seed_plan = {
             "gripper_force": 12.0,
@@ -208,6 +251,7 @@ class BenchmarkSchemaTest(unittest.TestCase):
                     "execution_feedback_mode": "suffix_counterfactual_replan",
                     "counterfactual_replan_trace": [
                         {
+                            "replan_mode": "soft_risk",
                             "diagnosed_cause": "under_supported_load",
                             "selected_intervention": "lift_force_up",
                         }
@@ -228,6 +272,10 @@ class BenchmarkSchemaTest(unittest.TestCase):
         [row] = runner._serialize_results([result])
         self.assertEqual(row["online_replan_success_rate"], 1.0)
         self.assertEqual(row["suffix_counterfactual_replan_count"], 1)
+        self.assertEqual(row["observer_only_count"], 0)
+        self.assertEqual(row["online_diagnosis_count"], 1)
+        self.assertEqual(row["soft_risk_replan_count"], 1)
+        self.assertEqual(row["hard_fail_replan_count"], 0)
         self.assertEqual(row["post_failure_retry_count"], 1)
         self.assertEqual(row["heavy_load_diagnosis_count"], 1)
         self.assertEqual(row["diagnosed_cause_distribution"]["under_supported_load"], 1)
@@ -323,8 +371,25 @@ class BenchmarkSchemaTest(unittest.TestCase):
             trial_records=[],
             method="rag_feedback",
         )
+        observer_only = runner.BenchmarkResult(
+            **{
+                **base.__dict__,
+                "method": "rag_feedback_observer_only",
+            }
+        )
 
-        with patch.object(runner, "run_benchmark", side_effect=[[base], [base], [base]]):
+        with patch.object(
+            runner,
+            "run_benchmark",
+            side_effect=[
+                [base],
+                [observer_only],
+                [base],
+                [observer_only],
+                [base],
+                [observer_only],
+            ],
+        ):
             rows = runner.run_benchmark_multi_seed_report(
                 n_trials_per_task=2,
                 seeds=[42, 43, 44],
@@ -334,6 +399,7 @@ class BenchmarkSchemaTest(unittest.TestCase):
 
         self.assertEqual(rows[0]["methods"]["rag_feedback"]["executed_plan_stats"]["mean"]["gripper_force"], 12.0)
         self.assertEqual(rows[0]["methods"]["rag_feedback"]["planner_diagnostics"]["belief_state_coverage_mean"], 0.8)
+        self.assertIn("rag_feedback_observer_only", rows[0]["methods"])
 
     def test_multi_seed_trial_record_serializer_keeps_seed_context(self):
         base = runner.BenchmarkResult(
@@ -418,7 +484,20 @@ class BenchmarkSchemaTest(unittest.TestCase):
                 "solver_selected_candidate": "belief_seed",
                 "evidence_support_score": 4.5,
             },
-            trial_records=[],
+            trial_records=[
+                {
+                    "success": True,
+                    "execution_feedback_mode": "suffix_counterfactual_replan",
+                    "feedback_retry_count": 0,
+                    "counterfactual_replan_trace": [
+                        {
+                            "replan_mode": "soft_risk",
+                            "diagnosed_cause": "transfer_disturbance_overload",
+                            "selected_intervention": "transport_velocity_down",
+                        }
+                    ],
+                }
+            ],
             method="rag_feedback",
         )
         rag_seed_43 = runner.BenchmarkResult(
@@ -472,6 +551,8 @@ class BenchmarkSchemaTest(unittest.TestCase):
         self.assertEqual(method_row["planner_diagnostics"]["belief_state_coverage_mean"], 0.8)
         self.assertEqual(method_row["executed_plan_stats"]["mean"]["gripper_force"], 12.5)
         self.assertEqual(method_row["failure_rates"]["dominant_failure_mode"], "none")
+        self.assertEqual(method_row["online_diagnosis_count"], 2)
+        self.assertEqual(method_row["soft_risk_replan_count"], 2)
         self.assertNotIn("rag_feedback_success_rate_mean", rows[0])
         self.assertEqual(split_rows[0]["rag_feedback_success_rate_mean"], 0.9)
 

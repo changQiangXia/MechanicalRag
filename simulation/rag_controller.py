@@ -1729,7 +1729,7 @@ class RAGController:
                 step=adjustment_step,
             )
             updated = replan_control_plan(previous_params, replan_request)
-            if replan_request.get("requested_suffix_start") == "lift" and "counterfactual_replan_trace" in updated:
+            if updated.get("counterfactual_replan_trace"):
                 updated["execution_feedback_mode"] = "suffix_counterfactual_replan"
             return updated
         return adjust_params_by_feedback(
@@ -1747,23 +1747,20 @@ class RAGController:
         adjustment_step: float = 4.0,
     ) -> dict[str, Any]:
         from .feedback import (
-            build_feedback_replan_request,
+            build_observation_replan_request,
             build_feedback_signal_from_observation,
             suggest_force_adjustment,
         )
 
         signal = build_feedback_signal_from_observation(previous_params, observation)
         suggestion = suggest_force_adjustment(signal)
-        replan_request = build_feedback_replan_request(
+        replan_request = build_observation_replan_request(
             previous_params,
-            signal,
+            observation,
             suggestion,
             step=adjustment_step,
         )
-        replan_request["observation_index"] = observation.get("observation_index")
-        replan_request["trigger_reason"] = observation.get("trigger_reason")
-        replan_request["observation_stage"] = observation.get("stage")
         updated = replan_control_plan(previous_params, replan_request)
-        if replan_request.get("requested_suffix_start") == "lift" and "counterfactual_replan_trace" in updated:
+        if updated.get("counterfactual_replan_trace"):
             updated["execution_feedback_mode"] = "suffix_counterfactual_replan"
         return updated

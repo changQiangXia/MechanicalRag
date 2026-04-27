@@ -125,23 +125,33 @@
             "seed_heavy_static_transport_floor"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
-        "success_rate": 0.95,
-        "success_count": 19,
+        "success_rate": 0.65,
+        "success_count": 13,
         "success_rate_ci95": [
-          0.7639,
-          0.9911
+          0.4329,
+          0.8188
         ],
-        "avg_time_sec": 4.1014,
-        "avg_steps": 11.35,
-        "avg_distance_error": 0.0405,
+        "avg_time_sec": 5.3703,
+        "avg_steps": 311.85,
+        "avg_distance_error": 0.0797,
         "reference_force_deviation_stats": {
-          "mean": 1.7,
-          "std": 1.880649383926509,
-          "min": 0.5,
-          "max": 4.5
+          "mean": 0.5799999999999986,
+          "std": 0.3914883879436764,
+          "min": 0.29999999999999716,
+          "max": 1.1000000000000014
         },
         "avg_risks": {
           "slip_risk": 0.0,
@@ -151,14 +161,14 @@
           "lift_hold_risk": 0.0,
           "transfer_sway_risk": 0.0,
           "placement_settle_risk": 0.0,
-          "stability_score": 0.773
+          "stability_score": 0.6385
         },
         "failure_rates": {
-          "physics_fail": 0.0,
+          "physics_fail": 0.35,
           "lift_hold_fail": 0.0,
-          "transfer_sway_fail": 0.05,
+          "transfer_sway_fail": 0.0,
           "placement_settle_fail": 0.0,
-          "dominant_failure_mode": "transfer_sway_fail"
+          "dominant_failure_mode": "physics_fail"
         },
         "seed_plan": {
           "gripper_force": 39.5,
@@ -172,47 +182,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 38.3,
-            "lift_force": 39.5,
-            "transfer_force": 39.59,
-            "transfer_alignment": 0.012,
-            "approach_height": 0.05,
-            "transport_velocity": 0.178,
-            "placement_velocity": 0.17200000000000001,
-            "lift_clearance": 0.07645
-          },
-          "std": {
-            "gripper_force": 1.880649383926509,
-            "lift_force": 0.0,
-            "transfer_force": 0.21980852911951446,
-            "transfer_alignment": 0.02930780388260186,
-            "approach_height": 0.0,
-            "transport_velocity": 0.021908902300206645,
-            "placement_velocity": 0.028209740758897633,
-            "lift_clearance": 0.0010990426455975706
-          },
-          "min": {
-            "gripper_force": 35.5,
-            "lift_force": 39.5,
-            "transfer_force": 39.5,
+            "gripper_force": 40.58,
+            "lift_force": 45.17,
+            "transfer_force": 40.58,
             "transfer_alignment": 0.0,
             "approach_height": 0.05,
-            "transport_velocity": 0.13,
-            "placement_velocity": 0.13,
-            "lift_clearance": 0.076
+            "transport_velocity": 0.17914,
+            "placement_velocity": 0.133,
+            "lift_clearance": 0.0949
+          },
+          "std": {
+            "gripper_force": 0.3914883879436764,
+            "lift_force": 2.055314036704288,
+            "transfer_force": 0.3914883879436764,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.0,
+            "transport_velocity": 0.00019574419397184277,
+            "placement_velocity": 0.009787209698591866,
+            "lift_clearance": 0.0068510467890143
+          },
+          "min": {
+            "gripper_force": 40.3,
+            "lift_force": 43.7,
+            "transfer_force": 40.3,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.179,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.09
           },
           "max": {
-            "gripper_force": 39.5,
-            "lift_force": 39.5,
-            "transfer_force": 40.1,
-            "transfer_alignment": 0.08,
+            "gripper_force": 41.1,
+            "lift_force": 47.9,
+            "transfer_force": 41.1,
+            "transfer_alignment": 0.0,
             "approach_height": 0.05,
-            "transport_velocity": 0.19,
-            "placement_velocity": 0.19,
-            "lift_clearance": 0.079
+            "transport_velocity": 0.1794,
+            "placement_velocity": 0.14,
+            "lift_clearance": 0.104
           },
           "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.6962,
@@ -238,6 +248,143 @@
             "seed_heavy_static_transport_floor"
           ]
         },
+        "online_replan_success_rate": 0.65,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 7,
+        "diagnosed_cause_distribution": {
+          "under_supported_load": 20
+        },
+        "selected_intervention_distribution": {
+          "lift_force_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.9,
+        "success_count": 18,
+        "success_rate_ci95": [
+          0.699,
+          0.9721
+        ],
+        "avg_time_sec": 3.5755,
+        "avg_steps": 86.3,
+        "avg_distance_error": 0.0535,
+        "reference_force_deviation_stats": {
+          "mean": 0.4799999999999997,
+          "std": 0.061558701125110124,
+          "min": 0.29999999999999716,
+          "max": 0.5
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.7005
+        },
+        "failure_rates": {
+          "physics_fail": 0.1,
+          "lift_hold_fail": 0.0,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "physics_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 39.5,
+          "lift_force": 39.5,
+          "transfer_force": 39.5,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.19,
+          "placement_velocity": 0.19,
+          "lift_clearance": 0.076
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 39.52,
+            "lift_force": 39.58,
+            "transfer_force": 39.58,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.189,
+            "placement_velocity": 0.179,
+            "lift_clearance": 0.07719999999999999
+          },
+          "std": {
+            "gripper_force": 0.061558701125110124,
+            "lift_force": 0.2462348045004361,
+            "transfer_force": 0.2462348045004361,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.0,
+            "transport_velocity": 0.003077935056255465,
+            "placement_velocity": 0.03385728561881009,
+            "lift_clearance": 0.003693522067506554
+          },
+          "min": {
+            "gripper_force": 39.5,
+            "lift_force": 39.5,
+            "transfer_force": 39.5,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.18,
+            "placement_velocity": 0.08,
+            "lift_clearance": 0.076
+          },
+          "max": {
+            "gripper_force": 39.7,
+            "lift_force": 40.3,
+            "transfer_force": 40.3,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.19,
+            "placement_velocity": 0.19,
+            "lift_clearance": 0.088
+          },
+          "dynamic_transport_mode_mode": "static",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.6962,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "local_search:gripper_force:up",
+          "evidence_rule_count": 3,
+          "evidence_support_score": 3.0,
+          "evidence_conflict_count": 1,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": true,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": false,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "specific_force_center",
+            "seed_uncertainty_force_guard",
+            "seed_low_friction_margin",
+            "seed_heavy_static_transport_floor"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 2,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -307,6 +454,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "fixed": {
@@ -376,6 +533,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       }
     }
@@ -504,37 +671,47 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
-        "success_rate": 0.7,
-        "success_count": 14,
+        "success_rate": 0.95,
+        "success_count": 19,
         "success_rate_ci95": [
-          0.481,
-          0.8545
+          0.7639,
+          0.9911
         ],
-        "avg_time_sec": 3.0999,
-        "avg_steps": 6.1,
-        "avg_distance_error": 0.0164,
+        "avg_time_sec": 3.7007,
+        "avg_steps": 7.3,
+        "avg_distance_error": 0.0221,
         "reference_force_deviation_stats": {
-          "mean": 5.500000000000001,
-          "std": 1.880649383926509,
-          "min": 4.300000000000001,
-          "max": 8.3
+          "mean": 6.12,
+          "std": 0.6582272843742791,
+          "min": 5.699999999999999,
+          "max": 7.100000000000001
         },
         "avg_risks": {
           "slip_risk": 0.0,
-          "compression_risk": 0.0534,
+          "compression_risk": 0.0378,
           "velocity_risk": 0.0,
           "clearance_risk": 0.0,
-          "lift_hold_risk": 0.0347,
+          "lift_hold_risk": 0.0246,
           "transfer_sway_risk": 0.0,
           "placement_settle_risk": 0.0,
-          "stability_score": 0.7545
+          "stability_score": 0.6971
         },
         "failure_rates": {
           "physics_fail": 0.0,
-          "lift_hold_fail": 0.3,
+          "lift_hold_fail": 0.05,
           "transfer_sway_fail": 0.0,
           "placement_settle_fail": 0.0,
           "dominant_failure_mode": "lift_hold_fail"
@@ -551,47 +728,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 15.5,
-            "lift_force": 15.620000000000001,
-            "transfer_force": 15.56,
-            "transfer_alignment": 0.008,
+            "gripper_force": 16.12,
+            "lift_force": 16.12,
+            "transfer_force": 16.12,
+            "transfer_alignment": 0.9440000000000001,
             "approach_height": 0.03,
-            "transport_velocity": 0.237,
-            "placement_velocity": 0.235,
-            "lift_clearance": 0.0684
+            "transport_velocity": 0.17200000000000001,
+            "placement_velocity": 0.17200000000000001,
+            "lift_clearance": 0.07379999999999999
           },
           "std": {
-            "gripper_force": 1.880649383926509,
-            "lift_force": 2.0808904976374647,
-            "transfer_force": 1.9810682923481884,
-            "transfer_alignment": 0.024623480450043696,
+            "gripper_force": 0.6582272843742791,
+            "lift_force": 0.6582272843742791,
+            "transfer_force": 0.6582272843742791,
+            "transfer_alignment": 0.03761298767853016,
             "approach_height": 0.0,
-            "transport_velocity": 0.02296450350111301,
-            "placement_velocity": 0.026056618514708557,
-            "lift_clearance": 0.0039656419139243605
+            "transport_velocity": 0.028209740758897633,
+            "placement_velocity": 0.028209740758897633,
+            "lift_clearance": 0.0028209740758897662
           },
           "min": {
-            "gripper_force": 14.3,
-            "lift_force": 14.3,
-            "transfer_force": 14.3,
-            "transfer_alignment": 0.0,
+            "gripper_force": 15.7,
+            "lift_force": 15.7,
+            "transfer_force": 15.7,
+            "transfer_alignment": 0.92,
             "approach_height": 0.03,
-            "transport_velocity": 0.18,
-            "placement_velocity": 0.18,
-            "lift_clearance": 0.066
+            "transport_velocity": 0.13,
+            "placement_velocity": 0.13,
+            "lift_clearance": 0.072
           },
           "max": {
-            "gripper_force": 18.3,
-            "lift_force": 19.1,
-            "transfer_force": 18.9,
-            "transfer_alignment": 0.08,
+            "gripper_force": 17.1,
+            "lift_force": 17.1,
+            "transfer_force": 17.1,
+            "transfer_alignment": 1.0,
             "approach_height": 0.03,
-            "transport_velocity": 0.25,
-            "placement_velocity": 0.25,
-            "lift_clearance": 0.076
+            "transport_velocity": 0.19,
+            "placement_velocity": 0.19,
+            "lift_clearance": 0.078
           },
           "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.6921,
@@ -615,6 +792,141 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.95,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 6,
+        "diagnosed_cause_distribution": {
+          "transfer_disturbance_overload": 20
+        },
+        "selected_intervention_distribution": {
+          "transfer_alignment_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.9,
+        "success_count": 18,
+        "success_rate_ci95": [
+          0.699,
+          0.9721
+        ],
+        "avg_time_sec": 3.1373,
+        "avg_steps": 6.1,
+        "avg_distance_error": 0.0189,
+        "reference_force_deviation_stats": {
+          "mean": 5.11,
+          "std": 1.3337323964210948,
+          "min": 4.300000000000001,
+          "max": 7.699999999999999
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0268,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0174,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.8138
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.1,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "lift_hold_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 14.3,
+          "lift_force": 14.3,
+          "transfer_force": 14.3,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.03,
+          "transport_velocity": 0.25,
+          "placement_velocity": 0.25,
+          "lift_clearance": 0.066
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 15.110000000000001,
+            "lift_force": 14.93,
+            "transfer_force": 14.93,
+            "transfer_alignment": 0.092,
+            "approach_height": 0.03,
+            "transport_velocity": 0.233,
+            "placement_velocity": 0.232,
+            "lift_clearance": 0.06945
+          },
+          "std": {
+            "gripper_force": 1.3337323964210948,
+            "lift_force": 0.9953047668665954,
+            "transfer_force": 0.9953047668665954,
+            "transfer_alignment": 0.28317002517550255,
+            "approach_height": 0.0,
+            "transport_velocity": 0.0271642179501289,
+            "placement_velocity": 0.02876401260347088,
+            "lift_clearance": 0.005835237784358062
+          },
+          "min": {
+            "gripper_force": 14.3,
+            "lift_force": 14.3,
+            "transfer_force": 14.3,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.03,
+            "transport_velocity": 0.18,
+            "placement_velocity": 0.18,
+            "lift_clearance": 0.066
+          },
+          "max": {
+            "gripper_force": 17.7,
+            "lift_force": 16.5,
+            "transfer_force": 16.5,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.03,
+            "transport_velocity": 0.25,
+            "placement_velocity": 0.25,
+            "lift_clearance": 0.081
+          },
+          "dynamic_transport_mode_mode": "static",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.6921,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "uncertainty_guard",
+          "evidence_rule_count": 4,
+          "evidence_support_score": 2.5,
+          "evidence_conflict_count": 1,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": true,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": false,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "specific_force_center",
+            "seed_uncertainty_force_guard"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 6,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -684,6 +996,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "fixed": {
@@ -753,6 +1075,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.02
       }
     }
@@ -880,23 +1212,33 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
-        "success_rate": 0.95,
-        "success_count": 19,
+        "success_rate": 1.0,
+        "success_count": 20,
         "success_rate_ci95": [
-          0.7639,
-          0.9911
+          0.8389,
+          1.0
         ],
-        "avg_time_sec": 1.8998,
-        "avg_steps": 6.0,
-        "avg_distance_error": 0.0081,
+        "avg_time_sec": 2.4416,
+        "avg_steps": 6.3,
+        "avg_distance_error": 0.0249,
         "reference_force_deviation_stats": {
-          "mean": 4.0,
-          "std": 1.4653901941300924,
-          "min": 3.4000000000000004,
-          "max": 7.399999999999999
+          "mean": 5.220000000000001,
+          "std": 0.6582272843742775,
+          "min": 4.800000000000001,
+          "max": 6.199999999999999
         },
         "avg_risks": {
           "slip_risk": 0.0,
@@ -906,14 +1248,14 @@
           "lift_hold_risk": 0.0,
           "transfer_sway_risk": 0.0,
           "placement_settle_risk": 0.0,
-          "stability_score": 0.8361
+          "stability_score": 0.8825
         },
         "failure_rates": {
           "physics_fail": 0.0,
-          "lift_hold_fail": 0.05,
+          "lift_hold_fail": 0.0,
           "transfer_sway_fail": 0.0,
           "placement_settle_fail": 0.0,
-          "dominant_failure_mode": "lift_hold_fail"
+          "dominant_failure_mode": "none"
         },
         "seed_plan": {
           "gripper_force": 13.4,
@@ -927,47 +1269,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 14.0,
-            "lift_force": 14.08,
-            "transfer_force": 14.03,
-            "transfer_alignment": 0.004,
+            "gripper_force": 15.22,
+            "lift_force": 15.22,
+            "transfer_force": 15.22,
+            "transfer_alignment": 0.9440000000000001,
             "approach_height": 0.04,
-            "transport_velocity": 0.34349999999999997,
-            "placement_velocity": 0.34349999999999997,
-            "lift_clearance": 0.05725
+            "transport_velocity": 0.27199999999999996,
+            "placement_velocity": 0.27199999999999996,
+            "lift_clearance": 0.0638
           },
           "std": {
-            "gripper_force": 1.4653901941300924,
-            "lift_force": 1.6675225872375363,
-            "transfer_force": 1.542758977662387,
-            "transfer_alignment": 0.01788854381999832,
+            "gripper_force": 0.6582272843742775,
+            "lift_force": 0.6582272843742775,
+            "transfer_force": 0.6582272843742775,
+            "transfer_alignment": 0.03761298767853016,
             "approach_height": 0.0,
-            "transport_velocity": 0.017554426642213114,
-            "placement_velocity": 0.017554426642213114,
-            "lift_clearance": 0.0031933318682925258
+            "transport_velocity": 0.028209740758897622,
+            "placement_velocity": 0.028209740758897622,
+            "lift_clearance": 0.0028209740758897662
           },
           "min": {
-            "gripper_force": 13.4,
-            "lift_force": 13.4,
-            "transfer_force": 13.4,
-            "transfer_alignment": 0.0,
+            "gripper_force": 14.8,
+            "lift_force": 14.8,
+            "transfer_force": 14.8,
+            "transfer_alignment": 0.92,
             "approach_height": 0.04,
-            "transport_velocity": 0.28,
-            "placement_velocity": 0.28,
-            "lift_clearance": 0.056
+            "transport_velocity": 0.23,
+            "placement_velocity": 0.23,
+            "lift_clearance": 0.062
           },
           "max": {
-            "gripper_force": 17.4,
-            "lift_force": 18.2,
-            "transfer_force": 18.0,
-            "transfer_alignment": 0.08,
+            "gripper_force": 16.2,
+            "lift_force": 16.2,
+            "transfer_force": 16.2,
+            "transfer_alignment": 1.0,
             "approach_height": 0.04,
-            "transport_velocity": 0.35,
-            "placement_velocity": 0.35,
-            "lift_clearance": 0.066
+            "transport_velocity": 0.29,
+            "placement_velocity": 0.29,
+            "lift_clearance": 0.068
           },
           "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.6057,
@@ -990,6 +1332,140 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 1.0,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 6,
+        "diagnosed_cause_distribution": {
+          "transfer_disturbance_overload": 20
+        },
+        "selected_intervention_distribution": {
+          "transfer_alignment_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 1.0,
+        "success_count": 20,
+        "success_rate_ci95": [
+          0.8389,
+          1.0
+        ],
+        "avg_time_sec": 2.0043,
+        "avg_steps": 6.0,
+        "avg_distance_error": 0.0103,
+        "reference_force_deviation_stats": {
+          "mean": 3.87,
+          "std": 1.0100026055203495,
+          "min": 3.4000000000000004,
+          "max": 6.800000000000001
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.83
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.0,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "none"
+        },
+        "seed_plan": {
+          "gripper_force": 13.4,
+          "lift_force": 13.4,
+          "transfer_force": 13.4,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.04,
+          "transport_velocity": 0.35,
+          "placement_velocity": 0.35,
+          "lift_clearance": 0.056
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 13.870000000000001,
+            "lift_force": 13.81,
+            "transfer_force": 13.81,
+            "transfer_alignment": 0.092,
+            "approach_height": 0.04,
+            "transport_velocity": 0.33799999999999997,
+            "placement_velocity": 0.33699999999999997,
+            "lift_clearance": 0.0582
+          },
+          "std": {
+            "gripper_force": 1.0100026055203495,
+            "lift_force": 0.8497058314499198,
+            "transfer_force": 0.8497058314499198,
+            "transfer_alignment": 0.28317002517550255,
+            "approach_height": 0.0,
+            "transport_velocity": 0.025047323630532484,
+            "placement_velocity": 0.026969768650335707,
+            "lift_clearance": 0.005074186478742441
+          },
+          "min": {
+            "gripper_force": 13.4,
+            "lift_force": 13.4,
+            "transfer_force": 13.4,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.04,
+            "transport_velocity": 0.28,
+            "placement_velocity": 0.28,
+            "lift_clearance": 0.056
+          },
+          "max": {
+            "gripper_force": 16.8,
+            "lift_force": 15.6,
+            "transfer_force": 15.6,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.04,
+            "transport_velocity": 0.35,
+            "placement_velocity": 0.35,
+            "lift_clearance": 0.073
+          },
+          "dynamic_transport_mode_mode": "static",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.6057,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "uncertainty_guard",
+          "evidence_rule_count": 1,
+          "evidence_support_score": 1.5,
+          "evidence_conflict_count": 0,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": false,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": false,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "seed_uncertainty_force_guard"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 4,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -1059,6 +1535,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "fixed": {
@@ -1128,6 +1614,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.01
       }
     }
@@ -1256,23 +1752,33 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
-        "success_rate": 0.9,
-        "success_count": 18,
+        "success_rate": 0.85,
+        "success_count": 17,
         "success_rate_ci95": [
-          0.699,
-          0.9721
+          0.6396,
+          0.9476
         ],
-        "avg_time_sec": 6.2414,
-        "avg_steps": 16.1,
-        "avg_distance_error": 0.0239,
+        "avg_time_sec": 7.3705,
+        "avg_steps": 17.0,
+        "avg_distance_error": 0.0256,
         "reference_force_deviation_stats": {
-          "mean": 5.400000000000001,
-          "std": 1.6415653633362466,
-          "min": 4.600000000000001,
-          "max": 8.600000000000001
+          "mean": 2.8500000000000014,
+          "std": 0.6219663216470495,
+          "min": 1.7999999999999972,
+          "max": 3.200000000000003
         },
         "avg_risks": {
           "slip_risk": 0.0,
@@ -1282,14 +1788,14 @@
           "lift_hold_risk": 0.0,
           "transfer_sway_risk": 0.0,
           "placement_settle_risk": 0.0,
-          "stability_score": 0.9099
+          "stability_score": 0.8284
         },
         "failure_rates": {
           "physics_fail": 0.0,
-          "lift_hold_fail": 0.05,
+          "lift_hold_fail": 0.0,
           "transfer_sway_fail": 0.05,
-          "placement_settle_fail": 0.0,
-          "dominant_failure_mode": "lift_hold_fail"
+          "placement_settle_fail": 0.1,
+          "dominant_failure_mode": "placement_settle_fail"
         },
         "seed_plan": {
           "gripper_force": 35.4,
@@ -1303,47 +1809,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 34.6,
-            "lift_force": 35.4,
-            "transfer_force": 35.46,
-            "transfer_alignment": 0.008,
-            "approach_height": 0.06,
-            "transport_velocity": 0.163,
-            "placement_velocity": 0.16,
-            "lift_clearance": 0.09129999999999999
-          },
-          "std": {
-            "gripper_force": 1.6415653633362466,
-            "lift_force": 0.0,
-            "transfer_force": 0.18467610337532817,
-            "transfer_alignment": 0.024623480450043696,
-            "approach_height": 0.0,
-            "transport_velocity": 0.015927467172350912,
-            "placement_velocity": 0.020519567041703088,
-            "lift_clearance": 0.0009233805168766395
-          },
-          "min": {
-            "gripper_force": 31.4,
-            "lift_force": 35.4,
-            "transfer_force": 35.4,
-            "transfer_alignment": 0.0,
+            "gripper_force": 37.15,
+            "lift_force": 37.15,
+            "transfer_force": 37.15,
+            "transfer_alignment": 0.9400000000000001,
             "approach_height": 0.06,
             "transport_velocity": 0.12,
             "placement_velocity": 0.12,
-            "lift_clearance": 0.091
+            "lift_clearance": 0.0985
+          },
+          "std": {
+            "gripper_force": 0.6219663216470495,
+            "lift_force": 0.6219663216470495,
+            "transfer_force": 0.6219663216470495,
+            "transfer_alignment": 0.035540932665545526,
+            "approach_height": 0.0,
+            "transport_velocity": 0.0,
+            "placement_velocity": 0.0,
+            "lift_clearance": 0.0026655699499159116
+          },
+          "min": {
+            "gripper_force": 36.8,
+            "lift_force": 36.8,
+            "transfer_force": 36.8,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.06,
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.097
           },
           "max": {
-            "gripper_force": 35.4,
-            "lift_force": 35.4,
-            "transfer_force": 36.0,
-            "transfer_alignment": 0.08,
+            "gripper_force": 38.2,
+            "lift_force": 38.2,
+            "transfer_force": 38.2,
+            "transfer_alignment": 1.0,
             "approach_height": 0.06,
-            "transport_velocity": 0.17,
-            "placement_velocity": 0.17,
-            "lift_clearance": 0.094
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.103
           },
           "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.8818,
@@ -1367,6 +1873,141 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.85,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 5,
+        "diagnosed_cause_distribution": {
+          "transfer_disturbance_overload": 20
+        },
+        "selected_intervention_distribution": {
+          "transfer_alignment_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.95,
+        "success_count": 19,
+        "success_rate_ci95": [
+          0.7639,
+          0.9911
+        ],
+        "avg_time_sec": 6.3338,
+        "avg_steps": 16.1,
+        "avg_distance_error": 0.0264,
+        "reference_force_deviation_stats": {
+          "mean": 4.5600000000000005,
+          "std": 0.08207826816681349,
+          "min": 4.399999999999999,
+          "max": 4.600000000000001
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.929
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.0,
+          "transfer_sway_fail": 0.05,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "transfer_sway_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 35.4,
+          "lift_force": 35.4,
+          "transfer_force": 35.4,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.06,
+          "transport_velocity": 0.17,
+          "placement_velocity": 0.17,
+          "lift_clearance": 0.091
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 35.44,
+            "lift_force": 35.9,
+            "transfer_force": 35.56,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.06,
+            "transport_velocity": 0.161,
+            "placement_velocity": 0.16,
+            "lift_clearance": 0.0939
+          },
+          "std": {
+            "gripper_force": 0.08207826816681349,
+            "lift_force": 1.2888183082106452,
+            "transfer_force": 0.32831307266725107,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.0,
+            "transport_velocity": 0.018609561775433735,
+            "placement_velocity": 0.020519567041703088,
+            "lift_clearance": 0.00595509512054483
+          },
+          "min": {
+            "gripper_force": 35.4,
+            "lift_force": 35.4,
+            "transfer_force": 35.4,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.06,
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.091
+          },
+          "max": {
+            "gripper_force": 35.6,
+            "lift_force": 39.6,
+            "transfer_force": 36.2,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.06,
+            "transport_velocity": 0.17,
+            "placement_velocity": 0.17,
+            "lift_clearance": 0.106
+          },
+          "dynamic_transport_mode_mode": "static",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.8818,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "uncertainty_guard",
+          "evidence_rule_count": 2,
+          "evidence_support_score": 2.75,
+          "evidence_conflict_count": 0,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": true,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": true,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "specific_force_center",
+            "seed_uncertainty_force_guard"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 4,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -1436,6 +2077,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "fixed": {
@@ -1505,6 +2156,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.01
       }
     }
@@ -1637,40 +2298,50 @@
             "seed_lift_margin_requirement"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
-        "success_rate": 0.9,
-        "success_count": 18,
+        "success_rate": 0.65,
+        "success_count": 13,
         "success_rate_ci95": [
-          0.699,
-          0.9721
+          0.4329,
+          0.8188
         ],
-        "avg_time_sec": 3.3966,
-        "avg_steps": 7.3,
-        "avg_distance_error": 0.0288,
+        "avg_time_sec": 4.6994,
+        "avg_steps": 6.55,
+        "avg_distance_error": 0.0423,
         "reference_force_deviation_stats": {
-          "mean": 4.299999999999999,
-          "std": 1.9574419397183715,
-          "min": 2.8999999999999986,
-          "max": 6.899999999999999
+          "mean": 1.659999999999999,
+          "std": 0.4083342284272345,
+          "min": 1.2999999999999972,
+          "max": 2.1000000000000014
         },
         "avg_risks": {
           "slip_risk": 0.0,
           "compression_risk": 0.0,
           "velocity_risk": 0.0,
           "clearance_risk": 0.0,
-          "lift_hold_risk": 0.0687,
-          "transfer_sway_risk": 0.0168,
-          "placement_settle_risk": 0.0428,
-          "stability_score": 0.7205
+          "lift_hold_risk": 0.0,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.6251
         },
         "failure_rates": {
           "physics_fail": 0.0,
           "lift_hold_fail": 0.0,
-          "transfer_sway_fail": 0.0,
-          "placement_settle_fail": 0.1,
-          "dominant_failure_mode": "placement_settle_fail"
+          "transfer_sway_fail": 0.2,
+          "placement_settle_fail": 0.15,
+          "dominant_failure_mode": "transfer_sway_fail"
         },
         "seed_plan": {
           "gripper_force": 39.6,
@@ -1684,47 +2355,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 38.2,
-            "lift_force": 40.839999999999996,
-            "transfer_force": 40.86,
-            "transfer_alignment": 0.008,
-            "approach_height": 0.05,
-            "transport_velocity": 0.299,
-            "placement_velocity": 0.291,
-            "lift_clearance": 0.07185
-          },
-          "std": {
-            "gripper_force": 1.9574419397183715,
-            "lift_force": 0.17888543819998412,
-            "transfer_force": 0.18467610337532817,
-            "transfer_alignment": 0.024623480450043696,
-            "approach_height": 0.0,
-            "transport_velocity": 0.018890264827766654,
-            "placement_velocity": 0.027890764364608318,
-            "lift_clearance": 0.0015652475842498543
-          },
-          "min": {
-            "gripper_force": 35.6,
-            "lift_force": 40.8,
-            "transfer_force": 40.8,
+            "gripper_force": 40.84,
+            "lift_force": 47.31,
+            "transfer_force": 42.04,
             "transfer_alignment": 0.0,
             "approach_height": 0.05,
-            "transport_velocity": 0.25,
-            "placement_velocity": 0.25,
-            "lift_clearance": 0.071
+            "transport_velocity": 0.2325,
+            "placement_velocity": 0.2325,
+            "lift_clearance": 0.0927
+          },
+          "std": {
+            "gripper_force": 0.4083342284272345,
+            "lift_force": 2.143754699242971,
+            "transfer_force": 0.4083342284272309,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.0,
+            "transport_velocity": 0.02552088927670203,
+            "placement_velocity": 0.02552088927670203,
+            "lift_clearance": 0.0071458489974765655
+          },
+          "min": {
+            "gripper_force": 40.4,
+            "lift_force": 45.0,
+            "transfer_force": 41.6,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.21,
+            "placement_velocity": 0.21,
+            "lift_clearance": 0.085
           },
           "max": {
-            "gripper_force": 39.6,
-            "lift_force": 41.6,
-            "transfer_force": 41.4,
-            "transfer_alignment": 0.08,
+            "gripper_force": 41.2,
+            "lift_force": 49.2,
+            "transfer_force": 42.4,
+            "transfer_alignment": 0.0,
             "approach_height": 0.05,
-            "transport_velocity": 0.31,
-            "placement_velocity": 0.31,
-            "lift_clearance": 0.076
+            "transport_velocity": 0.26,
+            "placement_velocity": 0.26,
+            "lift_clearance": 0.099
           },
           "dynamic_transport_mode_mode": "high_speed_low_friction",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.6053,
@@ -1751,6 +2422,144 @@
             "seed_lift_margin_requirement"
           ]
         },
+        "online_replan_success_rate": 0.65,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 11,
+        "diagnosed_cause_distribution": {
+          "under_supported_load": 20
+        },
+        "selected_intervention_distribution": {
+          "lift_force_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.95,
+        "success_count": 19,
+        "success_rate_ci95": [
+          0.7639,
+          0.9911
+        ],
+        "avg_time_sec": 3.6636,
+        "avg_steps": 6.1,
+        "avg_distance_error": 0.0339,
+        "reference_force_deviation_stats": {
+          "mean": 2.8200000000000003,
+          "std": 0.10052493799000478,
+          "min": 2.700000000000003,
+          "max": 2.8999999999999986
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0634,
+          "transfer_sway_risk": 0.0155,
+          "placement_settle_risk": 0.0395,
+          "stability_score": 0.6447
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.05,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "lift_hold_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 39.6,
+          "lift_force": 40.8,
+          "transfer_force": 40.8,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.31,
+          "placement_velocity": 0.31,
+          "lift_clearance": 0.071
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 39.68,
+            "lift_force": 41.879999999999995,
+            "transfer_force": 41.239999999999995,
+            "transfer_alignment": 0.092,
+            "approach_height": 0.05,
+            "transport_velocity": 0.289,
+            "placement_velocity": 0.286,
+            "lift_clearance": 0.0799
+          },
+          "std": {
+            "gripper_force": 0.10052493799000478,
+            "lift_force": 1.833489626511783,
+            "transfer_force": 0.6475866127805859,
+            "transfer_alignment": 0.28317002517550255,
+            "approach_height": 0.0,
+            "transport_velocity": 0.027318780892889128,
+            "placement_velocity": 0.030847673289381504,
+            "lift_clearance": 0.013691718588063985
+          },
+          "min": {
+            "gripper_force": 39.6,
+            "lift_force": 40.8,
+            "transfer_force": 40.8,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.24,
+            "placement_velocity": 0.24,
+            "lift_clearance": 0.071
+          },
+          "max": {
+            "gripper_force": 39.8,
+            "lift_force": 45.4,
+            "transfer_force": 42.8,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.05,
+            "transport_velocity": 0.31,
+            "placement_velocity": 0.31,
+            "lift_clearance": 0.105
+          },
+          "dynamic_transport_mode_mode": "high_speed_low_friction",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.6053,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "local_search:gripper_force:up",
+          "evidence_rule_count": 3,
+          "evidence_support_score": 3.5,
+          "evidence_conflict_count": 1,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": true,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": true,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "specific_force_center",
+            "seed_uncertainty_force_guard",
+            "seed_low_friction_margin",
+            "seed_high_speed_low_friction_cap",
+            "seed_lift_margin_requirement"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 8,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -1820,6 +2629,16 @@
           "dynamic_transport_mode_mode": "high_speed_low_friction"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "fixed": {
@@ -1889,6 +2708,16 @@
           "dynamic_transport_mode_mode": "high_speed_low_friction"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       }
     }
@@ -2017,6 +2846,16 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
@@ -2026,14 +2865,14 @@
           0.7639,
           0.9911
         ],
-        "avg_time_sec": 2.0917,
-        "avg_steps": 15.8,
-        "avg_distance_error": 0.0257,
+        "avg_time_sec": 2.2987,
+        "avg_steps": 7.15,
+        "avg_distance_error": 0.0114,
         "reference_force_deviation_stats": {
-          "mean": 5.199999999999998,
-          "std": 1.6415653633362466,
-          "min": 4.399999999999999,
-          "max": 8.399999999999999
+          "mean": 6.010000000000001,
+          "std": 0.512886567945532,
+          "min": 5.800000000000001,
+          "max": 7.199999999999999
         },
         "avg_risks": {
           "slip_risk": 0.0,
@@ -2043,14 +2882,14 @@
           "lift_hold_risk": 0.0,
           "transfer_sway_risk": 0.0,
           "placement_settle_risk": 0.0,
-          "stability_score": 0.9425
+          "stability_score": 0.9633
         },
         "failure_rates": {
           "physics_fail": 0.0,
-          "lift_hold_fail": 0.0,
+          "lift_hold_fail": 0.05,
           "transfer_sway_fail": 0.0,
-          "placement_settle_fail": 0.05,
-          "dominant_failure_mode": "placement_settle_fail"
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "lift_hold_fail"
         },
         "seed_plan": {
           "gripper_force": 17.4,
@@ -2064,47 +2903,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 18.2,
-            "lift_force": 18.279999999999998,
-            "transfer_force": 18.229999999999997,
-            "transfer_alignment": 0.004,
+            "gripper_force": 19.01,
+            "lift_force": 19.01,
+            "transfer_force": 19.01,
+            "transfer_alignment": 0.932,
             "approach_height": 0.04,
-            "transport_velocity": 0.302,
-            "placement_velocity": 0.3,
-            "lift_clearance": 0.06265
+            "transport_velocity": 0.241,
+            "placement_velocity": 0.241,
+            "lift_clearance": 0.0679
           },
           "std": {
-            "gripper_force": 1.6415653633362466,
-            "lift_force": 1.8150250107019696,
-            "transfer_force": 1.7072908672113134,
-            "transfer_alignment": 0.01788854381999832,
+            "gripper_force": 0.512886567945532,
+            "lift_force": 0.512886567945532,
+            "transfer_force": 0.512886567945532,
+            "transfer_alignment": 0.029307803882601846,
             "approach_height": 0.0,
-            "transport_velocity": 0.018238190122579823,
-            "placement_velocity": 0.022478059477960655,
-            "lift_clearance": 0.003513507768897809
+            "transport_velocity": 0.021980852911951395,
+            "placement_velocity": 0.021980852911951395,
+            "lift_clearance": 0.0021980852911951364
           },
           "min": {
-            "gripper_force": 17.4,
-            "lift_force": 17.4,
-            "transfer_force": 17.4,
-            "transfer_alignment": 0.0,
+            "gripper_force": 18.8,
+            "lift_force": 18.8,
+            "transfer_force": 18.8,
+            "transfer_alignment": 0.92,
             "approach_height": 0.04,
-            "transport_velocity": 0.24,
-            "placement_velocity": 0.24,
-            "lift_clearance": 0.061
+            "transport_velocity": 0.19,
+            "placement_velocity": 0.19,
+            "lift_clearance": 0.067
           },
           "max": {
-            "gripper_force": 21.4,
-            "lift_force": 22.2,
-            "transfer_force": 22.0,
-            "transfer_alignment": 0.08,
+            "gripper_force": 20.2,
+            "lift_force": 20.2,
+            "transfer_force": 20.2,
+            "transfer_alignment": 1.0,
             "approach_height": 0.04,
-            "transport_velocity": 0.31,
-            "placement_velocity": 0.31,
-            "lift_clearance": 0.071
+            "transport_velocity": 0.25,
+            "placement_velocity": 0.25,
+            "lift_clearance": 0.073
           },
           "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.7366,
@@ -2127,6 +2966,140 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.95,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 3,
+        "diagnosed_cause_distribution": {
+          "transfer_disturbance_overload": 20
+        },
+        "selected_intervention_distribution": {
+          "transfer_alignment_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.95,
+        "success_count": 19,
+        "success_rate_ci95": [
+          0.7639,
+          0.9911
+        ],
+        "avg_time_sec": 2.0133,
+        "avg_steps": 16.35,
+        "avg_distance_error": 0.0252,
+        "reference_force_deviation_stats": {
+          "mean": 4.699999999999999,
+          "std": 0.7412649217456115,
+          "min": 4.399999999999999,
+          "max": 6.600000000000001
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.9629
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.05,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "lift_hold_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 17.4,
+          "lift_force": 17.4,
+          "transfer_force": 17.4,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.04,
+          "transport_velocity": 0.31,
+          "placement_velocity": 0.31,
+          "lift_clearance": 0.061
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 17.7,
+            "lift_force": 17.86,
+            "transfer_force": 17.7,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.04,
+            "transport_velocity": 0.3025,
+            "placement_velocity": 0.3015,
+            "lift_clearance": 0.06344999999999999
+          },
+          "std": {
+            "gripper_force": 0.7412649217456115,
+            "lift_force": 1.1966620241321275,
+            "transfer_force": 0.7412649217456115,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.0,
+            "transport_velocity": 0.018317377426626157,
+            "placement_velocity": 0.021095023109728984,
+            "lift_clearance": 0.0059953929681135385
+          },
+          "min": {
+            "gripper_force": 17.4,
+            "lift_force": 17.4,
+            "transfer_force": 17.4,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.04,
+            "transport_velocity": 0.26,
+            "placement_velocity": 0.24,
+            "lift_clearance": 0.061
+          },
+          "max": {
+            "gripper_force": 19.6,
+            "lift_force": 21.2,
+            "transfer_force": 19.6,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.04,
+            "transport_velocity": 0.31,
+            "placement_velocity": 0.31,
+            "lift_clearance": 0.078
+          },
+          "dynamic_transport_mode_mode": "static",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.7366,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "uncertainty_guard",
+          "evidence_rule_count": 3,
+          "evidence_support_score": 3.0,
+          "evidence_conflict_count": 0,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": false,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": true,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "seed_uncertainty_force_guard"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 3,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -2196,6 +3169,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "fixed": {
@@ -2265,6 +3248,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.01
       }
     }
@@ -2392,6 +3385,16 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
@@ -2401,24 +3404,24 @@
           0.584,
           0.9193
         ],
-        "avg_time_sec": 4.0569,
+        "avg_time_sec": 4.7218,
         "avg_steps": 9.0,
-        "avg_distance_error": 0.0248,
+        "avg_distance_error": 0.0272,
         "reference_force_deviation_stats": {
-          "mean": 6.300000000000001,
-          "std": 1.7770466332772772,
-          "min": 5.300000000000001,
-          "max": 9.3
+          "mean": 7.19,
+          "std": 0.6851046789014311,
+          "min": 6.699999999999999,
+          "max": 8.100000000000001
         },
         "avg_risks": {
           "slip_risk": 0.0,
-          "compression_risk": 0.0389,
+          "compression_risk": 0.0245,
           "velocity_risk": 0.0,
           "clearance_risk": 0.0,
-          "lift_hold_risk": 0.0253,
+          "lift_hold_risk": 0.016,
           "transfer_sway_risk": 0.0,
           "placement_settle_risk": 0.0,
-          "stability_score": 0.8238
+          "stability_score": 0.7469
         },
         "failure_rates": {
           "physics_fail": 0.0,
@@ -2439,47 +3442,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 14.8,
-            "lift_force": 14.84,
-            "transfer_force": 14.89,
-            "transfer_alignment": 0.012,
-            "approach_height": 0.02,
-            "transport_velocity": 0.1275,
-            "placement_velocity": 0.1275,
-            "lift_clearance": 0.05765
-          },
-          "std": {
-            "gripper_force": 1.7770466332772772,
-            "lift_force": 1.855404623199337,
-            "transfer_force": 1.9428411100621086,
-            "transfer_alignment": 0.02930780388260186,
-            "approach_height": 0.0,
-            "transport_velocity": 0.004442616583193197,
-            "placement_velocity": 0.004442616583193197,
-            "lift_clearance": 0.0031165939573092995
-          },
-          "min": {
-            "gripper_force": 13.8,
-            "lift_force": 13.8,
-            "transfer_force": 13.8,
-            "transfer_alignment": 0.0,
+            "gripper_force": 15.69,
+            "lift_force": 15.69,
+            "transfer_force": 15.69,
+            "transfer_alignment": 0.9480000000000001,
             "approach_height": 0.02,
             "transport_velocity": 0.12,
             "placement_velocity": 0.12,
-            "lift_clearance": 0.056
+            "lift_clearance": 0.0641
+          },
+          "std": {
+            "gripper_force": 0.6851046789014311,
+            "lift_force": 0.6851046789014311,
+            "transfer_force": 0.6851046789014311,
+            "transfer_alignment": 0.03914883879436741,
+            "approach_height": 0.0,
+            "transport_velocity": 0.0,
+            "placement_velocity": 0.0,
+            "lift_clearance": 0.00293616290957756
+          },
+          "min": {
+            "gripper_force": 15.2,
+            "lift_force": 15.2,
+            "transfer_force": 15.2,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.02,
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.062
           },
           "max": {
-            "gripper_force": 17.8,
-            "lift_force": 18.6,
-            "transfer_force": 18.4,
-            "transfer_alignment": 0.08,
+            "gripper_force": 16.6,
+            "lift_force": 16.6,
+            "transfer_force": 16.6,
+            "transfer_alignment": 1.0,
             "approach_height": 0.02,
-            "transport_velocity": 0.13,
-            "placement_velocity": 0.13,
-            "lift_clearance": 0.066
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.068
           },
           "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.7376,
@@ -2502,6 +3505,140 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.8,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 7,
+        "diagnosed_cause_distribution": {
+          "transfer_disturbance_overload": 20
+        },
+        "selected_intervention_distribution": {
+          "transfer_alignment_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.95,
+        "success_count": 19,
+        "success_rate_ci95": [
+          0.7639,
+          0.9911
+        ],
+        "avg_time_sec": 4.2468,
+        "avg_steps": 9.0,
+        "avg_distance_error": 0.025,
+        "reference_force_deviation_stats": {
+          "mean": 5.9,
+          "std": 0.9536632970868313,
+          "min": 5.300000000000001,
+          "max": 7.5
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0079,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0051,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.8986
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.05,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "lift_hold_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 13.8,
+          "lift_force": 13.8,
+          "transfer_force": 13.8,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.02,
+          "transport_velocity": 0.13,
+          "placement_velocity": 0.13,
+          "lift_clearance": 0.056
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 14.4,
+            "lift_force": 14.4,
+            "transfer_force": 14.4,
+            "transfer_alignment": 0.184,
+            "approach_height": 0.02,
+            "transport_velocity": 0.127,
+            "placement_velocity": 0.127,
+            "lift_clearance": 0.0587
+          },
+          "std": {
+            "gripper_force": 0.9536632970868313,
+            "lift_force": 0.9536632970868313,
+            "transfer_force": 0.9536632970868313,
+            "transfer_alignment": 0.37756003356733675,
+            "approach_height": 0.0,
+            "transport_velocity": 0.0047016234598162765,
+            "placement_velocity": 0.0047016234598162765,
+            "lift_clearance": 0.004856899595854387
+          },
+          "min": {
+            "gripper_force": 13.8,
+            "lift_force": 13.8,
+            "transfer_force": 13.8,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.02,
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.056
+          },
+          "max": {
+            "gripper_force": 16.0,
+            "lift_force": 16.0,
+            "transfer_force": 16.0,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.02,
+            "transport_velocity": 0.13,
+            "placement_velocity": 0.13,
+            "lift_clearance": 0.071
+          },
+          "dynamic_transport_mode_mode": "static",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.7376,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "uncertainty_guard",
+          "evidence_rule_count": 2,
+          "evidence_support_score": 4.0,
+          "evidence_conflict_count": 0,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": false,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": true,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "seed_uncertainty_force_guard"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 6,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -2571,6 +3708,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.005
       },
       "fixed": {
@@ -2640,6 +3787,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.03
       }
     }
@@ -2768,6 +3925,16 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
@@ -2777,29 +3944,29 @@
           0.6396,
           0.9476
         ],
-        "avg_time_sec": 2.6641,
-        "avg_steps": 6.0,
-        "avg_distance_error": 0.0345,
+        "avg_time_sec": 2.9795,
+        "avg_steps": 6.25,
+        "avg_distance_error": 0.0223,
         "reference_force_deviation_stats": {
-          "mean": 2.5999999999999996,
-          "std": 1.8806493839265082,
-          "min": 1.4000000000000004,
-          "max": 5.399999999999999
+          "mean": 3.1500000000000004,
+          "std": 0.6219663216470463,
+          "min": 2.8000000000000007,
+          "max": 4.199999999999999
         },
         "avg_risks": {
           "slip_risk": 0.0,
-          "compression_risk": 0.0333,
+          "compression_risk": 0.0076,
           "velocity_risk": 0.0,
-          "clearance_risk": 0.0367,
-          "lift_hold_risk": 0.0217,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.005,
           "transfer_sway_risk": 0.0,
-          "placement_settle_risk": 0.0055,
-          "stability_score": 0.8107
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.8431
         },
         "failure_rates": {
           "physics_fail": 0.0,
-          "lift_hold_fail": 0.15,
-          "transfer_sway_fail": 0.0,
+          "lift_hold_fail": 0.1,
+          "transfer_sway_fail": 0.05,
           "placement_settle_fail": 0.0,
           "dominant_failure_mode": "lift_hold_fail"
         },
@@ -2815,47 +3982,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 15.6,
-            "lift_force": 15.6,
-            "transfer_force": 15.75,
-            "transfer_alignment": 0.02,
+            "gripper_force": 16.15,
+            "lift_force": 16.15,
+            "transfer_force": 16.15,
+            "transfer_alignment": 0.9400000000000001,
             "approach_height": 0.03,
-            "transport_velocity": 0.291,
-            "placement_velocity": 0.289,
-            "lift_clearance": 0.05765
+            "transport_velocity": 0.235,
+            "placement_velocity": 0.235,
+            "lift_clearance": 0.0635
           },
           "std": {
-            "gripper_force": 1.8806493839265082,
-            "lift_force": 1.8806493839265082,
-            "transfer_force": 2.119458719380468,
-            "transfer_alignment": 0.03554093266554554,
+            "gripper_force": 0.6219663216470463,
+            "lift_force": 0.6219663216470463,
+            "transfer_force": 0.6219663216470463,
+            "transfer_alignment": 0.035540932665545526,
             "approach_height": 0.0,
-            "transport_velocity": 0.03093286448525513,
-            "placement_velocity": 0.032911364218713914,
-            "lift_clearance": 0.00266112362496905
+            "transport_velocity": 0.026655699499159156,
+            "placement_velocity": 0.026655699499159156,
+            "lift_clearance": 0.002665569949915918
           },
           "min": {
-            "gripper_force": 14.4,
-            "lift_force": 14.4,
-            "transfer_force": 14.4,
-            "transfer_alignment": 0.0,
+            "gripper_force": 15.8,
+            "lift_force": 15.8,
+            "transfer_force": 15.8,
+            "transfer_alignment": 0.92,
             "approach_height": 0.03,
-            "transport_velocity": 0.24,
-            "placement_velocity": 0.24,
-            "lift_clearance": 0.056
+            "transport_velocity": 0.19,
+            "placement_velocity": 0.19,
+            "lift_clearance": 0.062
           },
           "max": {
-            "gripper_force": 18.4,
-            "lift_force": 18.4,
-            "transfer_force": 19.0,
-            "transfer_alignment": 0.08,
+            "gripper_force": 17.2,
+            "lift_force": 17.2,
+            "transfer_force": 17.2,
+            "transfer_alignment": 1.0,
             "approach_height": 0.03,
-            "transport_velocity": 0.31,
-            "placement_velocity": 0.31,
-            "lift_clearance": 0.064
+            "transport_velocity": 0.25,
+            "placement_velocity": 0.25,
+            "lift_clearance": 0.068
           },
           "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.7366,
@@ -2878,6 +4045,140 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.85,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 5,
+        "diagnosed_cause_distribution": {
+          "transfer_disturbance_overload": 20
+        },
+        "selected_intervention_distribution": {
+          "transfer_alignment_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.95,
+        "success_count": 19,
+        "success_rate_ci95": [
+          0.7639,
+          0.9911
+        ],
+        "avg_time_sec": 2.4406,
+        "avg_steps": 6.0,
+        "avg_distance_error": 0.0359,
+        "reference_force_deviation_stats": {
+          "mean": 1.8400000000000005,
+          "std": 0.902860949834936,
+          "min": 1.4000000000000004,
+          "max": 3.6000000000000014
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0004,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.042,
+          "lift_hold_risk": 0.0002,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0063,
+          "stability_score": 0.9168
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.05,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "lift_hold_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 14.4,
+          "lift_force": 14.4,
+          "transfer_force": 14.4,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.03,
+          "transport_velocity": 0.31,
+          "placement_velocity": 0.31,
+          "lift_clearance": 0.056
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 14.84,
+            "lift_force": 14.84,
+            "transfer_force": 14.84,
+            "transfer_alignment": 0.184,
+            "approach_height": 0.03,
+            "transport_velocity": 0.296,
+            "placement_velocity": 0.296,
+            "lift_clearance": 0.0572
+          },
+          "std": {
+            "gripper_force": 0.902860949834936,
+            "lift_force": 0.902860949834936,
+            "transfer_force": 0.902860949834936,
+            "transfer_alignment": 0.37756003356733675,
+            "approach_height": 0.0,
+            "transport_velocity": 0.02872739385838432,
+            "placement_velocity": 0.02872739385838432,
+            "lift_clearance": 0.002462348045004369
+          },
+          "min": {
+            "gripper_force": 14.4,
+            "lift_force": 14.4,
+            "transfer_force": 14.4,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.03,
+            "transport_velocity": 0.24,
+            "placement_velocity": 0.24,
+            "lift_clearance": 0.056
+          },
+          "max": {
+            "gripper_force": 16.6,
+            "lift_force": 16.6,
+            "transfer_force": 16.6,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.03,
+            "transport_velocity": 0.31,
+            "placement_velocity": 0.31,
+            "lift_clearance": 0.062
+          },
+          "dynamic_transport_mode_mode": "static",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.7366,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "uncertainty_guard",
+          "evidence_rule_count": 3,
+          "evidence_support_score": 3.0,
+          "evidence_conflict_count": 0,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": false,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": true,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "seed_uncertainty_force_guard"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 4,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -2947,6 +4248,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "fixed": {
@@ -3016,6 +4327,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.02
       }
     }
@@ -3149,39 +4470,49 @@
             "seed_lift_margin_requirement"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
-        "success_rate": 0.9,
-        "success_count": 18,
+        "success_rate": 0.95,
+        "success_count": 19,
         "success_rate_ci95": [
-          0.699,
-          0.9721
+          0.7639,
+          0.9911
         ],
-        "avg_time_sec": 9.9973,
-        "avg_steps": 16.5,
-        "avg_distance_error": 0.0337,
+        "avg_time_sec": 8.7503,
+        "avg_steps": 17.0,
+        "avg_distance_error": 0.0378,
         "reference_force_deviation_stats": {
-          "mean": 5.189999999999998,
-          "std": 2.051956704170308,
-          "min": 3.1899999999999977,
-          "max": 7.189999999999998
+          "mean": 2.2300000000000013,
+          "std": 0.32831307266724813,
+          "min": 1.5900000000000034,
+          "max": 2.3900000000000006
         },
         "avg_risks": {
           "slip_risk": 0.0,
           "compression_risk": 0.0,
           "velocity_risk": 0.0,
           "clearance_risk": 0.0,
-          "lift_hold_risk": 0.0098,
-          "transfer_sway_risk": 0.0179,
-          "placement_settle_risk": 0.0344,
-          "stability_score": 0.964
+          "lift_hold_risk": 0.017,
+          "transfer_sway_risk": 0.0141,
+          "placement_settle_risk": 0.0407,
+          "stability_score": 0.9236
         },
         "failure_rates": {
           "physics_fail": 0.0,
           "lift_hold_fail": 0.0,
           "transfer_sway_fail": 0.0,
-          "placement_settle_fail": 0.1,
+          "placement_settle_fail": 0.05,
           "dominant_failure_mode": "placement_settle_fail"
         },
         "seed_plan": {
@@ -3196,47 +4527,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 34.81,
-            "lift_force": 37.44,
-            "transfer_force": 37.3545,
-            "transfer_alignment": 0.9440000000000001,
-            "approach_height": 0.06,
-            "transport_velocity": 0.138,
-            "placement_velocity": 0.12,
-            "lift_clearance": 0.0871
-          },
-          "std": {
-            "gripper_force": 2.051956704170308,
-            "lift_force": 0.2462348045004361,
-            "transfer_force": 0.2490661505873933,
-            "transfer_alignment": 0.028727393858384295,
-            "approach_height": 0.0,
-            "transport_velocity": 0.012814465510343747,
-            "placement_velocity": 0.0,
-            "lift_clearance": 0.00180350535872433
-          },
-          "min": {
-            "gripper_force": 32.81,
-            "lift_force": 37.36,
-            "transfer_force": 37.23,
-            "transfer_alignment": 0.93,
+            "gripper_force": 37.769999999999996,
+            "lift_force": 38.32,
+            "transfer_force": 38.794999999999995,
+            "transfer_alignment": 1.0,
             "approach_height": 0.06,
             "transport_velocity": 0.12,
             "placement_velocity": 0.12,
-            "lift_clearance": 0.086
+            "lift_clearance": 0.0932
           },
-          "max": {
-            "gripper_force": 36.81,
+          "std": {
+            "gripper_force": 0.32831307266724813,
+            "lift_force": 0.32831307266725107,
+            "transfer_force": 0.5335087430842819,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.0,
+            "transport_velocity": 0.0,
+            "placement_velocity": 0.0,
+            "lift_clearance": 0.0024623480450043722
+          },
+          "min": {
+            "gripper_force": 37.61,
             "lift_force": 38.16,
-            "transfer_force": 37.84,
+            "transfer_force": 38.535,
             "transfer_alignment": 1.0,
             "approach_height": 0.06,
-            "transport_velocity": 0.15,
+            "transport_velocity": 0.12,
             "placement_velocity": 0.12,
-            "lift_clearance": 0.091
+            "lift_clearance": 0.092
+          },
+          "max": {
+            "gripper_force": 38.41,
+            "lift_force": 38.96,
+            "transfer_force": 39.835,
+            "transfer_alignment": 1.0,
+            "approach_height": 0.06,
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.098
           },
           "dynamic_transport_mode_mode": "long_transfer",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.5694,
@@ -3264,6 +4595,145 @@
             "seed_lift_margin_requirement"
           ]
         },
+        "online_replan_success_rate": 0.95,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 4,
+        "diagnosed_cause_distribution": {
+          "transfer_disturbance_overload": 20
+        },
+        "selected_intervention_distribution": {
+          "transfer_alignment_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.75,
+        "success_count": 15,
+        "success_rate_ci95": [
+          0.5313,
+          0.8881
+        ],
+        "avg_time_sec": 9.8629,
+        "avg_steps": 16.45,
+        "avg_distance_error": 0.0334,
+        "reference_force_deviation_stats": {
+          "mean": 3.0999999999999996,
+          "std": 0.1020835571068059,
+          "min": 2.990000000000002,
+          "max": 3.1899999999999977
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0111,
+          "transfer_sway_risk": 0.0166,
+          "placement_settle_risk": 0.0408,
+          "stability_score": 0.954
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.1,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.15,
+          "dominant_failure_mode": "placement_settle_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 36.81,
+          "lift_force": 37.36,
+          "transfer_force": 37.235,
+          "transfer_alignment": 0.93,
+          "approach_height": 0.06,
+          "transport_velocity": 0.15,
+          "placement_velocity": 0.12,
+          "lift_clearance": 0.086
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 36.9,
+            "lift_force": 37.72,
+            "transfer_force": 37.655,
+            "transfer_alignment": 0.9655,
+            "approach_height": 0.06,
+            "transport_velocity": 0.13649999999999998,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.0923
+          },
+          "std": {
+            "gripper_force": 0.1020835571068059,
+            "lift_force": 0.4083342284272309,
+            "transfer_force": 0.5425087920703989,
+            "transfer_alignment": 0.04382681226925145,
+            "approach_height": 0.0,
+            "transport_velocity": 0.015312533566021212,
+            "placement_velocity": 0.0,
+            "lift_clearance": 0.007406256245833482
+          },
+          "min": {
+            "gripper_force": 36.81,
+            "lift_force": 37.36,
+            "transfer_force": 37.235,
+            "transfer_alignment": 0.93,
+            "approach_height": 0.06,
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.086
+          },
+          "max": {
+            "gripper_force": 37.01,
+            "lift_force": 38.16,
+            "transfer_force": 39.235,
+            "transfer_alignment": 1.08,
+            "approach_height": 0.06,
+            "transport_velocity": 0.15,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.101
+          },
+          "dynamic_transport_mode_mode": "long_transfer",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.5694,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "uncertainty_guard",
+          "evidence_rule_count": 5,
+          "evidence_support_score": 4.5,
+          "evidence_conflict_count": 0,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": true,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": true,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": true,
+          "used_lift_stage_rules": true,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "numeric_motion_band",
+            "specific_force_center",
+            "seed_uncertainty_force_guard",
+            "seed_long_transfer_velocity_guard",
+            "seed_alignment_requirement",
+            "seed_lift_margin_requirement"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 9,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -3333,6 +4803,16 @@
           "dynamic_transport_mode_mode": "long_transfer"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "fixed": {
@@ -3402,6 +4882,16 @@
           "dynamic_transport_mode_mode": "long_transfer"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.01
       }
     }
@@ -3533,23 +5023,33 @@
             "seed_heavy_static_transport_floor"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
-        "success_rate": 0.85,
-        "success_count": 17,
+        "success_rate": 1.0,
+        "success_count": 20,
         "success_rate_ci95": [
-          0.6396,
-          0.9476
+          0.8389,
+          1.0
         ],
-        "avg_time_sec": 6.7994,
-        "avg_steps": 93.5,
-        "avg_distance_error": 0.0376,
+        "avg_time_sec": 8.3077,
+        "avg_steps": 15.0,
+        "avg_distance_error": 0.0282,
         "reference_force_deviation_stats": {
-          "mean": 5.600000000000001,
-          "std": 1.7770466332772772,
-          "min": 2.6000000000000014,
-          "max": 6.600000000000001
+          "mean": 7.639999999999999,
+          "std": 0.3015748139700215,
+          "min": 7.399999999999999,
+          "max": 8.0
         },
         "avg_risks": {
           "slip_risk": 0.0,
@@ -3559,14 +5059,14 @@
           "lift_hold_risk": 0.0,
           "transfer_sway_risk": 0.0,
           "placement_settle_risk": 0.0,
-          "stability_score": 0.9178
+          "stability_score": 0.9815
         },
         "failure_rates": {
-          "physics_fail": 0.1,
+          "physics_fail": 0.0,
           "lift_hold_fail": 0.0,
           "transfer_sway_fail": 0.0,
-          "placement_settle_fail": 0.05,
-          "dominant_failure_mode": "physics_fail"
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "none"
         },
         "seed_plan": {
           "gripper_force": 46.6,
@@ -3580,47 +5080,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 45.6,
-            "lift_force": 46.68,
-            "transfer_force": 46.96,
-            "transfer_alignment": 0.008,
-            "approach_height": 0.05,
-            "transport_velocity": 0.17099999999999999,
-            "placement_velocity": 0.154,
-            "lift_clearance": 0.07465
-          },
-          "std": {
-            "gripper_force": 1.7770466332772772,
-            "lift_force": 0.2462348045004361,
-            "transfer_force": 0.18467610337532817,
-            "transfer_alignment": 0.024623480450043696,
-            "approach_height": 0.0,
-            "transport_velocity": 0.01889026482776665,
-            "placement_velocity": 0.014653901941300933,
-            "lift_clearance": 0.0016311119875071357
-          },
-          "min": {
-            "gripper_force": 42.6,
-            "lift_force": 46.6,
-            "transfer_force": 46.9,
+            "gripper_force": 47.64,
+            "lift_force": 50.0,
+            "transfer_force": 47.900000000000006,
             "transfer_alignment": 0.0,
             "approach_height": 0.05,
-            "transport_velocity": 0.12,
+            "transport_velocity": 0.18,
+            "placement_velocity": 0.126,
+            "lift_clearance": 0.094
+          },
+          "std": {
+            "gripper_force": 0.3015748139700215,
+            "lift_force": 0.0,
+            "transfer_force": 0.2513123449750173,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.0,
+            "transport_velocity": 0.0005026246899500351,
+            "placement_velocity": 0.005026246899500351,
+            "lift_clearance": 0.007539370349250519
+          },
+          "min": {
+            "gripper_force": 47.4,
+            "lift_force": 50.0,
+            "transfer_force": 47.7,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.1794,
             "placement_velocity": 0.12,
-            "lift_clearance": 0.074
+            "lift_clearance": 0.088
           },
           "max": {
-            "gripper_force": 46.6,
-            "lift_force": 47.4,
-            "transfer_force": 47.5,
-            "transfer_alignment": 0.08,
+            "gripper_force": 48.0,
+            "lift_force": 50.0,
+            "transfer_force": 48.2,
+            "transfer_alignment": 0.0,
             "approach_height": 0.05,
-            "transport_velocity": 0.18,
-            "placement_velocity": 0.16,
-            "lift_clearance": 0.079
+            "transport_velocity": 0.1804,
+            "placement_velocity": 0.13,
+            "lift_clearance": 0.103
           },
           "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.7349,
@@ -3646,6 +5146,143 @@
             "seed_heavy_static_transport_floor"
           ]
         },
+        "online_replan_success_rate": 1.0,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 8,
+        "diagnosed_cause_distribution": {
+          "under_supported_load": 20
+        },
+        "selected_intervention_distribution": {
+          "lift_force_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.85,
+        "success_count": 17,
+        "success_rate_ci95": [
+          0.6396,
+          0.9476
+        ],
+        "avg_time_sec": 8.2219,
+        "avg_steps": 132.75,
+        "avg_distance_error": 0.0375,
+        "reference_force_deviation_stats": {
+          "mean": 6.6899999999999995,
+          "std": 0.1020835571068059,
+          "min": 6.600000000000001,
+          "max": 6.799999999999997
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.9727
+        },
+        "failure_rates": {
+          "physics_fail": 0.15,
+          "lift_hold_fail": 0.0,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "physics_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 46.6,
+          "lift_force": 46.6,
+          "transfer_force": 46.9,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.18,
+          "placement_velocity": 0.16,
+          "lift_clearance": 0.074
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 46.69,
+            "lift_force": 47.53,
+            "transfer_force": 47.44,
+            "transfer_alignment": 0.138,
+            "approach_height": 0.05,
+            "transport_velocity": 0.17091,
+            "placement_velocity": 0.1435,
+            "lift_clearance": 0.08225
+          },
+          "std": {
+            "gripper_force": 0.1020835571068059,
+            "lift_force": 1.622571059185164,
+            "transfer_force": 0.7257663825951598,
+            "transfer_alignment": 0.3370397446499214,
+            "approach_height": 0.0,
+            "transport_velocity": 0.021946007909364625,
+            "placement_velocity": 0.01899445902583726,
+            "lift_clearance": 0.012332562801914203
+          },
+          "min": {
+            "gripper_force": 46.6,
+            "lift_force": 46.6,
+            "transfer_force": 46.9,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.074
+          },
+          "max": {
+            "gripper_force": 46.8,
+            "lift_force": 51.2,
+            "transfer_force": 48.9,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.05,
+            "transport_velocity": 0.1804,
+            "placement_velocity": 0.16,
+            "lift_clearance": 0.108
+          },
+          "dynamic_transport_mode_mode": "static",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.7349,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "local_search:transport_velocity:up",
+          "evidence_rule_count": 2,
+          "evidence_support_score": 3.0,
+          "evidence_conflict_count": 1,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": true,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": false,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "specific_force_center",
+            "seed_uncertainty_force_guard",
+            "seed_low_friction_margin",
+            "seed_heavy_static_transport_floor"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 9,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -3715,6 +5352,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.005
       },
       "fixed": {
@@ -3784,6 +5431,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       }
     }
@@ -3912,37 +5569,47 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
-        "success_rate": 0.75,
-        "success_count": 15,
+        "success_rate": 0.8,
+        "success_count": 16,
         "success_rate_ci95": [
-          0.5313,
-          0.8881
+          0.584,
+          0.9193
         ],
-        "avg_time_sec": 4.1422,
-        "avg_steps": 8.1,
-        "avg_distance_error": 0.0245,
+        "avg_time_sec": 4.8104,
+        "avg_steps": 9.35,
+        "avg_distance_error": 0.0281,
         "reference_force_deviation_stats": {
-          "mean": 5.6000000000000005,
-          "std": 2.0416711421361615,
-          "min": 3.8000000000000007,
-          "max": 7.800000000000001
+          "mean": 5.69,
+          "std": 0.6851046789014311,
+          "min": 5.199999999999999,
+          "max": 6.600000000000001
         },
         "avg_risks": {
           "slip_risk": 0.0,
-          "compression_risk": 0.104,
+          "compression_risk": 0.1007,
           "velocity_risk": 0.0,
           "clearance_risk": 0.0,
-          "lift_hold_risk": 0.0676,
+          "lift_hold_risk": 0.0655,
           "transfer_sway_risk": 0.0,
           "placement_settle_risk": 0.0,
-          "stability_score": 0.5887
+          "stability_score": 0.5245
         },
         "failure_rates": {
           "physics_fail": 0.0,
-          "lift_hold_fail": 0.25,
+          "lift_hold_fail": 0.2,
           "transfer_sway_fail": 0.0,
           "placement_settle_fail": 0.0,
           "dominant_failure_mode": "lift_hold_fail"
@@ -3959,47 +5626,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 17.6,
-            "lift_force": 17.8,
-            "transfer_force": 17.63,
-            "transfer_alignment": 0.004,
+            "gripper_force": 17.69,
+            "lift_force": 17.69,
+            "transfer_force": 17.69,
+            "transfer_alignment": 0.9480000000000001,
             "approach_height": 0.02,
-            "transport_velocity": 0.1745,
-            "placement_velocity": 0.1685,
-            "lift_clearance": 0.06995
+            "transport_velocity": 0.1265,
+            "placement_velocity": 0.1265,
+            "lift_clearance": 0.0741
           },
           "std": {
-            "gripper_force": 2.0416711421361615,
-            "lift_force": 2.284962282309918,
-            "transfer_force": 2.079752009508016,
-            "transfer_alignment": 0.01788854381999832,
+            "gripper_force": 0.6851046789014311,
+            "lift_force": 0.6851046789014311,
+            "transfer_force": 0.6851046789014311,
+            "transfer_alignment": 0.03914883879436741,
             "approach_height": 0.0,
-            "transport_velocity": 0.019594574974238475,
-            "placement_velocity": 0.027961439613567073,
-            "lift_clearance": 0.004616617581599846
+            "transport_velocity": 0.004893604849295933,
+            "placement_velocity": 0.004893604849295933,
+            "lift_clearance": 0.00293616290957756
           },
           "min": {
-            "gripper_force": 15.8,
-            "lift_force": 15.8,
-            "transfer_force": 15.8,
-            "transfer_alignment": 0.0,
+            "gripper_force": 17.2,
+            "lift_force": 17.2,
+            "transfer_force": 17.2,
+            "transfer_alignment": 0.92,
             "approach_height": 0.02,
             "transport_velocity": 0.12,
             "placement_velocity": 0.12,
-            "lift_clearance": 0.066
+            "lift_clearance": 0.072
           },
           "max": {
-            "gripper_force": 19.8,
-            "lift_force": 20.6,
-            "transfer_force": 20.4,
-            "transfer_alignment": 0.08,
+            "gripper_force": 18.6,
+            "lift_force": 18.6,
+            "transfer_force": 18.6,
+            "transfer_alignment": 1.0,
             "approach_height": 0.02,
-            "transport_velocity": 0.19,
-            "placement_velocity": 0.19,
-            "lift_clearance": 0.076
+            "transport_velocity": 0.13,
+            "placement_velocity": 0.13,
+            "lift_clearance": 0.078
           },
           "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.688,
@@ -4022,6 +5689,140 @@
             "seed_uncertainty_force_guard"
           ]
         },
+        "online_replan_success_rate": 0.8,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 7,
+        "diagnosed_cause_distribution": {
+          "transfer_disturbance_overload": 20
+        },
+        "selected_intervention_distribution": {
+          "transfer_alignment_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 0.65,
+        "success_count": 13,
+        "success_rate_ci95": [
+          0.4329,
+          0.8188
+        ],
+        "avg_time_sec": 5.0079,
+        "avg_steps": 8.8,
+        "avg_distance_error": 0.0228,
+        "reference_force_deviation_stats": {
+          "mean": 4.989999999999999,
+          "std": 0.927872495777869,
+          "min": 3.8000000000000007,
+          "max": 6.0
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0587,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0381,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.6422
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.35,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "lift_hold_fail"
+        },
+        "seed_plan": {
+          "gripper_force": 15.8,
+          "lift_force": 15.8,
+          "transfer_force": 15.8,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.02,
+          "transport_velocity": 0.19,
+          "placement_velocity": 0.19,
+          "lift_clearance": 0.066
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 16.99,
+            "lift_force": 17.15,
+            "transfer_force": 16.99,
+            "transfer_alignment": 0.138,
+            "approach_height": 0.02,
+            "transport_velocity": 0.1545,
+            "placement_velocity": 0.1465,
+            "lift_clearance": 0.0746
+          },
+          "std": {
+            "gripper_force": 0.927872495777869,
+            "lift_force": 1.2015341071007162,
+            "transfer_force": 0.927872495777869,
+            "transfer_alignment": 0.3370397446499214,
+            "approach_height": 0.0,
+            "transport_velocity": 0.027620549177054848,
+            "placement_velocity": 0.03328900561351814,
+            "lift_clearance": 0.007279386903044138
+          },
+          "min": {
+            "gripper_force": 15.8,
+            "lift_force": 15.8,
+            "transfer_force": 15.8,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.02,
+            "transport_velocity": 0.12,
+            "placement_velocity": 0.12,
+            "lift_clearance": 0.066
+          },
+          "max": {
+            "gripper_force": 18.0,
+            "lift_force": 19.6,
+            "transfer_force": 18.0,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.02,
+            "transport_velocity": 0.19,
+            "placement_velocity": 0.19,
+            "lift_clearance": 0.083
+          },
+          "dynamic_transport_mode_mode": "static",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.688,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "uncertainty_guard",
+          "evidence_rule_count": 3,
+          "evidence_support_score": 4.6667,
+          "evidence_conflict_count": 0,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": false,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": true,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "seed_uncertainty_force_guard"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 13,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -4091,6 +5892,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "fixed": {
@@ -4160,6 +5971,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.03
       }
     }
@@ -4293,23 +6114,33 @@
             "seed_lift_margin_requirement"
           ]
         },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "rag_feedback": {
-        "success_rate": 0.95,
-        "success_count": 19,
+        "success_rate": 0.9,
+        "success_count": 18,
         "success_rate_ci95": [
-          0.7639,
-          0.9911
+          0.699,
+          0.9721
         ],
-        "avg_time_sec": 5.9698,
-        "avg_steps": 7.9,
-        "avg_distance_error": 0.0399,
+        "avg_time_sec": 6.9692,
+        "avg_steps": 14.6,
+        "avg_distance_error": 0.0388,
         "reference_force_deviation_stats": {
-          "mean": 3.599999999999997,
-          "std": 1.880649383926509,
-          "min": 0.7999999999999972,
-          "max": 4.799999999999997
+          "mean": 5.720000000000001,
+          "std": 0.18806493839265023,
+          "min": 5.600000000000001,
+          "max": 6.0
         },
         "avg_risks": {
           "slip_risk": 0.0,
@@ -4319,13 +6150,13 @@
           "lift_hold_risk": 0.0,
           "transfer_sway_risk": 0.0,
           "placement_settle_risk": 0.0,
-          "stability_score": 0.9067
+          "stability_score": 0.9849
         },
         "failure_rates": {
           "physics_fail": 0.0,
           "lift_hold_fail": 0.0,
           "transfer_sway_fail": 0.05,
-          "placement_settle_fail": 0.0,
+          "placement_settle_fail": 0.05,
           "dominant_failure_mode": "transfer_sway_fail"
         },
         "seed_plan": {
@@ -4340,47 +6171,47 @@
         },
         "executed_plan_stats": {
           "mean": {
-            "gripper_force": 47.599999999999994,
-            "lift_force": 49.37,
-            "transfer_force": 49.32,
-            "transfer_alignment": 0.016,
-            "approach_height": 0.05,
-            "transport_velocity": 0.256,
-            "placement_velocity": 0.256,
-            "lift_clearance": 0.0785
-          },
-          "std": {
-            "gripper_force": 1.880649383926509,
-            "lift_force": 0.21545545393788323,
-            "transfer_force": 0.24623480450043464,
-            "transfer_alignment": 0.03283130726672493,
-            "approach_height": 0.0,
-            "transport_velocity": 0.024365635853109115,
-            "placement_velocity": 0.024365635853109115,
-            "lift_clearance": 0.0015389675281277325
-          },
-          "min": {
-            "gripper_force": 44.8,
-            "lift_force": 49.3,
-            "transfer_force": 49.2,
+            "gripper_force": 49.72,
+            "lift_force": 50.0,
+            "transfer_force": 50.0,
             "transfer_alignment": 0.0,
             "approach_height": 0.05,
-            "transport_velocity": 0.21,
-            "placement_velocity": 0.21,
-            "lift_clearance": 0.078
+            "transport_velocity": 0.20500000000000002,
+            "placement_velocity": 0.20500000000000002,
+            "lift_clearance": 0.0962
+          },
+          "std": {
+            "gripper_force": 0.18806493839265023,
+            "lift_force": 0.0,
+            "transfer_force": 0.0,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.0,
+            "transport_velocity": 0.02350811729908136,
+            "placement_velocity": 0.02350811729908136,
+            "lift_clearance": 0.006582272843742781
+          },
+          "min": {
+            "gripper_force": 49.6,
+            "lift_force": 50.0,
+            "transfer_force": 50.0,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.17,
+            "placement_velocity": 0.17,
+            "lift_clearance": 0.092
           },
           "max": {
-            "gripper_force": 48.8,
+            "gripper_force": 50.0,
             "lift_force": 50.0,
-            "transfer_force": 49.8,
-            "transfer_alignment": 0.08,
+            "transfer_force": 50.0,
+            "transfer_alignment": 0.0,
             "approach_height": 0.05,
-            "transport_velocity": 0.27,
-            "placement_velocity": 0.27,
-            "lift_clearance": 0.083
+            "transport_velocity": 0.22,
+            "placement_velocity": 0.22,
+            "lift_clearance": 0.106
           },
-          "dynamic_transport_mode_mode": "static",
-          "execution_feedback_mode_mode": "observer_only"
+          "dynamic_transport_mode_mode": "high_speed_low_friction",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
         },
         "planner_diagnostics": {
           "belief_state_coverage": 0.6053,
@@ -4407,6 +6238,144 @@
             "seed_lift_margin_requirement"
           ]
         },
+        "online_replan_success_rate": 0.9,
+        "suffix_counterfactual_replan_count": 20,
+        "observer_only_count": 0,
+        "online_diagnosis_count": 20,
+        "heavy_load_diagnosis_count": 20,
+        "soft_risk_replan_count": 20,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 6,
+        "diagnosed_cause_distribution": {
+          "under_supported_load": 20
+        },
+        "selected_intervention_distribution": {
+          "lift_force_up": 20
+        },
+        "approach_height_error": 0.0
+      },
+      "rag_feedback_observer_only": {
+        "success_rate": 1.0,
+        "success_count": 20,
+        "success_rate_ci95": [
+          0.8389,
+          1.0
+        ],
+        "avg_time_sec": 5.2897,
+        "avg_steps": 6.45,
+        "avg_distance_error": 0.0469,
+        "reference_force_deviation_stats": {
+          "mean": 4.829999999999997,
+          "std": 0.07326950970650568,
+          "min": 4.799999999999997,
+          "max": 5.0
+        },
+        "avg_risks": {
+          "slip_risk": 0.0,
+          "compression_risk": 0.0,
+          "velocity_risk": 0.0,
+          "clearance_risk": 0.0,
+          "lift_hold_risk": 0.0,
+          "transfer_sway_risk": 0.0,
+          "placement_settle_risk": 0.0,
+          "stability_score": 0.9756
+        },
+        "failure_rates": {
+          "physics_fail": 0.0,
+          "lift_hold_fail": 0.0,
+          "transfer_sway_fail": 0.0,
+          "placement_settle_fail": 0.0,
+          "dominant_failure_mode": "none"
+        },
+        "seed_plan": {
+          "gripper_force": 48.8,
+          "lift_force": 49.3,
+          "transfer_force": 49.2,
+          "transfer_alignment": 0.0,
+          "approach_height": 0.05,
+          "transport_velocity": 0.27,
+          "placement_velocity": 0.27,
+          "lift_clearance": 0.078
+        },
+        "executed_plan_stats": {
+          "mean": {
+            "gripper_force": 48.83,
+            "lift_force": 49.405,
+            "transfer_force": 49.32,
+            "transfer_alignment": 0.092,
+            "approach_height": 0.05,
+            "transport_velocity": 0.261,
+            "placement_velocity": 0.2575,
+            "lift_clearance": 0.0792
+          },
+          "std": {
+            "gripper_force": 0.07326950970650568,
+            "lift_force": 0.2564432839727673,
+            "transfer_force": 0.2930780388260176,
+            "transfer_alignment": 0.28317002517550255,
+            "approach_height": 0.0,
+            "transport_velocity": 0.02268781263377462,
+            "placement_velocity": 0.031434978841043335,
+            "lift_clearance": 0.003138890182683582
+          },
+          "min": {
+            "gripper_force": 48.8,
+            "lift_force": 49.3,
+            "transfer_force": 49.2,
+            "transfer_alignment": 0.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.2,
+            "placement_velocity": 0.16,
+            "lift_clearance": 0.078
+          },
+          "max": {
+            "gripper_force": 49.0,
+            "lift_force": 50.0,
+            "transfer_force": 50.0,
+            "transfer_alignment": 0.92,
+            "approach_height": 0.05,
+            "transport_velocity": 0.27,
+            "placement_velocity": 0.27,
+            "lift_clearance": 0.09
+          },
+          "dynamic_transport_mode_mode": "high_speed_low_friction",
+          "execution_feedback_mode_mode": "suffix_counterfactual_replan"
+        },
+        "planner_diagnostics": {
+          "belief_state_coverage": 0.6053,
+          "uncertainty_conservative_mode": true,
+          "solver_selected_candidate": "uncertainty_guard",
+          "evidence_rule_count": 3,
+          "evidence_support_score": 3.5,
+          "evidence_conflict_count": 1,
+          "force_rule_mode": "all",
+          "motion_rule_mode": "all",
+          "available_specific_force_rules": true,
+          "suppressed_specific_force_rules": false,
+          "available_motion_rules": true,
+          "suppressed_motion_rules": false,
+          "available_lift_stage_rules": false,
+          "used_lift_stage_rules": false,
+          "seed_mode": "belief_constraint_synthesis",
+          "seed_notes": [
+            "belief_constraint_seed",
+            "specific_force_center",
+            "seed_uncertainty_force_guard",
+            "seed_low_friction_margin",
+            "seed_high_speed_low_friction_cap",
+            "seed_lift_margin_requirement"
+          ]
+        },
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 3,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       },
       "task_heuristic": {
@@ -4476,6 +6445,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.005
       },
       "fixed": {
@@ -4545,6 +6524,16 @@
           "dynamic_transport_mode_mode": "static"
         },
         "planner_diagnostics": {},
+        "online_replan_success_rate": 0.0,
+        "suffix_counterfactual_replan_count": 0,
+        "observer_only_count": 20,
+        "online_diagnosis_count": 0,
+        "heavy_load_diagnosis_count": 0,
+        "soft_risk_replan_count": 0,
+        "hard_fail_replan_count": 0,
+        "post_failure_retry_count": 0,
+        "diagnosed_cause_distribution": {},
+        "selected_intervention_distribution": {},
         "approach_height_error": 0.0
       }
     }

@@ -5,6 +5,7 @@ from simulation.control_core import (
     build_execution_prior,
     CounterfactualDiagnosis,
     CounterfactualIntervention,
+    decide_observation_replan,
     diagnose_failure_cause,
     EvidenceConstraintHints,
     ExecutionBelief,
@@ -12,11 +13,13 @@ from simulation.control_core import (
     apply_phase_observation,
     repair_suffix_plan,
     replan_control_plan,
+    roll_execution_belief_forward,
     solve_control_plan,
     summarize_control_evidence,
     synthesize_control_seed,
 )
 from simulation.feedback import FeedbackSignal, build_feedback_replan_request
+from simulation.rag_controller import RAGController
 
 
 def _rule(
@@ -451,6 +454,76 @@ class ControlCoreTest(unittest.TestCase):
         self.assertEqual(trace["phase"], "lift")
         self.assertEqual(trace["updated_latents"][0]["name"], "load_support_margin")
 
+    def test_roll_execution_belief_forward_carries_posterior_into_next_phase(self):
+        prior = build_execution_prior(
+            {
+                "dynamic_transport_mode": "static",
+                "belief_state": {
+                    "mass_band": "heavy",
+                    "dynamic_load_band": "high",
+                    "center_of_mass_risk": 0.72,
+                    "alignment_confidence": 0.34,
+                },
+                "task_constraints": {"preferred_transport_mode": "static"},
+                "uncertainty_profile": {"conservative_mode": False},
+            },
+            phase="lift",
+        )
+        posterior, _ = apply_phase_observation(
+            prior,
+            PhaseObservation(
+                phase="lift",
+                payload_ratio_obs=0.98,
+                lift_progress_obs=0.44,
+                lift_reserve_obs=-0.24,
+                tilt_obs=0.18,
+                observation_confidence=0.84,
+                trigger_reason="lift_reserve_obs",
+            ),
+        )
+
+        next_prior = roll_execution_belief_forward(posterior, next_phase="transfer")
+
+        self.assertEqual(next_prior.phase, "transfer")
+        self.assertEqual(next_prior.load_support_margin, posterior.load_support_margin)
+        self.assertEqual(next_prior.lift_reserve, posterior.lift_reserve)
+        self.assertEqual(next_prior.pose_alignment_error, posterior.pose_alignment_error)
+
+    def test_decide_observation_replan_flags_soft_transfer_risk(self):
+        posterior = ExecutionBelief(
+            phase="transfer",
+            load_support_margin=-0.10,
+            load_support_uncertainty=0.22,
+            grip_hold_margin=0.06,
+            grip_hold_uncertainty=0.18,
+            pose_alignment_error=0.22,
+            pose_alignment_uncertainty=0.20,
+            lift_reserve=-0.05,
+            lift_reserve_uncertainty=0.24,
+            transfer_disturbance=0.68,
+            transfer_disturbance_uncertainty=0.18,
+            preferred_transport_mode="static",
+            conservative_mode=True,
+        )
+
+        decision = decide_observation_replan(
+            posterior,
+            PhaseObservation(
+                phase="transfer",
+                sway_obs=0.22,
+                velocity_stress_obs=0.18,
+                observation_confidence=0.82,
+                trigger_reason="soft_transfer_disturbance",
+            ),
+            phase_success=True,
+            remaining_phases=["place"],
+        )
+
+        self.assertTrue(decision.should_replan)
+        self.assertEqual(decision.replan_mode, "soft_risk")
+        self.assertEqual(decision.requested_suffix_start, "place")
+        self.assertIn("transfer_disturbance", decision.risk_latents)
+
     def test_diagnosis_prefers_minimal_sufficient_lift_intervention(self):
         belief = build_execution_prior(
             {
@@ -564,6 +637,124 @@ class ControlCoreTest(unittest.TestCase):
         )
         self.assertEqual(diagnosis.selected_intervention.label, "lift_force_plus_clearance")
         self.assertGreater(diagnosis.predicted_flip_gain, 0.0)
+
+    def test_transfer_soft_risk_replan_uses_phase_general_counterfactual_repair(self):
+        _, belief = self._build_summary_and_belief()
+        previous_params = {
+            "gripper_force": 42.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.24,
+            "lift_force": 42.0,
+            "transfer_force": 42.0,
+            "placement_velocity": 0.20,
+            "transfer_alignment": 0.48,
+            "lift_clearance": 0.06,
+            **belief.to_trace_dict(),
+            "execution_belief_state": build_execution_prior(
+                {
+                    **belief.to_trace_dict(),
+                    "dynamic_transport_mode": "static",
+                },
+                phase="transfer",
+            ).to_trace_dict(),
+        }
+        request = {
+            "stage_bias": "transfer",
+            "requested_suffix_start": "place",
+            "replan_mode": "soft_risk",
+            "phase_observation": {
+                "phase": "transfer",
+                "sway_obs": 0.24,
+                "velocity_stress_obs": 0.18,
+                "observation_confidence": 0.84,
+                "trigger_reason": "soft_transfer_disturbance",
+            },
+            "param_deltas": {
+                "transport_velocity": -0.03,
+                "placement_velocity": -0.03,
+                "transfer_alignment": 0.08,
+            },
+        }
+
+        updated = replan_control_plan(previous_params, request)
+
+        self.assertEqual(updated["suffix_replan_start_stage"], "place")
+        self.assertEqual(updated["counterfactual_replan_trace"][0]["diagnosis_phase"], "transfer")
+        self.assertEqual(updated["counterfactual_replan_trace"][0]["start_phase"], "place")
+        self.assertEqual(updated["execution_feedback_mode"], "suffix_counterfactual_replan")
+
+    def test_place_failure_replan_stays_on_place_suffix(self):
+        _, belief = self._build_summary_and_belief()
+        previous_params = {
+            "gripper_force": 36.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.18,
+            "lift_force": 36.0,
+            "transfer_force": 36.0,
+            "placement_velocity": 0.18,
+            "transfer_alignment": 0.60,
+            "lift_clearance": 0.06,
+            **belief.to_trace_dict(),
+        }
+        request = {
+            "stage_bias": "place",
+            "requested_suffix_start": "place",
+            "replan_mode": "hard_fail",
+            "phase_observation": {
+                "phase": "place",
+                "settle_obs": 0.18,
+                "placement_error_obs": 0.07,
+                "observation_confidence": 0.82,
+                "trigger_reason": "placement_settle_fail",
+            },
+            "param_deltas": {
+                "placement_velocity": -0.04,
+                "lift_clearance": 0.003,
+            },
+        }
+
+        updated = replan_control_plan(previous_params, request)
+
+        self.assertEqual(updated["suffix_replan_start_stage"], "place")
+        self.assertEqual(updated["counterfactual_replan_trace"][0]["diagnosis_phase"], "place")
+        self.assertEqual(updated["counterfactual_replan_trace"][0]["start_phase"], "place")
+
+    def test_controller_observation_replan_preserves_suffix_start(self):
+        _, belief = self._build_summary_and_belief()
+        previous_params = {
+            "gripper_force": 42.0,
+            "approach_height": 0.05,
+            "transport_velocity": 0.24,
+            "lift_force": 42.0,
+            "transfer_force": 42.0,
+            "placement_velocity": 0.20,
+            "transfer_alignment": 0.48,
+            "lift_clearance": 0.06,
+            **belief.to_trace_dict(),
+        }
+        observation = {
+            "observation_index": 3,
+            "phase": "transfer",
+            "stage": "transfer",
+            "requested_suffix_start": "place",
+            "replan_mode": "soft_risk",
+            "trigger_reason": "soft_transfer_disturbance",
+            "risk_score": 0.24,
+            "phase_observation": {
+                "phase": "transfer",
+                "sway_obs": 0.24,
+                "velocity_stress_obs": 0.18,
+                "observation_confidence": 0.84,
+                "trigger_reason": "soft_transfer_disturbance",
+            },
+        }
+
+        controller = object.__new__(RAGController)
+        updated = controller.get_params_after_observation("", previous_params, observation)
+
+        self.assertEqual(updated["feedback_replan_trace"]["requested_suffix_start"], "place")
+        self.assertEqual(updated["suffix_replan_start_stage"], "place")
+        self.assertEqual(updated["execution_feedback_mode"], "suffix_counterfactual_replan")
 
 
 if __name__ == "__main__":

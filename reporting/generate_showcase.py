@@ -70,6 +70,31 @@ def _mean_method_gap(rows: list[dict], left_method: str, right_method: str, fiel
     return sum(gaps) / len(gaps)
 
 
+def _online_repair_claim_lines(sim_benchmark: list[dict], *, primary_method: str) -> list[str]:
+    if primary_method != "rag_feedback":
+        return []
+    total_suffix = sum(
+        int(_method_metric(row, "rag_feedback", "suffix_counterfactual_replan_count", 0) or 0)
+        for row in sim_benchmark
+    )
+    total_online = sum(
+        int(_method_metric(row, "rag_feedback", "online_diagnosis_count", _method_metric(row, "rag_feedback", "heavy_load_diagnosis_count", 0)) or 0)
+        for row in sim_benchmark
+    )
+    total_retry = sum(
+        int(_method_metric(row, "rag_feedback", "post_failure_retry_count", 0) or 0)
+        for row in sim_benchmark
+    )
+    if total_suffix == 0 or total_online == 0:
+        return [
+            "- 当前默认收益主要来自 belief-seeded planner / solver thickening。",
+            f"- observer / posterior logging 已接入，但公开结果尚未证明 online suffix repair 已主导贡献；suffix_counterfactual_replan_count={total_suffix}, online_diagnosis_count={total_online}, post_failure_retry_count={total_retry}。",
+        ]
+    return [
+        f"- rolling posterior + soft-trigger suffix repair 已在默认结果中实际触发；suffix_counterfactual_replan_count={total_suffix}, online_diagnosis_count={total_online}, post_failure_retry_count={total_retry}。",
+    ]
+
+
 def _flatten_method_row(row: dict) -> dict:
     flat = dict(row)
     methods = row.get("methods")
@@ -321,8 +346,15 @@ def build_summary(
         return _plan_mean(row, primary_method, field, default)
 
     seed_only_gain = None
+    observer_only_gain = None
     if primary_method == "rag_feedback":
         seed_only_gain = _mean_method_gap(sim_multi_seed, "rag_feedback", "rag", "success_rate_mean")
+        observer_only_gain = _mean_method_gap(
+            sim_multi_seed,
+            "rag_feedback",
+            "rag_feedback_observer_only",
+            "success_rate_mean",
+        )
     direct_gain = _mean_method_gap(sim_multi_seed, primary_method, "direct_llm", "success_rate_mean")
     heuristic_gain = _mean_method_gap(sim_multi_seed, primary_method, "task_heuristic", "success_rate_mean")
     fixed_gain = _mean_method_gap(sim_multi_seed, primary_method, "fixed", "success_rate_mean")
@@ -331,6 +363,10 @@ def build_summary(
     if seed_only_gain is not None:
         lines.append(
             f"- 多 seed 平均上，{primary_label} 相对 RAG seed-only 的成功率提升为 {_format_pct(seed_only_gain)}。"
+        )
+    if observer_only_gain is not None:
+        lines.append(
+            f"- 多 seed 平均上，{primary_label} 相对 observer-only ablation 的成功率提升为 {_format_pct(observer_only_gain)}。"
         )
     if direct_gain is not None:
         lines.append(
@@ -348,6 +384,7 @@ def build_summary(
         lines.append(
             f"- 多 seed 平均上，{primary_label} 相对独立 learned baseline 的成功率提升为 {_format_pct(learned_gain)}。"
         )
+    lines.extend(_online_repair_claim_lines(sim_benchmark, primary_method=primary_method))
 
     primary_evidence_support = [
         _primary_metric(row, "evidence_support_score_mean")

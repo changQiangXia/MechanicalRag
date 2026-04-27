@@ -41,7 +41,7 @@ class CurrentProfileTest(unittest.TestCase):
         text = Path("scripts/run_all.sh").read_text(encoding="utf-8")
         self.assertIn("outputs/current_observer_step_replan", text)
         self.assertIn("--method rag_feedback", text)
-        self.assertIn("--multi_seed_methods rag rag_feedback", text)
+        self.assertIn("--multi_seed_methods rag rag_feedback rag_feedback_observer_only", text)
 
 
 if __name__ == "__main__":

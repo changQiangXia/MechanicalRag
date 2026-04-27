@@ -178,6 +178,8 @@ def _online_diagnosis_summary(trial_records: list[dict[str, Any]]) -> dict[str, 
     )
     diagnosed_causes: Counter[str] = Counter()
     interventions: Counter[str] = Counter()
+    soft_risk = 0
+    hard_fail = 0
     for record in trial_records:
         for trace in record.get("counterfactual_replan_trace", []):
             cause = trace.get("diagnosed_cause")
@@ -186,11 +188,19 @@ def _online_diagnosis_summary(trial_records: list[dict[str, Any]]) -> dict[str, 
                 diagnosed_causes[str(cause)] += 1
             if selected:
                 interventions[str(selected)] += 1
+            if trace.get("replan_mode") == "soft_risk":
+                soft_risk += 1
+            if trace.get("replan_mode") == "hard_fail":
+                hard_fail += 1
     return {
         "online_replan_success_rate": round(online_success_rate, 4),
         "suffix_counterfactual_replan_count": len(suffix_trials),
+        "observer_only_count": sum(1 for record in trial_records if record.get("execution_feedback_mode") == "observer_only"),
+        "online_diagnosis_count": sum(diagnosed_causes.values()),
         "post_failure_retry_count": sum(int(record.get("feedback_retry_count", 0)) for record in trial_records),
         "heavy_load_diagnosis_count": sum(diagnosed_causes.values()),
+        "soft_risk_replan_count": soft_risk,
+        "hard_fail_replan_count": hard_fail,
         "diagnosed_cause_distribution": dict(diagnosed_causes),
         "selected_intervention_distribution": dict(interventions),
     }
@@ -326,6 +336,7 @@ def _task_row_metadata(
 
 
 def _method_summary(result: BenchmarkResult) -> dict:
+    online = _online_diagnosis_summary(result.trial_records)
     return {
         "success_rate": round(result.success_rate, 4),
         "success_count": result.success_count,
@@ -354,6 +365,16 @@ def _method_summary(result: BenchmarkResult) -> dict:
         "seed_plan": result.seed_plan,
         "executed_plan_stats": result.executed_plan_stats,
         "planner_diagnostics": result.planner_diagnostics,
+        "online_replan_success_rate": online["online_replan_success_rate"],
+        "suffix_counterfactual_replan_count": online["suffix_counterfactual_replan_count"],
+        "observer_only_count": online["observer_only_count"],
+        "online_diagnosis_count": online["online_diagnosis_count"],
+        "heavy_load_diagnosis_count": online["heavy_load_diagnosis_count"],
+        "soft_risk_replan_count": online["soft_risk_replan_count"],
+        "hard_fail_replan_count": online["hard_fail_replan_count"],
+        "post_failure_retry_count": online["post_failure_retry_count"],
+        "diagnosed_cause_distribution": online["diagnosed_cause_distribution"],
+        "selected_intervention_distribution": online["selected_intervention_distribution"],
     }
 
 
@@ -430,6 +451,27 @@ def _aggregate_failure_rates(task_runs: list[BenchmarkResult]) -> dict:
     return summary
 
 
+def _multi_seed_online_summary(task_runs: list[BenchmarkResult]) -> dict[str, Any]:
+    online_stats = [_online_diagnosis_summary(run.trial_records) for run in task_runs]
+    diagnosed_causes: Counter[str] = Counter()
+    interventions: Counter[str] = Counter()
+    for item in online_stats:
+        diagnosed_causes.update({str(key): int(value) for key, value in item["diagnosed_cause_distribution"].items()})
+        interventions.update({str(key): int(value) for key, value in item["selected_intervention_distribution"].items()})
+    return {
+        "online_replan_success_rate": _rounded_mean([item["online_replan_success_rate"] for item in online_stats]),
+        "suffix_counterfactual_replan_count": int(sum(item["suffix_counterfactual_replan_count"] for item in online_stats)),
+        "observer_only_count": int(sum(item["observer_only_count"] for item in online_stats)),
+        "online_diagnosis_count": int(sum(item["online_diagnosis_count"] for item in online_stats)),
+        "heavy_load_diagnosis_count": int(sum(item["heavy_load_diagnosis_count"] for item in online_stats)),
+        "soft_risk_replan_count": int(sum(item["soft_risk_replan_count"] for item in online_stats)),
+        "hard_fail_replan_count": int(sum(item["hard_fail_replan_count"] for item in online_stats)),
+        "post_failure_retry_count": int(sum(item["post_failure_retry_count"] for item in online_stats)),
+        "diagnosed_cause_distribution": dict(diagnosed_causes),
+        "selected_intervention_distribution": dict(interventions),
+    }
+
+
 def _multi_seed_method_summary(
     *,
     task_runs: list[BenchmarkResult],
@@ -471,6 +513,7 @@ def _multi_seed_method_summary(
         "reference_force_deviation_stats": _aggregate_nested_scalar_stats(task_runs),
         "planner_diagnostics": _aggregate_planner_diagnostics(task_runs),
         "failure_rates": _aggregate_failure_rates(task_runs),
+        **_multi_seed_online_summary(task_runs),
         "per_seed_success_rate": {
             str(seed): round(run.success_rate, 4)
             for seed, run in zip(seeds, task_runs)
@@ -673,6 +716,9 @@ def _get_param_getter(method: str, data_path: str, seed: int) -> Callable[[str],
     if method == "rag_feedback":
         rag = RAGController(data_path)
         return lambda desc: rag.get_params_for_task(desc, retrieval="single")
+    if method == "rag_feedback_observer_only":
+        rag = RAGController(data_path)
+        return lambda desc: rag.get_params_for_task(desc, retrieval="single")
     if method == "fixed":
         return lambda desc: baseline.get_params_fixed(desc, seed=seed)
     if method == "task_heuristic":
@@ -682,8 +728,16 @@ def _get_param_getter(method: str, data_path: str, seed: int) -> Callable[[str],
     raise ValueError(f"未知 method: {method}")
 
 
+def _method_supports_observation_replan(method: str) -> bool:
+    return method == "rag_feedback"
+
+
+def _method_supports_feedback_retry(method: str) -> bool:
+    return method in {"rag_feedback", "rag_feedback_observer_only"}
+
+
 def _get_feedback_controller(method: str, data_path: str):
-    if method != "rag_feedback":
+    if not _method_supports_feedback_retry(method):
         return None
     return RAGController(data_path)
 
@@ -759,8 +813,12 @@ def _serialize_results(results: list[BenchmarkResult]) -> list[dict]:
                 "trial_record_count": len(result.trial_records),
                 "online_replan_success_rate": online["online_replan_success_rate"],
                 "suffix_counterfactual_replan_count": online["suffix_counterfactual_replan_count"],
+                "observer_only_count": online["observer_only_count"],
+                "online_diagnosis_count": online["online_diagnosis_count"],
                 "post_failure_retry_count": online["post_failure_retry_count"],
                 "heavy_load_diagnosis_count": online["heavy_load_diagnosis_count"],
+                "soft_risk_replan_count": online["soft_risk_replan_count"],
+                "hard_fail_replan_count": online["hard_fail_replan_count"],
                 "diagnosed_cause_distribution": online["diagnosed_cause_distribution"],
                 "selected_intervention_distribution": online["selected_intervention_distribution"],
             }
@@ -807,10 +865,11 @@ def run_benchmark(
         for trial_index in range(n_trials_per_task):
             current_params = dict(params)
             step_replan_callback = None
-            if feedback_controller is not None:
+            if feedback_controller is not None and _method_supports_observation_replan(method):
                 step_replan_state = {"value": dict(current_params)}
 
                 def _step_replan_callback(observation: dict, params_snapshot: dict, *, _task=task, _controller=feedback_controller):
+                    del params_snapshot
                     updated = _controller.get_params_after_observation(
                         _task.description,
                         step_replan_state["value"],
@@ -820,6 +879,7 @@ def run_benchmark(
                     return updated
 
                 step_replan_callback = _step_replan_callback
+            step_replan_budget = max_feedback_retries if step_replan_callback is not None else 0
             if HAS_MUJOCO and env is not None:
                 success, elapsed, info = env.execute_pick_place(
                     object_pos=task.object_pos,
@@ -833,8 +893,9 @@ def run_benchmark(
                     placement_velocity=float(current_params.get("placement_velocity", current_params.get("transport_velocity", 0.3))),
                     lift_clearance=float(current_params.get("lift_clearance", 0.06)),
                     object_profile=task.profile.__dict__ if task.profile is not None else None,
+                    control_context=current_params,
                     step_replan_callback=step_replan_callback,
-                    max_step_replans=max_feedback_retries if feedback_controller is not None else 0,
+                    max_step_replans=step_replan_budget,
                 )
             else:
                 success, elapsed, info = _run_surrogate_trial(
@@ -842,7 +903,7 @@ def run_benchmark(
                     current_params,
                     rng=surrogate_rng,
                     step_replan_callback=step_replan_callback,
-                    max_step_replans=max_feedback_retries if feedback_controller is not None else 0,
+                    max_step_replans=step_replan_budget,
                 )
             current_params = dict(info.get("applied_params", current_params))
 
@@ -867,8 +928,9 @@ def run_benchmark(
                         placement_velocity=float(current_params.get("placement_velocity", current_params.get("transport_velocity", 0.3))),
                         lift_clearance=float(current_params.get("lift_clearance", 0.06)),
                         object_profile=task.profile.__dict__ if task.profile is not None else None,
+                        control_context=current_params,
                         step_replan_callback=step_replan_callback,
-                        max_step_replans=max_feedback_retries,
+                        max_step_replans=step_replan_budget,
                     )
                 else:
                     success, elapsed_retry, info = _run_surrogate_trial(
@@ -876,7 +938,7 @@ def run_benchmark(
                         current_params,
                         rng=surrogate_rng,
                         step_replan_callback=step_replan_callback,
-                        max_step_replans=max_feedback_retries,
+                        max_step_replans=step_replan_budget,
                     )
                 current_params = dict(info.get("applied_params", current_params))
                 elapsed += elapsed_retry
@@ -1001,42 +1063,51 @@ def run_benchmark_multi_seed_report(
     method: str = "rag",
 ) -> list[dict]:
     seeds = seeds or [42, 43, 44]
-    per_seed_results = {
-        seed: run_benchmark(
-            data_path=data_path,
-            n_trials_per_task=n_trials_per_task,
-            gui=False,
-            seed=seed,
-            output_path=None,
-            method=method,
-        )
-        for seed in seeds
-    }
+    report_methods = [method]
+    if method == "rag_feedback":
+        report_methods.append("rag_feedback_observer_only")
+
+    per_seed_results: dict[int, list[BenchmarkResult]] = {}
+    for seed in seeds:
+        seed_results: list[BenchmarkResult] = []
+        for report_method in report_methods:
+            seed_results.extend(
+                run_benchmark(
+                    data_path=data_path,
+                    n_trials_per_task=n_trials_per_task,
+                    gui=False,
+                    seed=seed,
+                    output_path=None,
+                    method=report_method,
+                )
+            )
+        per_seed_results[seed] = seed_results
 
     summary_rows: list[dict] = []
     for task, fallback_result in _task_contexts_from_results(*per_seed_results.values()):
         metadata = _task_row_metadata(task, fallback_result)
         task_id = metadata["task_id"]
-        task_runs = []
-        for seed in seeds:
-            match = next(
-                (
-                    result
-                    for result in per_seed_results[seed]
-                    if result.task_id == task_id and result.method == method
-                ),
-                None,
-            )
-            if match is None:
-                task_runs = []
-                break
-            task_runs.append(match)
-        if not task_runs:
+        methods_payload: dict[str, dict] = {}
+        for report_method in report_methods:
+            task_runs = []
+            for seed in seeds:
+                match = next(
+                    (
+                        result
+                        for result in per_seed_results[seed]
+                        if result.task_id == task_id and result.method == report_method
+                    ),
+                    None,
+                )
+                if match is None:
+                    task_runs = []
+                    break
+                task_runs.append(match)
+            if not task_runs:
+                continue
+            methods_payload[report_method] = _multi_seed_method_summary(task_runs=task_runs, seeds=seeds)
+        if not methods_payload:
             continue
-        success_rates = [run.success_rate for run in task_runs]
-        methods_payload = {
-            method: _multi_seed_method_summary(task_runs=task_runs, seeds=seeds)
-        }
         summary_rows.append(
             {
                 **metadata,

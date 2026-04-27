@@ -67,7 +67,7 @@ python -m simulation.benchmark \
   --compare_multi_seed \
   --n_trials 20 \
   --seeds 42 43 44 \
-  --multi_seed_methods rag rag_feedback task_heuristic fixed \
+  --multi_seed_methods rag rag_feedback rag_feedback_observer_only task_heuristic fixed \
   --output_dir "${SIM_OUTPUT_DIR}" || echo "多 seed 对比失败"
 
 echo ""

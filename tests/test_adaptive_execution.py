@@ -3,11 +3,12 @@ from unittest.mock import patch
 
 from simulation.control_core import (
     EvidenceConstraintHints,
+    PhaseObservation,
     build_control_belief,
     summarize_control_evidence,
     synthesize_control_seed,
 )
-from simulation.env import simulate_stepwise_execution
+from simulation.env import ArmSimEnv, HAS_MUJOCO, simulate_stepwise_execution
 
 
 def _rule(
@@ -215,6 +216,56 @@ class AdaptiveExecutionTest(unittest.TestCase):
         self.assertGreater(len(info["counterfactual_replan_trace"]), 0)
         self.assertEqual(info["counterfactual_replan_trace"][0]["start_phase"], "transfer")
 
+    def test_mujoco_execute_pick_place_forwards_symbolic_control_context(self):
+        if not HAS_MUJOCO:
+            self.skipTest("MuJoCo unavailable in this environment")
+
+        captured: dict = {}
+
+        def _fake_stepwise_execution(**kwargs):
+            captured.update(kwargs["params"])
+            return True, 0.0, {"applied_params": dict(kwargs["params"])}
+
+        with patch("simulation.env.simulate_stepwise_execution", side_effect=_fake_stepwise_execution):
+            env = ArmSimEnv(gui=False, seed=0)
+            try:
+                success, _, _ = env.execute_pick_place(
+                    object_pos=(0.0, 0.0, 0.0),
+                    target_pos=(0.2, 0.0, 0.0),
+                    gripper_force=42.0,
+                    approach_height=0.05,
+                    transport_velocity=0.22,
+                    lift_force=42.0,
+                    transfer_force=42.0,
+                    placement_velocity=0.18,
+                    transfer_alignment=0.0,
+                    lift_clearance=0.06,
+                    object_profile={
+                        "mass_kg": 0.42,
+                        "surface_friction": 0.18,
+                        "fragility": 0.72,
+                        "velocity_scale": 0.8,
+                        "target_tolerance": 0.04,
+                        "size_xyz": (0.055, 0.045, 0.03),
+                        "preferred_approach_height": 0.05,
+                        "approach_height_tolerance": 0.02,
+                    },
+                    step_replan_callback=lambda observation, params: None,
+                    max_step_replans=1,
+                    control_context={
+                        "belief_state": {"mass_band": "heavy"},
+                        "task_constraints": {"preferred_transport_mode": "static"},
+                        "uncertainty_profile": {"conservative_mode": True},
+                    },
+                )
+            finally:
+                env.close()
+
+        self.assertTrue(success)
+        self.assertEqual(captured["belief_state"]["mass_band"], "heavy")
+        self.assertEqual(captured["task_constraints"]["preferred_transport_mode"], "static")
+        self.assertTrue(captured["uncertainty_profile"]["conservative_mode"])
+
     def test_stepwise_execution_reuses_last_evaluation_without_extra_sampling(self):
         evaluation_log: list[dict] = []
         original = simulate_stepwise_execution.__globals__["_evaluate_execution_plan"]
@@ -268,6 +319,56 @@ class AdaptiveExecutionTest(unittest.TestCase):
         self.assertEqual(info["failure_bucket"], evaluation_log[-1]["failure_bucket"])
         expected_stage = "none" if info["failure_bucket"] == "success" else info["failure_bucket"].replace("_fail", "")
         self.assertEqual(info["observer_trace"][-1]["estimated_failure_stage"], expected_stage)
+
+    def test_stepwise_execution_rolls_posterior_into_next_phase(self):
+        def _fake_phase_eval(*, phase, params, object_profile, rng=None):
+            del params, object_profile, rng
+            if phase == "grasp":
+                return (
+                    PhaseObservation(
+                        phase="grasp",
+                        contact_stability_obs=0.74,
+                        micro_slip_obs=0.18,
+                        observation_confidence=0.81,
+                        trigger_reason="micro_slip_obs",
+                    ),
+                    True,
+                    {"phase_success": True},
+                )
+            return (
+                PhaseObservation(phase=phase, observation_confidence=0.72),
+                True,
+                {"phase_success": True},
+            )
+
+        with patch("simulation.env._evaluate_phase_execution", side_effect=_fake_phase_eval):
+            _, _, info = simulate_stepwise_execution(
+                object_pos=(0.0, 0.0, 0.0),
+                target_pos=(0.30, 0.0, 0.0),
+                params={
+                    "gripper_force": 42.0,
+                    "approach_height": 0.05,
+                    "transport_velocity": 0.22,
+                    "lift_force": 42.0,
+                    "transfer_force": 42.0,
+                    "placement_velocity": 0.18,
+                    "transfer_alignment": 0.0,
+                    "lift_clearance": 0.06,
+                    "belief_state": {
+                        "mass_band": "heavy",
+                        "dynamic_load_band": "high",
+                        "center_of_mass_risk": 0.72,
+                        "alignment_confidence": 0.34,
+                    },
+                    "task_constraints": {"preferred_transport_mode": "static"},
+                    "uncertainty_profile": {"conservative_mode": False},
+                },
+                object_profile={"mass_kg": 0.42, "surface_friction": 0.18},
+            )
+
+        grasp_update = next(row for row in info["belief_update_trace"] if row["posterior"]["phase"] == "grasp")
+        lift_update = next(row for row in info["belief_update_trace"] if row["prior"]["phase"] == "lift")
+        self.assertEqual(lift_update["prior"]["grip_hold_margin"], grasp_update["posterior"]["grip_hold_margin"])
 
 
 if __name__ == "__main__":
