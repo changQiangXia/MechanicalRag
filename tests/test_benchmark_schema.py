@@ -170,6 +170,69 @@ class BenchmarkSchemaTest(unittest.TestCase):
         self.assertNotIn("params_used", row)
         self.assertNotIn("params", row)
 
+    def test_serialize_results_includes_online_diagnosis_stats(self):
+        result = runner.BenchmarkResult(
+            task_id="pick_demo",
+            task_description="测试抓取任务",
+            task_split="test",
+            reference_force_range=(10.0, 14.0),
+            n_trials=2,
+            success_count=1,
+            success_rate=0.5,
+            avg_time=1.1,
+            avg_steps=12.0,
+            avg_distance_error=0.015,
+            ci95_low=0.1,
+            ci95_high=0.9,
+            reference_force_deviation_stats={"mean": 1.0, "std": 0.0, "min": 1.0, "max": 1.0},
+            avg_slip_risk=0.15,
+            avg_compression_risk=0.0,
+            avg_velocity_risk=0.0,
+            avg_clearance_risk=0.05,
+            avg_lift_hold_risk=0.15,
+            avg_transfer_sway_risk=0.05,
+            avg_placement_settle_risk=0.05,
+            avg_stability_score=0.75,
+            physics_fail_rate=0.0,
+            lift_hold_fail_rate=0.0,
+            transfer_sway_fail_rate=0.5,
+            placement_settle_fail_rate=0.0,
+            dominant_failure_mode="transfer_sway_fail",
+            seed_plan={"gripper_force": 12.0},
+            executed_plan_stats={"mean": {"gripper_force": 12.0}},
+            planner_diagnostics={"belief_state_coverage": 0.8},
+            trial_records=[
+                {
+                    "trial_index": 0,
+                    "success": True,
+                    "execution_feedback_mode": "suffix_counterfactual_replan",
+                    "counterfactual_replan_trace": [
+                        {
+                            "diagnosed_cause": "under_supported_load",
+                            "selected_intervention": "lift_force_up",
+                        }
+                    ],
+                    "feedback_retry_count": 0,
+                },
+                {
+                    "trial_index": 1,
+                    "success": False,
+                    "execution_feedback_mode": "post_failure_retry",
+                    "counterfactual_replan_trace": [],
+                    "feedback_retry_count": 1,
+                },
+            ],
+            method="rag_feedback",
+        )
+
+        [row] = runner._serialize_results([result])
+        self.assertEqual(row["online_replan_success_rate"], 1.0)
+        self.assertEqual(row["suffix_counterfactual_replan_count"], 1)
+        self.assertEqual(row["post_failure_retry_count"], 1)
+        self.assertEqual(row["heavy_load_diagnosis_count"], 1)
+        self.assertEqual(row["diagnosed_cause_distribution"]["under_supported_load"], 1)
+        self.assertEqual(row["selected_intervention_distribution"]["lift_force_up"], 1)
+
     def test_comparison_uses_executed_plan_stats_mean_values(self):
         result = runner.BenchmarkResult(
             task_id="pick_demo",

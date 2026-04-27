@@ -7,7 +7,7 @@ import random
 import statistics
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable
 
 from . import baseline_controller as baseline
 from .env import HAS_MUJOCO, ArmSimEnv, _estimate_force_window, _estimate_motion_targets, _success_model, simulate_stepwise_execution
@@ -163,6 +163,37 @@ def _aggregate_plan_stats(plans: list[dict]) -> dict:
         if values:
             stats[f"{field}_mode"] = Counter(values).most_common(1)[0][0]
     return stats
+
+
+def _online_diagnosis_summary(trial_records: list[dict[str, Any]]) -> dict[str, Any]:
+    suffix_trials = [
+        record
+        for record in trial_records
+        if record.get("execution_feedback_mode") == "suffix_counterfactual_replan"
+    ]
+    online_success_rate = (
+        sum(1 for record in suffix_trials if record.get("success")) / len(suffix_trials)
+        if suffix_trials
+        else 0.0
+    )
+    diagnosed_causes: Counter[str] = Counter()
+    interventions: Counter[str] = Counter()
+    for record in trial_records:
+        for trace in record.get("counterfactual_replan_trace", []):
+            cause = trace.get("diagnosed_cause")
+            selected = trace.get("selected_intervention")
+            if cause:
+                diagnosed_causes[str(cause)] += 1
+            if selected:
+                interventions[str(selected)] += 1
+    return {
+        "online_replan_success_rate": round(online_success_rate, 4),
+        "suffix_counterfactual_replan_count": len(suffix_trials),
+        "post_failure_retry_count": sum(int(record.get("feedback_retry_count", 0)) for record in trial_records),
+        "heavy_load_diagnosis_count": sum(diagnosed_causes.values()),
+        "diagnosed_cause_distribution": dict(diagnosed_causes),
+        "selected_intervention_distribution": dict(interventions),
+    }
 
 
 def _serialize_trial_records(results: list[BenchmarkResult]) -> list[dict]:
@@ -689,6 +720,7 @@ def _serialize_results(results: list[BenchmarkResult]) -> list[dict]:
     rows = []
     for result in results:
         task = next((item for item in BENCHMARK_TASKS if item.task_id == result.task_id), None)
+        online = _online_diagnosis_summary(result.trial_records)
         rows.append(
             {
                 "task_id": result.task_id,
@@ -725,6 +757,12 @@ def _serialize_results(results: list[BenchmarkResult]) -> list[dict]:
                 "executed_plan_stats": result.executed_plan_stats,
                 "planner_diagnostics": result.planner_diagnostics,
                 "trial_record_count": len(result.trial_records),
+                "online_replan_success_rate": online["online_replan_success_rate"],
+                "suffix_counterfactual_replan_count": online["suffix_counterfactual_replan_count"],
+                "post_failure_retry_count": online["post_failure_retry_count"],
+                "heavy_load_diagnosis_count": online["heavy_load_diagnosis_count"],
+                "diagnosed_cause_distribution": online["diagnosed_cause_distribution"],
+                "selected_intervention_distribution": online["selected_intervention_distribution"],
             }
         )
     return rows
@@ -865,10 +903,15 @@ def run_benchmark(
                     "failure_bucket": info.get("failure_bucket", "unknown_failure"),
                     "elapsed_sec": round(elapsed, 4),
                     "distance_error": round(info.get("distance", 0.0), 4),
+                    "execution_feedback_mode": info.get("execution_feedback_mode", "observer_only"),
                     "feedback_retry_count": retries,
                     "step_replan_count": int(info.get("step_replan_count", 0)),
                     "terminal_plan": terminal_plan,
                     "observer_trace": info.get("observer_trace", []),
+                    "phase_execution_trace": info.get("phase_execution_trace", []),
+                    "observation_trace": info.get("observation_trace", []),
+                    "belief_update_trace": info.get("belief_update_trace", []),
+                    "counterfactual_replan_trace": info.get("counterfactual_replan_trace", []),
                     "step_replan_trace": info.get("step_replan_trace", []),
                     "avg_risks": {
                         "slip_risk": info.get("slip_risk", 0.0),
