@@ -39,7 +39,7 @@ class BenchmarkResult:
     avg_distance_error: float
     ci95_low: float
     ci95_high: float
-    reference_force_deviation: float
+    reference_force_deviation_stats: dict
     avg_slip_risk: float
     avg_compression_risk: float
     avg_velocity_risk: float
@@ -53,8 +53,143 @@ class BenchmarkResult:
     transfer_sway_fail_rate: float
     placement_settle_fail_rate: float
     dominant_failure_mode: str
-    params_used: dict
+    seed_plan: dict
+    executed_plan_stats: dict
+    planner_diagnostics: dict
+    trial_records: list[dict]
     method: str = "rag"
+
+    @property
+    def reference_force_deviation(self) -> float:
+        value = self.reference_force_deviation_stats.get("mean", 0.0)
+        return float(value) if value is not None else 0.0
+
+    @property
+    def params_used(self) -> dict:
+        merged = dict(self.seed_plan)
+        merged.update(self.executed_plan_stats.get("mean", {}))
+        for key in CATEGORICAL_PLAN_FIELDS:
+            mode_key = f"{key}_mode"
+            if mode_key in self.executed_plan_stats:
+                merged[key] = self.executed_plan_stats[mode_key]
+        merged.update(self.planner_diagnostics)
+        return merged
+
+
+NUMERIC_PLAN_FIELDS = (
+    "gripper_force",
+    "lift_force",
+    "transfer_force",
+    "transfer_alignment",
+    "approach_height",
+    "transport_velocity",
+    "placement_velocity",
+    "lift_clearance",
+)
+
+CATEGORICAL_PLAN_FIELDS = (
+    "dynamic_transport_mode",
+    "execution_feedback_mode",
+)
+
+PLANNER_DIAGNOSTIC_FIELDS = (
+    "belief_state_coverage",
+    "uncertainty_conservative_mode",
+    "solver_selected_candidate",
+    "evidence_rule_count",
+    "evidence_support_score",
+    "evidence_conflict_count",
+    "force_rule_mode",
+    "motion_rule_mode",
+    "available_specific_force_rules",
+    "suppressed_specific_force_rules",
+    "available_motion_rules",
+    "suppressed_motion_rules",
+    "available_lift_stage_rules",
+    "used_lift_stage_rules",
+    "seed_mode",
+    "seed_notes",
+)
+
+
+def _extract_seed_plan(params: dict) -> dict:
+    return {
+        key: float(params[key])
+        for key in NUMERIC_PLAN_FIELDS
+        if key in params and params[key] is not None
+    }
+
+
+def _extract_planner_diagnostics(params: dict) -> dict:
+    kept = {}
+    for key in PLANNER_DIAGNOSTIC_FIELDS:
+        if key in params:
+            kept[key] = params[key]
+    return kept
+
+
+def _aggregate_scalar_stats(values: list[float]) -> dict:
+    if not values:
+        return {"mean": 0.0, "std": 0.0, "min": 0.0, "max": 0.0}
+    return {
+        "mean": statistics.mean(values),
+        "std": statistics.stdev(values) if len(values) > 1 else 0.0,
+        "min": min(values),
+        "max": max(values),
+    }
+
+
+def _aggregate_plan_stats(plans: list[dict]) -> dict:
+    stats = {
+        "mean": {},
+        "std": {},
+        "min": {},
+        "max": {},
+    }
+    for field in NUMERIC_PLAN_FIELDS:
+        values = [
+            float(plan[field])
+            for plan in plans
+            if field in plan and plan[field] is not None
+        ]
+        if not values:
+            continue
+        stats["mean"][field] = statistics.mean(values)
+        stats["std"][field] = statistics.stdev(values) if len(values) > 1 else 0.0
+        stats["min"][field] = min(values)
+        stats["max"][field] = max(values)
+    for field in CATEGORICAL_PLAN_FIELDS:
+        values = [plan[field] for plan in plans if plan.get(field) is not None]
+        if values:
+            stats[f"{field}_mode"] = Counter(values).most_common(1)[0][0]
+    return stats
+
+
+def _serialize_trial_records(results: list[BenchmarkResult]) -> list[dict]:
+    rows = []
+    for result in results:
+        task = next((item for item in BENCHMARK_TASKS if item.task_id == result.task_id), None)
+        rows.append(
+            {
+                "task_id": result.task_id,
+                "task_label": task_label(task) if task is not None else result.task_description,
+                "task_description": result.task_description,
+                "task_split": result.task_split,
+                "challenge_tags": list(task.challenge_tags) if task is not None else [],
+                "method": result.method,
+                "seed_plan": result.seed_plan,
+                "planner_diagnostics": result.planner_diagnostics,
+                "trial_records": result.trial_records,
+            }
+        )
+    return rows
+
+
+def _trial_records_path(output_path: str) -> Path:
+    path = Path(output_path)
+    if path.name.endswith("_result.json"):
+        return path.with_name(path.name.replace("_result.json", "_trial_records.json"))
+    return path.with_name(f"{path.stem}_trial_records{path.suffix}")
 
 
 def _summarize_params(params: dict) -> dict:
@@ -252,26 +387,26 @@ def _run_surrogate_trial(
 def _serialize_results(results: list[BenchmarkResult]) -> list[dict]:
     rows = []
     for result in results:
-        task = next(item for item in BENCHMARK_TASKS if item.task_id == result.task_id)
+        task = next((item for item in BENCHMARK_TASKS if item.task_id == result.task_id), None)
         rows.append(
             {
                 "task_id": result.task_id,
-                "task_label": task_label(task),
+                "task_label": task_label(task) if task is not None else result.task_description,
                 "task_description": result.task_description,
                 "task_split": result.task_split,
-                "challenge_tags": list(task.challenge_tags),
+                "challenge_tags": list(task.challenge_tags) if task is not None else [],
                 "method": result.method,
                 "n_trials": result.n_trials,
                 "reference_force_range": list(result.reference_force_range),
-                "reference_force_center": round(reference_force_center(task), 4),
-                "reference_approach_height": reference_approach_height(task),
+                "reference_force_center": round(reference_force_center(task), 4) if task is not None else None,
+                "reference_approach_height": reference_approach_height(task) if task is not None else None,
                 "success_count": result.success_count,
                 "success_rate": round(result.success_rate, 4),
                 "avg_time_sec": round(result.avg_time, 4),
                 "avg_steps": round(result.avg_steps, 2),
                 "avg_distance_error": round(result.avg_distance_error, 4),
                 "success_rate_ci95": [round(result.ci95_low, 4), round(result.ci95_high, 4)],
-                "reference_force_deviation": round(result.reference_force_deviation, 4),
+                "reference_force_deviation_stats": result.reference_force_deviation_stats,
                 "avg_slip_risk": round(result.avg_slip_risk, 4),
                 "avg_compression_risk": round(result.avg_compression_risk, 4),
                 "avg_velocity_risk": round(result.avg_velocity_risk, 4),
@@ -285,19 +420,10 @@ def _serialize_results(results: list[BenchmarkResult]) -> list[dict]:
                 "transfer_sway_fail_rate": round(result.transfer_sway_fail_rate, 4),
                 "placement_settle_fail_rate": round(result.placement_settle_fail_rate, 4),
                 "dominant_failure_mode": result.dominant_failure_mode,
-                "belief_state_coverage": result.params_used.get("belief_state_coverage"),
-                "uncertainty_conservative_mode": result.params_used.get("uncertainty_conservative_mode"),
-                "solver_selected_candidate": result.params_used.get("solver_selected_candidate"),
-                "evidence_rule_count": result.params_used.get("evidence_rule_count"),
-                "evidence_support_score": result.params_used.get("evidence_support_score"),
-                "evidence_conflict_count": result.params_used.get("evidence_conflict_count"),
-                "force_rule_mode": result.params_used.get("force_rule_mode"),
-                "motion_rule_mode": result.params_used.get("motion_rule_mode"),
-                "available_specific_force_rules": result.params_used.get("available_specific_force_rules"),
-                "suppressed_specific_force_rules": result.params_used.get("suppressed_specific_force_rules"),
-                "available_motion_rules": result.params_used.get("available_motion_rules"),
-                "suppressed_motion_rules": result.params_used.get("suppressed_motion_rules"),
-                "params": result.params_used,
+                "seed_plan": result.seed_plan,
+                "executed_plan_stats": result.executed_plan_stats,
+                "planner_diagnostics": result.planner_diagnostics,
+                "trial_record_count": len(result.trial_records),
             }
         )
     return rows
@@ -318,6 +444,8 @@ def run_benchmark(
 
     for task in BENCHMARK_TASKS:
         params = get_params(task.description)
+        seed_plan = _extract_seed_plan(params)
+        planner_diagnostics = _extract_planner_diagnostics(params)
         env = ArmSimEnv(gui=gui, seed=seed + stable_seed_offset(task.task_id)) if HAS_MUJOCO else None
         surrogate_rng = None if HAS_MUJOCO else random.Random(seed + stable_seed_offset(task.task_id))
         successes = 0
@@ -333,9 +461,11 @@ def run_benchmark(
         placement_settle_risks: list[float] = []
         stability_scores: list[float] = []
         failure_counts: Counter[str] = Counter()
-        last_params_used = _summarize_params(params)
+        force_deviations: list[float] = []
+        terminal_plans: list[dict] = []
+        trial_records: list[dict] = []
 
-        for _ in range(n_trials_per_task):
+        for trial_index in range(n_trials_per_task):
             current_params = dict(params)
             step_replan_callback = None
             if feedback_controller is not None:
@@ -413,10 +543,40 @@ def run_benchmark(
                 elapsed += elapsed_retry
                 retries += 1
 
-            for key in ("observer_trace", "step_replan_trace", "step_replan_count", "execution_feedback_mode"):
-                if key in info:
-                    current_params[key] = info[key]
-            last_params_used = _summarize_params(current_params)
+            terminal_plan = {
+                field: float(current_params[field])
+                for field in NUMERIC_PLAN_FIELDS
+                if field in current_params and current_params[field] is not None
+            }
+            for field in CATEGORICAL_PLAN_FIELDS:
+                value = current_params.get(field, info.get(field))
+                if value is not None:
+                    terminal_plan[field] = value
+            terminal_plans.append(terminal_plan)
+            if "gripper_force" in terminal_plan:
+                force_deviations.append(
+                    reference_force_deviation(task, float(terminal_plan["gripper_force"]))
+                )
+            trial_records.append(
+                {
+                    "trial_index": trial_index,
+                    "success": success,
+                    "failure_bucket": info.get("failure_bucket", "unknown_failure"),
+                    "elapsed_sec": round(elapsed, 4),
+                    "distance_error": round(info.get("distance", 0.0), 4),
+                    "feedback_retry_count": retries,
+                    "step_replan_count": int(info.get("step_replan_count", 0)),
+                    "terminal_plan": terminal_plan,
+                    "observer_trace": info.get("observer_trace", []),
+                    "step_replan_trace": info.get("step_replan_trace", []),
+                    "avg_risks": {
+                        "slip_risk": info.get("slip_risk", 0.0),
+                        "compression_risk": info.get("compression_risk", 0.0),
+                        "velocity_risk": info.get("velocity_risk", 0.0),
+                        "clearance_risk": info.get("clearance_risk", 0.0),
+                    },
+                }
+            )
             successes += 1 if success else 0
             times.append(elapsed)
             step_counts.append(info.get("steps", 0))
@@ -445,6 +605,8 @@ def run_benchmark(
             if any(rate > 0.0 for rate in fail_rate_map.values())
             else "none"
         )
+        executed_plan_stats = _aggregate_plan_stats(terminal_plans)
+        reference_force_deviation_stats = _aggregate_scalar_stats(force_deviations)
         results.append(
             BenchmarkResult(
                 task_id=task.task_id,
@@ -459,10 +621,7 @@ def run_benchmark(
                 avg_distance_error=sum(distance_errors) / len(distance_errors),
                 ci95_low=ci95_low,
                 ci95_high=ci95_high,
-                reference_force_deviation=reference_force_deviation(
-                    task,
-                    float(last_params_used.get("gripper_force", 0.0)),
-                ),
+                reference_force_deviation_stats=reference_force_deviation_stats,
                 avg_slip_risk=sum(slip_risks) / len(slip_risks),
                 avg_compression_risk=sum(compression_risks) / len(compression_risks),
                 avg_velocity_risk=sum(velocity_risks) / len(velocity_risks),
@@ -476,13 +635,17 @@ def run_benchmark(
                 transfer_sway_fail_rate=fail_rate_map["transfer_sway_fail"],
                 placement_settle_fail_rate=fail_rate_map["placement_settle_fail"],
                 dominant_failure_mode=dominant_failure_mode,
-                params_used=last_params_used,
+                seed_plan=seed_plan,
+                executed_plan_stats=executed_plan_stats,
+                planner_diagnostics=planner_diagnostics,
+                trial_records=trial_records,
                 method=method,
             )
         )
 
     if output_path:
         write_json(output_path, _serialize_results(results))
+        write_json(_trial_records_path(output_path), _serialize_trial_records(results))
     return results
 
 
