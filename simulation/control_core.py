@@ -245,6 +245,22 @@ class ExecutionBelief:
         return asdict(self)
 
 
+@dataclass
+class CounterfactualIntervention:
+    label: str
+    param_deltas: dict[str, float]
+    targeted_latents: list[str]
+    predicted_flip_gain: float
+
+
+@dataclass
+class CounterfactualDiagnosis:
+    diagnosed_cause: str
+    candidate_interventions: list[CounterfactualIntervention]
+    selected_intervention: CounterfactualIntervention
+    predicted_flip_gain: float
+
+
 def build_execution_prior(params: dict[str, Any], *, phase: str) -> ExecutionBelief:
     belief_state = dict(params.get("belief_state", {}))
     uncertainty = dict(params.get("uncertainty_profile", {}))
@@ -322,6 +338,176 @@ def apply_phase_observation(
         "updated_latents": updates,
         "posterior": updated.to_trace_dict(),
     }
+
+
+def _heavy_static_candidates() -> list[CounterfactualIntervention]:
+    return [
+        CounterfactualIntervention(
+            "gripper_force_up",
+            {"gripper_force": 1.2},
+            ["grip_hold_margin", "load_support_margin"],
+            0.0,
+        ),
+        CounterfactualIntervention(
+            "lift_force_up",
+            {"lift_force": 1.6},
+            ["load_support_margin", "lift_reserve"],
+            0.0,
+        ),
+        CounterfactualIntervention(
+            "transfer_force_up",
+            {"transfer_force": 1.2},
+            ["load_support_margin"],
+            0.0,
+        ),
+        CounterfactualIntervention(
+            "transport_velocity_down",
+            {"transport_velocity": -0.02, "placement_velocity": -0.02},
+            ["lift_reserve"],
+            0.0,
+        ),
+        CounterfactualIntervention(
+            "lift_clearance_up",
+            {"lift_clearance": 0.006},
+            ["lift_reserve"],
+            0.0,
+        ),
+        CounterfactualIntervention(
+            "lift_force_plus_velocity",
+            {"lift_force": 1.4, "transport_velocity": -0.02, "placement_velocity": -0.02},
+            ["load_support_margin", "lift_reserve"],
+            0.0,
+        ),
+        CounterfactualIntervention(
+            "lift_force_plus_clearance",
+            {"lift_force": 2.0, "lift_clearance": 0.02},
+            ["load_support_margin", "lift_reserve"],
+            0.0,
+        ),
+        CounterfactualIntervention(
+            "gripper_plus_lift",
+            {"gripper_force": 1.0, "lift_force": 1.2},
+            ["grip_hold_margin", "load_support_margin"],
+            0.0,
+        ),
+    ]
+
+
+def _predicted_latent_gains(
+    belief: ExecutionBelief,
+    deltas: dict[str, float],
+) -> dict[str, float]:
+    velocity_drop = max(0.0, -float(deltas.get("transport_velocity", 0.0)))
+    return {
+        "load_support_margin": round(
+            0.14 * float(deltas.get("lift_force", 0.0))
+            + 0.07 * float(deltas.get("gripper_force", 0.0))
+            + 0.06 * float(deltas.get("transfer_force", 0.0)),
+            4,
+        ),
+        "lift_reserve": round(
+            0.10 * float(deltas.get("lift_force", 0.0))
+            + 4.0 * float(deltas.get("lift_clearance", 0.0))
+            + 1.0 * velocity_drop
+            + 0.04 * float(deltas.get("gripper_force", 0.0)),
+            4,
+        ),
+        "grip_hold_margin": round(0.07 * float(deltas.get("gripper_force", 0.0)), 4),
+    }
+
+
+def diagnose_failure_cause(
+    belief: ExecutionBelief,
+    observation: PhaseObservation,
+    current_plan: dict[str, float],
+) -> CounterfactualDiagnosis:
+    del current_plan
+    if belief.load_support_margin <= min(belief.grip_hold_margin, belief.lift_reserve):
+        diagnosed_cause = "under_supported_load"
+    elif belief.grip_hold_margin < 0.0:
+        diagnosed_cause = "load_induced_slip"
+    else:
+        diagnosed_cause = "alignment_coupled_overload"
+
+    required_support = max(0.0, -belief.load_support_margin)
+    required_lift = max(0.0, -belief.lift_reserve)
+    required_grip = max(0.0, -belief.grip_hold_margin)
+
+    ranked: list[tuple[bool, CounterfactualIntervention]] = []
+    for candidate in _heavy_static_candidates():
+        gains = _predicted_latent_gains(belief, candidate.param_deltas)
+        sufficient = (
+            gains["load_support_margin"] >= required_support
+            and gains["lift_reserve"] >= required_lift
+            and gains["grip_hold_margin"] >= required_grip
+        )
+        flip_gain = round(
+            gains["load_support_margin"]
+            + gains["lift_reserve"]
+            + 0.5 * gains["grip_hold_margin"]
+            - required_support
+            - required_lift
+            - 0.5 * required_grip,
+            4,
+        )
+        ranked.append(
+            (
+                sufficient,
+                CounterfactualIntervention(
+                    label=candidate.label,
+                    param_deltas=dict(candidate.param_deltas),
+                    targeted_latents=list(candidate.targeted_latents),
+                    predicted_flip_gain=flip_gain,
+                ),
+            )
+        )
+
+    ranked.sort(
+        key=lambda item: (
+            0 if item[0] else 1,
+            len(item[1].param_deltas),
+            -item[1].predicted_flip_gain,
+            item[1].label,
+        )
+    )
+    candidates = [item[1] for item in ranked]
+    selected = candidates[0]
+    return CounterfactualDiagnosis(
+        diagnosed_cause=diagnosed_cause,
+        candidate_interventions=candidates,
+        selected_intervention=selected,
+        predicted_flip_gain=selected.predicted_flip_gain,
+    )
+
+
+def repair_suffix_plan(
+    current_plan: dict[str, float],
+    *,
+    current_phase: str,
+    diagnosis: CounterfactualDiagnosis,
+) -> dict[str, Any]:
+    next_plan = dict(current_plan)
+    for key, delta in diagnosis.selected_intervention.param_deltas.items():
+        next_plan[key] = round(float(next_plan.get(key, 0.0)) + float(delta), 4)
+    next_plan["suffix_replan_start_stage"] = current_phase
+    next_plan["execution_feedback_mode"] = "suffix_counterfactual_replan"
+    next_plan["counterfactual_replan_trace"] = [
+        {
+            "start_phase": current_phase,
+            "diagnosed_cause": diagnosis.diagnosed_cause,
+            "selected_intervention": diagnosis.selected_intervention.label,
+            "predicted_flip_gain": diagnosis.predicted_flip_gain,
+            "candidate_interventions": [
+                {
+                    "label": item.label,
+                    "param_deltas": item.param_deltas,
+                    "predicted_flip_gain": item.predicted_flip_gain,
+                }
+                for item in diagnosis.candidate_interventions
+            ],
+        }
+    ]
+    return next_plan
 
 
 @dataclass

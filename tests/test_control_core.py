@@ -3,8 +3,13 @@ import unittest
 from simulation.control_core import (
     build_control_belief,
     build_execution_prior,
+    CounterfactualDiagnosis,
+    CounterfactualIntervention,
+    diagnose_failure_cause,
+    ExecutionBelief,
     PhaseObservation,
     apply_phase_observation,
+    repair_suffix_plan,
     replan_control_plan,
     solve_control_plan,
     summarize_control_evidence,
@@ -292,6 +297,120 @@ class ControlCoreTest(unittest.TestCase):
         self.assertGreater(posterior.pose_alignment_error, prior.pose_alignment_error)
         self.assertEqual(trace["phase"], "lift")
         self.assertEqual(trace["updated_latents"][0]["name"], "load_support_margin")
+
+    def test_diagnosis_prefers_minimal_sufficient_lift_intervention(self):
+        belief = build_execution_prior(
+            {
+                "gripper_force": 42.0,
+                "lift_force": 42.0,
+                "transfer_force": 42.0,
+                "transport_velocity": 0.22,
+                "placement_velocity": 0.18,
+                "lift_clearance": 0.06,
+                "belief_state": {
+                    "mass_band": "heavy",
+                    "dynamic_load_band": "high",
+                    "center_of_mass_risk": 0.72,
+                    "alignment_confidence": 0.34,
+                },
+                "task_constraints": {"preferred_transport_mode": "static"},
+                "uncertainty_profile": {
+                    "support_score": 3.8,
+                    "state_coverage": 0.74,
+                    "conflict_count": 0,
+                    "force_std": 5.0,
+                    "attribute_confidence": 0.66,
+                    "motion_confidence": 0.32,
+                    "alignment_confidence": 0.34,
+                    "lift_stage_confidence": 0.41,
+                    "missing_specific_force": False,
+                    "missing_numeric_motion": False,
+                    "missing_alignment": False,
+                    "missing_lift_stage": False,
+                    "conservative_mode": False,
+                    "reasons": [],
+                },
+            },
+            phase="lift",
+        )
+        observation = PhaseObservation(
+            phase="lift",
+            payload_ratio_obs=0.98,
+            lift_progress_obs=0.46,
+            lift_reserve_obs=-0.24,
+            tilt_obs=0.14,
+            observation_confidence=0.84,
+            trigger_reason="lift_reserve_obs",
+        )
+        diagnosis = diagnose_failure_cause(
+            belief,
+            observation,
+            {
+                "gripper_force": 42.0,
+                "lift_force": 42.0,
+                "transfer_force": 42.0,
+                "transport_velocity": 0.22,
+                "placement_velocity": 0.18,
+                "lift_clearance": 0.06,
+            },
+        )
+        self.assertEqual(diagnosis.diagnosed_cause, "under_supported_load")
+        self.assertEqual(diagnosis.selected_intervention.label, "lift_force_up")
+        repaired = repair_suffix_plan(
+            {
+                "gripper_force": 42.0,
+                "lift_force": 42.0,
+                "transfer_force": 42.0,
+                "transport_velocity": 0.22,
+                "placement_velocity": 0.18,
+                "lift_clearance": 0.06,
+            },
+            current_phase="lift",
+            diagnosis=diagnosis,
+        )
+        self.assertEqual(repaired["suffix_replan_start_stage"], "lift")
+        self.assertGreater(repaired["lift_force"], 42.0)
+        self.assertEqual(repaired["transport_velocity"], 0.22)
+
+    def test_diagnosis_uses_smallest_combination_when_single_knob_cannot_flip(self):
+        belief = ExecutionBelief(
+            phase="lift",
+            load_support_margin=-0.28,
+            load_support_uncertainty=0.18,
+            grip_hold_margin=0.06,
+            grip_hold_uncertainty=0.14,
+            pose_alignment_error=0.26,
+            pose_alignment_uncertainty=0.18,
+            lift_reserve=-0.22,
+            lift_reserve_uncertainty=0.20,
+            transfer_disturbance=0.24,
+            transfer_disturbance_uncertainty=0.16,
+            preferred_transport_mode="static",
+            conservative_mode=True,
+        )
+        observation = PhaseObservation(
+            phase="lift",
+            payload_ratio_obs=1.02,
+            lift_progress_obs=0.40,
+            lift_reserve_obs=-0.28,
+            tilt_obs=0.22,
+            observation_confidence=0.88,
+            trigger_reason="lift_reserve_obs",
+        )
+        diagnosis = diagnose_failure_cause(
+            belief,
+            observation,
+            {
+                "gripper_force": 42.0,
+                "lift_force": 42.0,
+                "transfer_force": 42.0,
+                "transport_velocity": 0.22,
+                "placement_velocity": 0.18,
+                "lift_clearance": 0.06,
+            },
+        )
+        self.assertEqual(diagnosis.selected_intervention.label, "lift_force_plus_clearance")
+        self.assertGreater(diagnosis.predicted_flip_gain, 0.0)
 
 
 if __name__ == "__main__":
